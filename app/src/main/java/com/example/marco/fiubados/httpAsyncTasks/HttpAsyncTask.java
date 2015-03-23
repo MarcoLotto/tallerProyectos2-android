@@ -3,6 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -18,6 +19,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Maneja asincronicamente los pedidos HTTP a servicios REST. Para utilizar esta clase se debe implementar un hijo de la misma
+ * redefiniendo el método onResponseArrival el cual se ejecutará cuando la respuesta del servicio externo llegue.
+ * Además se debe implmentar los métodos configureRequestFields y configureResponseFields con los campos de salida y entrada.
+ * Ver como ejemplo LoginHttpAsyncTask.java.
+ */
 public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObject> {
 
     private ProgressDialog dialog;
@@ -55,8 +62,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     @Override
     public JSONObject doInBackground(String... params) {
-        String url = params[0];
-        // TODO: Appendear cada uno de los atributos del request!
+        String url = this.appendParametersToURL(params[0]);
+        Log.d("REQUEST", url);
         HttpURLConnection urlToRequest = null;
         try {
             urlToRequest = (HttpURLConnection) (new URL(url)).openConnection();
@@ -88,6 +95,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
         }
         String response = new Scanner(in).useDelimiter("\\A").next();
+        Log.d("RESPONSE", response);
         JSONObject json = null;
         try {
             json = new JSONObject(response);
@@ -95,6 +103,23 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
         }
         return json;
+    }
+
+    private String appendParametersToURL(String url) {
+        String finalUrl = url;
+        if(this.requestFields.size() > 0){
+            finalUrl += "?";
+        }
+        Iterator<String> it = this.requestFields.keySet().iterator();
+        while(it.hasNext()){
+            if(!finalUrl.endsWith("?")){
+                finalUrl += "&";
+            }
+            String paramName = it.next();
+            String paramValue = this.requestFields.get(paramName);
+            finalUrl += paramName + "=" + paramValue;
+        }
+        return finalUrl;
     }
 
     private JSONObject handleError() {

@@ -52,7 +52,7 @@ public class LoginActivity extends ActionBarActivity {
 
     private void makeLogin(){
         EditText username = (EditText) findViewById(R.id.usernameTextBox);
-        EditText password = (EditText) findViewById(R.id.usernameTextBox);
+        EditText password = (EditText) findViewById(R.id.passwordTextBox);
         LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
         loginRequest.execute("http://www.mocky.io/v2/550dca952fe36d9413713b37");
     }
