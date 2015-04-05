@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.example.marco.fiubados.LoginOkActivity;
+import com.example.marco.fiubados.MainScreenActivity;
 
 /**
  * Created by Marco on 21/03/2015.
@@ -21,7 +21,7 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureRequestFields() {
-        this.addRequestField("username", this.username);
+        this.addRequestField("email", this.username);
         this.addRequestField("password", this.password);
     }
 
@@ -34,9 +34,15 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
     protected void onResponseArrival() {
         String loginResult = this.getResponseField("loginStatus");
         if(loginResult.equals("OK")){
-            // Vamos a la activity de login OK
-            Intent intent = new Intent(this.callingActivity, LoginOkActivity.class);
+            // Pudimos logueanos correctamente, vamos a la pantalla de inicio
+            Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
             this.callingActivity.startActivity(intent);
         }
+    }
+
+    @Override
+    protected String getRequestMethod() {
+        // Cambiando este parámetro se determina por que método se enviará el request
+        return POST_REQUEST_TYPE;
     }
 }
