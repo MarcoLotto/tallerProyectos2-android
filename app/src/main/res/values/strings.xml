@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">fiubados</string>
+    <string name="app_name">FIUBA Login</string>
 
     <string name="hello_world">Login OK!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_login_ok">LoginOkActivity</string>
-    <string name="title_activity_news">NewsActivity</string>
+    <string name="title_activity_news"></string>
 </resources>

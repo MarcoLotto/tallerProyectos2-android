@@ -31,16 +31,18 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     protected static final String GET_REQUEST_TYPE = "GET";
     protected static final String POST_REQUEST_TYPE = "POST";
-    
-    private ProgressDialog dialog;
+
     private Map<String, String> requestFields, responseFields;
+    protected ProgressDialog dialog;
     protected Activity callingActivity;
+    protected int responseCode;
 
     public HttpAsyncTask(Activity callingActivity) {
         this.dialog = new ProgressDialog(callingActivity);
         this.callingActivity = callingActivity;
         this.requestFields = new HashMap<String, String>();
         this.responseFields = new HashMap<String, String>();
+        this.responseCode = -1;
     }
 
     /**
@@ -73,6 +75,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     @Override
     public JSONObject doInBackground(String... params) {
+        // Armamos la url final apendeando atributos GET de ser necesario
         String url = this.appendParametersToURL(params[0]);
         Log.d("REQUEST", url);
         HttpURLConnection urlToRequest = null;
@@ -87,7 +90,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         }
         urlToRequest.setReadTimeout(10000);
         urlToRequest.setConnectTimeout(10000);
-        
+
+        // Si hace falta enviamos la data del POST
         if(this.getRequestMethod().equals(POST_REQUEST_TYPE)) {
             try {
                 this.addPostData(urlToRequest);
@@ -97,19 +101,22 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
                 e.printStackTrace();
             }
         }
-
-        int responseCode = 0;
+        // Nos llego el response, evaluamos su código de respuesta
         try {
-            responseCode = urlToRequest.getResponseCode();
+            this.responseCode = urlToRequest.getResponseCode();
         } catch (IOException e) {
             e.printStackTrace();
             return handleError();
         }
-        if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-
-        } else if (responseCode != HttpURLConnection.HTTP_OK) {
-            return handleError();
+        // Si tenemos como respuesta un codigo distinto a 200, nos guardamos el codigo y terminamos
+        if (this.responseCode != HttpURLConnection.HTTP_OK) {
+            try {
+                return new JSONObject("{}");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+        // Vamos a conseguir la data del response
         InputStream in = null;
         try {
             in = urlToRequest.getInputStream();

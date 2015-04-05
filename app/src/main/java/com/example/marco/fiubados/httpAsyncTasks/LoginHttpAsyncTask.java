@@ -5,6 +5,8 @@ import android.content.Intent;
 
 import com.example.marco.fiubados.MainScreenActivity;
 
+import java.net.HttpURLConnection;
+
 /**
  * Created by Marco on 21/03/2015.
  *
@@ -27,16 +29,28 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureResponseFields() {
-       this.addResponseField("loginStatus");
+        this.addResponseField("email");
+        this.addResponseField("user_token");
     }
 
     @Override
     protected void onResponseArrival() {
-        String loginResult = this.getResponseField("loginStatus");
-        if(loginResult.equals("OK")){
+        if(this.responseCode == HttpURLConnection.HTTP_OK){
+            // TODO: Tengo que guardarme el user token y password!
+            // String userToken = this.getResponseField("user_token");
+            // String email = this.getResponseField("email");
+
             // Pudimos logueanos correctamente, vamos a la pantalla de inicio
             Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
             this.callingActivity.startActivity(intent);
+        }
+        else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
+            this.dialog.setMessage("Error en los datos de usuario. Revise los datos ingresados");
+            this.dialog.show();
+        }
+        else{
+            this.dialog.setMessage("Error en la conexión con el servidor");
+            this.dialog.show();
         }
     }
 
