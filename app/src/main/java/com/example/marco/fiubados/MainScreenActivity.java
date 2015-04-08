@@ -4,10 +4,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TabHost;
+
+import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
+import com.example.marco.fiubados.TabScreens.TabScreen;
 
 
 public class MainScreenActivity extends ActionBarActivity {
+
+    private TabHost tabHost;
+    FriendsTabScreen friendsTabScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,12 +27,43 @@ public class MainScreenActivity extends ActionBarActivity {
     }
 
     private void configureTabHost() {
-        TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
-        tabHost.setup();
-        this.addTabSpectToTabHost(tabHost, "Inicio", R.id.TabInicio);
-        this.addTabSpectToTabHost(tabHost, "Muro", R.id.TabMuro);
-        this.addTabSpectToTabHost(tabHost, "Grupos", R.id.TabGrupos);
-        this.addTabSpectToTabHost(tabHost, "Amigos", R.id.TabAmigos);
+        this.tabHost = (TabHost) findViewById(R.id.tabHost);
+        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+               handleTabChange();
+            }
+        });
+        this.tabHost.setup();
+        this.addTabSpectToTabHost(this.tabHost, "Inicio", R.id.TabInicio);
+        this.addTabSpectToTabHost(this.tabHost, "Muro", R.id.TabMuro);
+        this.addTabSpectToTabHost(this.tabHost, "Grupos", R.id.TabGrupos);
+        this.addTabSpectToTabHost(this.tabHost, "Amigos", R.id.TabAmigos);
+
+        ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
+        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+    }
+
+    /**
+     * Maneja el cambio de pestañas
+     */
+    private void handleTabChange() {
+        int currentTabIndex = this.tabHost.getCurrentTab();
+        switch(currentTabIndex){
+            case 0:
+                // Tab de inicio
+                break;
+            case 1:
+                // Tab de muro
+                break;
+            case 2:
+                // Tab de grupos
+                break;
+            case 3:
+                // Tab de amigos
+                this.friendsTabScreen.onFocus();
+                break;
+        };
     }
 
     private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, int tabId) {

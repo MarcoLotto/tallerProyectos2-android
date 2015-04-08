@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 /**
  * Created by Marco on 21/03/2015.
  *
- * Para procesar el request REST para el servicio de Login
+ * Para procesar el request para el servicio de Login
  */
 public class LoginHttpAsyncTask extends HttpAsyncTask {
     String username, password;
