@@ -4,17 +4,28 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.WallTabScreen;
 
+/**
+ * Activity contenedora de todos los tabs
+ */
+public class MainScreenActivity extends TabbedActivity {
 
-public class MainScreenActivity extends ActionBarActivity {
+    private final int NEWS_TAB_INDEX = 0;
+    private final int WALL_TAB_INDEX = 1;
+    private final int GROUPS_TAB_INDEX = 2;
+    private final int FRIENDS_TAB_INDEX = 3;
 
     private TabHost tabHost;
-    FriendsTabScreen friendsTabScreen;
+    private FriendsTabScreen friendsTabScreen;
+    private WallTabScreen wallTabScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +51,10 @@ public class MainScreenActivity extends ActionBarActivity {
         this.addTabSpectToTabHost(this.tabHost, "Grupos", R.id.TabGrupos);
         this.addTabSpectToTabHost(this.tabHost, "Amigos", R.id.TabAmigos);
 
+        // Inicializamos los controladores de los tabs
+        Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
+        TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
     }
@@ -55,6 +70,7 @@ public class MainScreenActivity extends ActionBarActivity {
                 break;
             case 1:
                 // Tab de muro
+                this.wallTabScreen.onFocus();
                 break;
             case 2:
                 // Tab de grupos
@@ -96,4 +112,43 @@ public class MainScreenActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public TabScreen getNewsTabScreen() {
+        return null;  // TODO
+    }
+
+    @Override
+    public TabScreen getGroupsTabScreen() {
+        return null;  // TODO
+    }
+
+    @Override
+    public FriendsTabScreen getFriendsTabScreen() {
+        return this.friendsTabScreen;
+    }
+
+    @Override
+    public WallTabScreen getWallTabScreen() {
+        return this.wallTabScreen;
+    }
+
+    @Override
+    public void selectNewsTabScreen() {
+        this.tabHost.setCurrentTab(NEWS_TAB_INDEX);
+    }
+
+    @Override
+    public void selectGroupsTabScreen() {
+        this.tabHost.setCurrentTab(GROUPS_TAB_INDEX);
+    }
+
+    @Override
+    public void selectFriendsTabScreen() {
+        this.tabHost.setCurrentTab(FRIENDS_TAB_INDEX);
+    }
+
+    @Override
+    public void selectWallTabScreen() {
+        this.tabHost.setCurrentTab(WALL_TAB_INDEX);
+    }
 }

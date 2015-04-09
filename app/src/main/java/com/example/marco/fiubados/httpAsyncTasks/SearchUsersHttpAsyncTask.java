@@ -21,13 +21,13 @@ import java.util.List;
  * Para procesar el request para el servicio de Login
  */
 public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
-    private String userPartialName, myUserId;
+    private String searchName, myUserId;
     private TabScreen screen;
     private int serviceId;
 
-    public SearchUsersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId) {
+    public SearchUsersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName, String myUserId) {
         super(callingActivity);
-        this.userPartialName = userPartialName;
+        this.searchName = searchName;
         this.myUserId = myUserId;
         this.screen = screen;
         this.serviceId = serviceId;
@@ -35,13 +35,14 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureRequestFields() {
-        this.addRequestField("userPartialName", this.userPartialName);
+        this.addRequestField("searchName", this.searchName);
         this.addRequestField("myUserId", this.myUserId);
     }
 
     @Override
     protected void configureResponseFields() {
         // TODO: No va a venir un unico usuario esto hay que hacerlo para una lista!
+        this.addResponseField("userId");
         this.addResponseField("userName");
         this.addResponseField("userFriendshipStatus");
     }
@@ -52,7 +53,7 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
             List<User> users = new ArrayList<User>();
 
             // TODO: Hacer esto para cada usuario que traigamos y agregarlos todos a la lista de users
-            User user = new User(this.getResponseField("userName"));
+            User user = new User(this.getResponseField("userId"), this.getResponseField("userName"));
             String userFriendShipStatus = this.getResponseField("userFriendshipStatus");
             user.setFriendshipStatus(userFriendShipStatus);
             users.add(user);
