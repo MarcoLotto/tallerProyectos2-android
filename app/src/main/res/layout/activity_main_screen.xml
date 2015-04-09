@@ -43,6 +43,7 @@
                         android:id="@+id/textView"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="100dp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -58,15 +59,29 @@
                         android:id="@+id/addFriendButton"
                         android:layout_gravity="center_horizontal" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <TableLayout
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Proximamente Mi Muro"
-                        android:id="@+id/wallTitleTextView"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="100dp" />
-
+                        android:layout_gravity="center_horizontal">
+                        <TableRow android:layout_width="fill_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="Proximamente Mi Muro"
+                                android:id="@+id/wallTitleTextView"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10dp" />
+                        </TableRow>
+                        <TableRow android:layout_width="fill_parent">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/imageView"
+                                android:background="@drawable/ic_action_picture"
+                                android:layout_gravity="top|left" />
+                        </TableRow>
+                    </TableLayout>
                 </LinearLayout>
 
                 <LinearLayout
