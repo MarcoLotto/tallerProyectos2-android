@@ -1,6 +1,7 @@
 package com.example.marco.fiubados;
 
 import android.content.ClipData;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
+import com.example.marco.fiubados.model.User;
 
 /**
  * Activity contenedora de todos los tabs
@@ -149,11 +151,24 @@ public class MainScreenActivity extends TabbedActivity {
                 // TODO: this.notificationScreen.onFocus();
                 return true;
             case R.id.profileAction:
-                // TODO: this.profileScreen.onFocus();
-                return true;
+                return this.openProfileActivity();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private boolean openProfileActivity() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        // Le pasamos al activity de profile el usuario que esta actualmente en el muro
+        User currentWallUser = this.wallTabScreen.getUserOwnerOfTheWall();
+        if(currentWallUser != null) {
+            intent.putExtra(ProfileActivity.USER_ID_PARAMETER, currentWallUser.getId());
+        }
+        else{
+            intent.putExtra(ProfileActivity.USER_ID_PARAMETER, ContextManager.getInstance().getMyUser());
+        }
+        this.startActivity(intent);
+        return true;
     }
 
     @Override
