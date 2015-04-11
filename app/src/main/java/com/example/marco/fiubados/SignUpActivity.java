@@ -1,6 +1,5 @@
 package com.example.marco.fiubados;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,39 +8,31 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.SignUpHttpAsyncTask;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class SignUpActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        // Cargamos el onClick listener al boton de login
-        Button loginButton = (Button) findViewById(R.id.signUpButton);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makeLogin();
-            }
-        });
+        setContentView(R.layout.activity_sign_up);
 
         // Cargamos el onClick listener al boton de signUp
-        Button signUpButton = (Button) findViewById(R.id.loginSignUpButton);
+        Button signUpButton = (Button) findViewById(R.id.signUpButton);
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showSignUpMenu();
+                makeSignUp();
             }
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_login, menu);
+        getMenuInflater().inflate(R.menu.menu_sign_up, menu);
         return true;
     }
 
@@ -60,15 +51,14 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void makeLogin(){
-        EditText username = (EditText) findViewById(R.id.usernameTextBox);
+    private void makeSignUp(){
+        EditText firstName = (EditText) findViewById(R.id.firstNameTextBox);
+        EditText lastName = (EditText) findViewById(R.id.lastNameTextBox);
+        EditText padron = (EditText) findViewById(R.id.padronTextBox);
+        EditText email = (EditText) findViewById(R.id.emailTextBox);
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
-        LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
-        loginRequest.execute("http://fiuba-campus-movil.herokuapp.com/api/users/sign_in");
-    }
-
-    private void showSignUpMenu(){
-        Intent intent = new Intent(this, SignUpActivity.class);
-        this.startActivity(intent);
+        SignUpHttpAsyncTask signUpRequest = new SignUpHttpAsyncTask(this, firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), padron.getText().toString(), password.getText().toString());
+        signUpRequest.execute("http://fiuba-campus-movil.herokuapp.com/api/users/sign_up");
+        // signUpRequest.execute("http://www.mocky.io/v2/552993f222258fe902a378a4");
     }
 }

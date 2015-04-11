@@ -40,8 +40,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     public HttpAsyncTask(Activity callingActivity) {
         this.dialog = new ProgressDialog(callingActivity);
         this.callingActivity = callingActivity;
-        this.requestFields = new HashMap<String, String>();
-        this.responseFields = new HashMap<String, String>();
+        this.requestFields = new HashMap<>();
+        this.responseFields = new HashMap<>();
         this.responseCode = -1;
     }
 

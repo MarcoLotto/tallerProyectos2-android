@@ -26,6 +26,10 @@
             android:name=".MainScreenActivity"
             android:label="@string/title_activity_news" >
         </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_sign_up" >
+        </activity>
     </application>
 
 </manifest>

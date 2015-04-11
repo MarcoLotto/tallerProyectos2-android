@@ -9,8 +9,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
-        android:id="@+id/loginButton"
+        android:text="Sign In"
+        android:id="@+id/signUpButton"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -38,4 +38,23 @@
         android:layout_alignLeft="@+id/passwordTextBox"
         android:layout_alignStart="@+id/passwordTextBox"
         android:layout_marginTop="100dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:id="@+id/loginSignUpButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/signUpButton"
+        android:layout_alignStart="@+id/signUpButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¿No estás registrado?"
+        android:id="@+id/textSignUp"
+        android:layout_above="@+id/loginSignUpButton"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
