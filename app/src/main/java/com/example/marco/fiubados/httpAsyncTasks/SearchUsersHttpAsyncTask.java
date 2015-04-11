@@ -7,9 +7,14 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.MainScreenActivity;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ import java.util.List;
  * Para procesar el request para el servicio de Login
  */
 public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
+    private static final String GET_FRIEND_RESULT_OK = "ok";
     private String searchName, myUserId;
     private TabScreen screen;
     private int serviceId;
@@ -42,9 +48,9 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected void configureResponseFields() {
         // TODO: No va a venir un unico usuario esto hay que hacerlo para una lista!
-        this.addResponseField("userId");
-        this.addResponseField("userName");
-        this.addResponseField("userFriendshipStatus");
+        this.addResponseField("result");
+        this.addResponseField("message");
+        this.addResponseField("data");
     }
 
     @Override
@@ -52,12 +58,25 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
             List<User> users = new ArrayList<User>();
 
-            // TODO: Hacer esto para cada usuario que traigamos y agregarlos todos a la lista de users
-            User user = new User(this.getResponseField("userId"), this.getResponseField("userName"));
-            String userFriendShipStatus = this.getResponseField("userFriendshipStatus");
-            user.setFriendshipStatus(userFriendShipStatus);
-            users.add(user);
+            String result = this.getResponseField("result");
+            if(result.equals(this.GET_FRIEND_RESULT_OK)) {
+                String dataField = this.getResponseField("data");
+                try {
+                    JSONArray jObject = new JSONArray(dataField);
+                    for (int i = 0; i < jObject.length(); i++) {
+                        JSONObject jsonObject = jObject.getJSONObject(i);
 
+                        String name = jsonObject.getString("name");
+                        String userId = jsonObject.getString("userId");
+                        String friendshipStatus = jsonObject.getString("friendshipStatus");
+                        User user = new User(userId, name);
+                        user.setFriendshipStatus(friendshipStatus);
+                        users.add(user);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
             // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
             screen.onServiceCallback(users, this.serviceId);
         }

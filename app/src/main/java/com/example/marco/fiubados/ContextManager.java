@@ -1,5 +1,7 @@
 package com.example.marco.fiubados;
 
+import com.example.marco.fiubados.model.User;
+
 /**
  * Created by Marco on 11/04/2015.
  */
@@ -7,7 +9,7 @@ public class ContextManager {
 
     private static ContextManager instance = null;
     private String userToken;
-    private String myUser;
+    private User myUser;
 
     private ContextManager(){
     }
@@ -31,11 +33,11 @@ public class ContextManager {
         this.userToken = userToken;
     }
 
-    public String getMyUser() {
-        return myUser;
+    public User getMyUser() {
+        return this.myUser;
     }
 
-    public void setMyUser(String myUser) {
+    public void setMyUser(User myUser) {
         this.myUser = myUser;
     }
 }

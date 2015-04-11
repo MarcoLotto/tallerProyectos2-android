@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.HttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SearchUsersHttpAsyncTask;
@@ -60,8 +61,8 @@ public class FriendsTabScreen implements TabScreen{
     public void onFocus() {
         // Vamos a hacer el pedido de amigos al web service
         SearchUsersHttpAsyncTask httpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
-                SEARCH_USERS_SERVICE_ID, "TODO", "TODO");
-        httpService.execute("http://www.mocky.io/v2/55244275cb8408900ad8888d");
+                SEARCH_USERS_SERVICE_ID, "TODO", ContextManager.getInstance().getMyUser().getId());
+        httpService.execute("http://www.mocky.io/v2/55299ffa22258fe502a378b0");
     }
 
     @Override
@@ -78,7 +79,11 @@ public class FriendsTabScreen implements TabScreen{
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            finalListViewLines.add(user.getName());  // REVIEW: Se puede agregar el estatus de amistad
+            String appender = "";
+            if(!user.getFriendshipStatus().isEmpty()){
+                appender = " - " + user.getFriendshipStatus();
+            }
+            finalListViewLines.add(user.getName() + appender);
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         this.friendsListView.setAdapter(adapter);

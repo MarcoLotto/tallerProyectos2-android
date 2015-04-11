@@ -165,7 +165,7 @@ public class MainScreenActivity extends TabbedActivity {
             intent.putExtra(ProfileActivity.USER_ID_PARAMETER, currentWallUser.getId());
         }
         else{
-            intent.putExtra(ProfileActivity.USER_ID_PARAMETER, ContextManager.getInstance().getMyUser());
+            intent.putExtra(ProfileActivity.USER_ID_PARAMETER, ContextManager.getInstance().getMyUser().getId());
         }
         this.startActivity(intent);
         return true;

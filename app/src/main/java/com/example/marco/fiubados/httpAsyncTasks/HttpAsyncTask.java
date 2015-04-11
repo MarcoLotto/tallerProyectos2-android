@@ -88,8 +88,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
             return handleError();
         }
-        urlToRequest.setReadTimeout(10000);
-        urlToRequest.setConnectTimeout(10000);
+        urlToRequest.setReadTimeout(1000000);
+        urlToRequest.setConnectTimeout(1000000);
 
         // Si hace falta enviamos la data del POST
         if(this.getRequestMethod().equals(POST_REQUEST_TYPE)) {
