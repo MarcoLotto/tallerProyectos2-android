@@ -27,22 +27,21 @@ import java.util.List;
  */
 public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
     private static final String GET_FRIEND_RESULT_OK = "ok";
-    private String searchName, myUserId;
+    private String searchName;
     private TabScreen screen;
     private int serviceId;
 
-    public SearchUsersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName, String myUserId) {
+    public SearchUsersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
         super(callingActivity);
         this.searchName = searchName;
-        this.myUserId = myUserId;
         this.screen = screen;
         this.serviceId = serviceId;
     }
 
     @Override
     protected void configureRequestFields() {
-        this.addRequestField("searchName", this.searchName);
-        this.addRequestField("myUserId", this.myUserId);
+        //this.addRequestField("searchName", this.searchName);
+        this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
     }
 
     @Override
@@ -62,15 +61,14 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    JSONArray jObject = new JSONArray(dataField);
+                    String friendsField = (new JSONObject(dataField)).getString("friends");
+                    JSONArray jObject = new JSONArray(friendsField);
                     for (int i = 0; i < jObject.length(); i++) {
                         JSONObject jsonObject = jObject.getJSONObject(i);
 
-                        String name = jsonObject.getString("name");
-                        String userId = jsonObject.getString("userId");
-                        String friendshipStatus = jsonObject.getString("friendshipStatus");
+                        String name = jsonObject.getString("email");  // TODO: Despues va a ser el name real
+                        String userId = jsonObject.getString("id");
                         User user = new User(userId, name);
-                        user.setFriendshipStatus(friendshipStatus);
                         users.add(user);
                     }
                 } catch (JSONException e) {
@@ -93,6 +91,6 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected String getRequestMethod() {
         // Cambiando este parámetro se determina por que método se enviará el request
-        return POST_REQUEST_TYPE;
+        return GET_REQUEST_TYPE;
     }
 }

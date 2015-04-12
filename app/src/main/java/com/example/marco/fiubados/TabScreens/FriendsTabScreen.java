@@ -61,8 +61,9 @@ public class FriendsTabScreen implements TabScreen{
     public void onFocus() {
         // Vamos a hacer el pedido de amigos al web service
         SearchUsersHttpAsyncTask httpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
-                SEARCH_USERS_SERVICE_ID, "TODO", ContextManager.getInstance().getMyUser().getId());
-        httpService.execute("http://www.mocky.io/v2/55299ffa22258fe502a378b0");
+                SEARCH_USERS_SERVICE_ID, "TODO");
+        //httpService.execute("http://www.mocky.io/v2/5529a3a422258fe902a378b1");
+        httpService.execute("http://fiuba-campus-movil.herokuapp.com/api/friends");
     }
 
     @Override
@@ -79,11 +80,7 @@ public class FriendsTabScreen implements TabScreen{
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            String appender = "";
-            if(!user.getFriendshipStatus().isEmpty()){
-                appender = " - " + user.getFriendshipStatus();
-            }
-            finalListViewLines.add(user.getName() + appender);
+            finalListViewLines.add(user.getName());
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         this.friendsListView.setAdapter(adapter);
