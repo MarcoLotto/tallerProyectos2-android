@@ -1,19 +1,28 @@
 package com.example.marco.fiubados;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.ProfileField;
+import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +37,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;
     private List<ProfileField> fields;
+    private ProfileField lastFieldClicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
 
         // Nos guardamos la list view para mostrar los campos del perfil para su edición
         this.profileEditListView = (ListView) findViewById(R.id.profileEditListView);
+        this.configureComponents();
 
         // Primero conseguimos los datos del perfil
         Bundle params = getIntent().getExtras();
@@ -110,5 +121,64 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.profileEditListView.setAdapter(adapter);
+    }
+
+    public Dialog createDialog(String fieldName, String fieldOriginalValue) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_edit_parameter, null);
+
+        // Asignamos los valores iniciales
+        TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.profileFieldNameTextView);
+        fieldNameTextView.setText(fieldName);
+        EditText fieldValueEditText = (EditText) dialogView.findViewById(R.id.profileValueEditText);
+        fieldValueEditText.setText(fieldOriginalValue);
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        EditText paramValue = (EditText) dialogView.findViewById(R.id.profileValueEditText);
+                        saveParameterValue(paramValue.getText().toString());
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        return builder.create();
+    }
+
+    private void saveParameterValue(String value) {
+        if(this.lastFieldClicked != null){
+            this.lastFieldClicked.setValue(value);
+            this.addProfileFieldsToUIList();
+        }
+    }
+
+    private void configureComponents() {
+        // Configuramos el handler del onClick del friendsListView
+        this.profileEditListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                onParameterClickedOnList(position);
+            }
+        });
+    }
+
+    private void onParameterClickedOnList(int position) {
+        // Se hizo click en un usuario, preparo al muro y lo invoco
+        if(this.fields.size() > position) {
+            this.lastFieldClicked = this.fields.get(position);
+            // Abrimos el popup de modificación del parámetro
+            Dialog editDialog = this.createDialog(this.lastFieldClicked.getName(), this.lastFieldClicked.getValue());
+            editDialog.show();
+        }
     }
 }

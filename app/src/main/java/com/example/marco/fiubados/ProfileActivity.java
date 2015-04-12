@@ -69,6 +69,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         Intent intent = new Intent(this, ProfileEditActivity.class);
         intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
         this.startActivity(intent);
+        this.finish();
         return true;
     }
 
