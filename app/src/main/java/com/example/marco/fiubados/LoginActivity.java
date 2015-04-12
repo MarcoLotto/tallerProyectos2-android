@@ -65,6 +65,7 @@ public class LoginActivity extends ActionBarActivity {
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
         LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
         loginRequest.execute("http://fiuba-campus-movil.herokuapp.com/api/users/sign_in");
+        //loginRequest.execute("http://www.mocky.io/v2/55298a2c22258fea02a378a1");
     }
 
     private void showSignUpMenu(){

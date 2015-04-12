@@ -3,7 +3,12 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.MainScreenActivity;
+import com.example.marco.fiubados.model.User;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 
@@ -13,6 +18,7 @@ import java.net.HttpURLConnection;
  * Para procesar el request para el servicio de Login
  */
 public class LoginHttpAsyncTask extends HttpAsyncTask {
+    private static final String LOGIN_RESULT_OK = "ok";
     String username, password;
 
     public LoginHttpAsyncTask(Activity callingActivity, String username, String password) {
@@ -29,20 +35,30 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureResponseFields() {
-        this.addResponseField("email");
-        this.addResponseField("user_token");
+        this.addResponseField("result");
+        this.addResponseField("message");
+        this.addResponseField("data");
     }
 
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            // TODO: Tengo que guardarme el user token y password!
-            // String userToken = this.getResponseField("user_token");
-            // String email = this.getResponseField("email");
-
-            // Pudimos logueanos correctamente, vamos a la pantalla de inicio
-            Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
-            this.callingActivity.startActivity(intent);
+            String result = this.getResponseField("result");
+            if(result.equals(this.LOGIN_RESULT_OK)) {
+                String data = this.getResponseField("data");
+                // Vamos a buscar los atributos en el tag de data
+                try {
+                    JSONObject json = new JSONObject(data);
+                    ContextManager.getInstance().setUserToken(json.getString("userToken"));
+                    User myUser = new User("", json.getString("userId"));
+                    ContextManager.getInstance().setMyUser(myUser);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                // Pudimos logueanos correctamente, vamos a la pantalla de inicio
+                Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
+                this.callingActivity.startActivity(intent);
+            }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Error en los datos de usuario. Revise los datos ingresados");

@@ -40,7 +40,7 @@ public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
             String resultValue = this.getResponseField("Result");
-            if(!resultValue.equals("OK")) {
+            if(!resultValue.equals("ok")) {
                 this.dialog.setMessage("Su solicitud no pudo ser procesada");
                 this.dialog.show();
             }

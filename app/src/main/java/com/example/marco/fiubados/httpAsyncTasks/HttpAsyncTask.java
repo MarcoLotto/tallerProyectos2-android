@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,6 +34,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     protected static final String POST_REQUEST_TYPE = "POST";
 
     private Map<String, String> requestFields, responseFields;
+    private Map<String, Map<String, String>> requestArrays;
     protected ProgressDialog dialog;
     protected Activity callingActivity;
     protected int responseCode;
@@ -40,8 +42,9 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     public HttpAsyncTask(Activity callingActivity) {
         this.dialog = new ProgressDialog(callingActivity);
         this.callingActivity = callingActivity;
-        this.requestFields = new HashMap<>();
-        this.responseFields = new HashMap<>();
+        this.requestFields = new HashMap<String, String>();
+        this.responseFields = new HashMap<String, String>();
+        this.requestArrays = new HashMap<String, Map<String, String>>();
         this.responseCode = -1;
     }
 
@@ -88,7 +91,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
             return handleError();
         }
-        urlToRequest.setReadTimeout(10000);
+        urlToRequest.setReadTimeout(100000);
         urlToRequest.setConnectTimeout(10000);
 
         // Si hace falta enviamos la data del POST
@@ -145,10 +148,17 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
         // Ahora parseamos la data del post a JSON y se la damos al request
         JSONObject jsonParam = new JSONObject();
-        Iterator<String> it = this.requestFields.keySet().iterator();
-        while(it.hasNext()){
-            String fieldName = it.next();
+        Iterator<String> it1 = this.requestFields.keySet().iterator();
+        while(it1.hasNext()){
+            String fieldName = it1.next();
             jsonParam.put(fieldName, this.requestFields.get(fieldName));
+        }
+        Iterator<String> it2 = this.requestArrays.keySet().iterator();
+        while(it2.hasNext()){
+            String externalFieldName = it2.next();
+            Map<String, String> fields = this.requestArrays.get(externalFieldName);
+            JSONObject jsonToSend = this.getJSONObjectForRequest(fields);
+            jsonParam.put(externalFieldName, jsonToSend);
         }
         Writer printout = new OutputStreamWriter(urlToRequest.getOutputStream(), "UTF-8");
         String finalPostData = jsonParam.toString();
@@ -158,6 +168,21 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         }
         printout.flush ();
         printout.close ();
+    }
+
+    private JSONObject getJSONObjectForRequest(Map<String, String> fields) {
+        JSONObject jsonArray = new JSONObject();
+        Iterator<String> it = fields.keySet().iterator();
+        while(it.hasNext()){
+            String fieldName = it.next();
+            String fieldValue = fields.get(fieldName);
+            try {
+                jsonArray.put(fieldName, fieldValue);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return jsonArray;
     }
 
     private String appendParametersToURL(String url) {
@@ -213,5 +238,9 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     public void addRequestField(String name, String value) {
         this.requestFields.put(name, value);
+    }
+
+    public void addRequestField(String arrayFieldName, Map<String, String> fieldsToSend) {
+        this.requestArrays.put(arrayFieldName, fieldsToSend);
     }
 }
