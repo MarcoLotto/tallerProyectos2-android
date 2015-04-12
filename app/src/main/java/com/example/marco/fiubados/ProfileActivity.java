@@ -1,5 +1,6 @@
 package com.example.marco.fiubados;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +26,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     private List<ProfileField> fields = new ArrayList<ProfileField>();
     private ListView profileFieldsListView;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         // Conseguimos el parametro que nos paso el activity que nos llamó
         Bundle params = getIntent().getExtras();
         String userOwnerId = params.getString(this.USER_ID_PARAMETER);
+        this.user = new User(userOwnerId, "");
         ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
         profileInfoService.execute("http://www.mocky.io/v2/552966ac22258fdb02a3789a");
     }
@@ -51,17 +54,22 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.notificationAction:
+                // TODO: this.notificationScreen.onFocus();
+                return true;
+            case R.id.profileEditAction:
+                return this.openProfileEditActivity();
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean openProfileEditActivity() {
+        Intent intent = new Intent(this, ProfileEditActivity.class);
+        intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
+        this.startActivity(intent);
+        return true;
     }
 
     @Override
