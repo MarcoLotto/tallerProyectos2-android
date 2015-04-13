@@ -23,7 +23,7 @@
         android:ems="10"
         android:id="@+id/passwordTextBox"
         android:layout_gravity="center"
-        android:hint="password"
+        android:hint="Password"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="170dp" />
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/usernameTextBox"
         android:layout_gravity="center_horizontal|top"
-        android:hint="Username"
+        android:hint="E-mail"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/passwordTextBox"
         android:layout_alignStart="@+id/passwordTextBox"
