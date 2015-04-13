@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
@@ -22,6 +23,7 @@ import java.util.List;
  */
 public class WallTabScreen implements TabScreen{
 
+    private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
@@ -54,7 +56,7 @@ public class WallTabScreen implements TabScreen{
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == SEND_FRIEND_REQUEST_SERVICE_ID){
-            if(responseElements.size() > 0 && responseElements.get(0).equals("OK")){
+            if(responseElements.size() > 0 && responseElements.get(0).equals("ok")){
                 // Si se envio la solicitud de amistad quitamos el boton
                 this.addFriendButton.setVisibility(View.GONE);
             }
@@ -63,8 +65,8 @@ public class WallTabScreen implements TabScreen{
 
     private void sendFriendRequest(){
         SendFriendRequestHttpAsyncTask sendFriendRequest = new SendFriendRequestHttpAsyncTask(this.tabOwnerActivity, this,
-                SEND_FRIEND_REQUEST_SERVICE_ID, "TODO: this.userOwnerOfTheWall.getId()", "TODO");
-        sendFriendRequest.execute("http://www.mocky.io/v2/5525b96f59b959ab05b009b1");
+                SEND_FRIEND_REQUEST_SERVICE_ID, this.userOwnerOfTheWall.getId());
+        sendFriendRequest.execute(this.SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL);
     }
 
     public User getUserOwnerOfTheWall() {

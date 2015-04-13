@@ -52,7 +52,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         Bundle params = getIntent().getExtras();
         String userOwnerId = params.getString(ProfileActivity.USER_ID_PARAMETER);
         ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
-        profileInfoService.execute("http://www.mocky.io/v2/552966ac22258fdb02a3789a");
+        profileInfoService.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
 
         // Manejamos el on click del boton de guardar perfil
         Button saveEditButton = (Button) findViewById(R.id.saveProfileButton);

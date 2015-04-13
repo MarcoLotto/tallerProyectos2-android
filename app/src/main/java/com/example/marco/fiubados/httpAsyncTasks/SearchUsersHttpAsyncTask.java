@@ -46,7 +46,6 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureResponseFields() {
-        // TODO: No va a venir un unico usuario esto hay que hacerlo para una lista!
         this.addResponseField("result");
         this.addResponseField("message");
         this.addResponseField("data");

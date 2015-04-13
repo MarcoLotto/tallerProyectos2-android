@@ -22,6 +22,8 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     // Parametros que recibe este activity via extra info
     public static final String USER_ID_PARAMETER = "userIdParameter";
+    //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/552afe974787d0c5012fa58e";
+    public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
 
     private List<ProfileField> fields = new ArrayList<ProfileField>();
@@ -41,7 +43,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         String userOwnerId = params.getString(this.USER_ID_PARAMETER);
         this.user = new User(userOwnerId, "");
         ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
-        profileInfoService.execute("http://www.mocky.io/v2/552966ac22258fdb02a3789a");
+        profileInfoService.execute(this.SHOW_PROFILE_ENDPOINT_URL);
     }
 
 

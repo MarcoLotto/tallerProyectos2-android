@@ -17,8 +17,10 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -33,8 +35,9 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     protected static final String GET_REQUEST_TYPE = "GET";
     protected static final String POST_REQUEST_TYPE = "POST";
 
-    private Map<String, String> requestFields, responseFields;
+    private Map<String, String> requestFields, responseFields, forcedGetRequestFields;
     private Map<String, Map<String, String>> requestArrays;
+    private List<String> urlRequestFields;
     protected ProgressDialog dialog;
     protected Activity callingActivity;
     protected int responseCode;
@@ -44,6 +47,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         this.callingActivity = callingActivity;
         this.requestFields = new HashMap<String, String>();
         this.responseFields = new HashMap<String, String>();
+        this.forcedGetRequestFields = new HashMap<String, String>();
+        this.urlRequestFields = new ArrayList<String>();
         this.requestArrays = new HashMap<String, Map<String, String>>();
         this.responseCode = -1;
     }
@@ -91,8 +96,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
             return handleError();
         }
-        urlToRequest.setReadTimeout(100000);
-        urlToRequest.setConnectTimeout(10000);
+        urlToRequest.setReadTimeout(1000000);
+        urlToRequest.setConnectTimeout(100000);
 
         // Si hace falta enviamos la data del POST
         if(this.getRequestMethod().equals(POST_REQUEST_TYPE)) {
@@ -187,10 +192,26 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     private String appendParametersToURL(String url) {
         String finalUrl = url;
-        if(this.getRequestMethod().equals(GET_REQUEST_TYPE)) {
-            if (this.requestFields.size() > 0) {
-                finalUrl += "?";
+        // Agregamos primero los parametros que forman parte de la url
+        Iterator<String> urlIt = this.urlRequestFields.iterator();
+        while(urlIt.hasNext()){
+            finalUrl += "/" + urlIt.next();
+        }
+        // Ahora agregamos los parametros que se fuerzan a su envío por get
+        if (this.hasToAppendUrlParameterSeparator()) {
+            finalUrl += "?";
+        }
+        Iterator<String> getForceIt = this.forcedGetRequestFields.keySet().iterator();
+        while (getForceIt.hasNext()) {
+            if (!finalUrl.endsWith("?")) {
+                finalUrl += "&";
             }
+            String paramName = getForceIt.next();
+            String paramValue = this.requestFields.get(paramName);
+            finalUrl += paramName + "=" + paramValue;
+        }
+        // Ahora agregamos los parametros que se envian por get
+        if(this.getRequestMethod().equals(GET_REQUEST_TYPE)) {
             Iterator<String> it = this.requestFields.keySet().iterator();
             while (it.hasNext()) {
                 if (!finalUrl.endsWith("?")) {
@@ -202,6 +223,10 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             }
         }
         return finalUrl;
+    }
+
+    private boolean hasToAppendUrlParameterSeparator() {
+        return ((this.getRequestMethod().equals(GET_REQUEST_TYPE) && this.requestFields.size() > 0) || this.forcedGetRequestFields.size() > 0);
     }
 
     private JSONObject handleError() {
@@ -242,5 +267,13 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     public void addRequestField(String arrayFieldName, Map<String, String> fieldsToSend) {
         this.requestArrays.put(arrayFieldName, fieldsToSend);
+    }
+
+    public void addUrlRequestField(String value) {
+        this.urlRequestFields.add(value);
+    }
+
+    public void addRequestFieldAndForceAsGetParameter(String name, String value) {
+        this.forcedGetRequestFields.put(name, value);
     }
 }

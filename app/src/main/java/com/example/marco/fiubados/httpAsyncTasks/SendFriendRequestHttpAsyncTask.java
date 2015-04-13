@@ -2,6 +2,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
 
@@ -17,29 +18,29 @@ public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
     private TabScreen screen;
     private int serviceId;
 
-    public SendFriendRequestHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String requestedUserId, String myUserId) {
+    public SendFriendRequestHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String requestedUserId) {
         super(callingActivity);
         this.screen = screen;
         this.serviceId = serviceId;
         this.requestedUserId = requestedUserId;
-        this.myUserId = myUserId;
     }
 
     @Override
     protected void configureRequestFields() {
-        this.addRequestField("myUserId", this.myUserId);
-        this.addRequestField("requestedUserId", this.requestedUserId);
+        this.addRequestFieldAndForceAsGetParameter("userToken", ContextManager.getInstance().getUserToken());
+        this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
+        this.addRequestField("userToInviteId", this.requestedUserId);
     }
 
     @Override
     protected void configureResponseFields() {
-        this.addResponseField("Result");
+        this.addResponseField("result");
      }
 
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            String resultValue = this.getResponseField("Result");
+            String resultValue = this.getResponseField("result");
             if(!resultValue.equals("ok")) {
                 this.dialog.setMessage("Su solicitud no pudo ser procesada");
                 this.dialog.show();

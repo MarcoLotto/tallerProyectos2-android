@@ -63,7 +63,7 @@ public class FriendsTabScreen implements TabScreen{
         SearchUsersHttpAsyncTask httpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
                 SEARCH_USERS_SERVICE_ID, "TODO");
         //httpService.execute("http://www.mocky.io/v2/5529a3a422258fe902a378b1");
-        httpService.execute("http://fiuba-campus-movil.herokuapp.com/api/friends");
+        httpService.execute(ContextManager.WS_SERVER_URL + "/api/friends");
     }
 
     @Override
