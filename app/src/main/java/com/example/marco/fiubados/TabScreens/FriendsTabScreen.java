@@ -33,7 +33,9 @@ import java.util.List;
 public class FriendsTabScreen implements TabScreen{
 
     private static final String FRIENDS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends";
-    private static final String FRIENDSHIP_CONFIRMATION_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/TODOTODOTODO";
+    private static final String FRIENDSHIP_CONFIRMATION_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/respond_friendship_request";
+    private static final String FRIENDSHIP_RESPONSE_STATUS_ACCEPT = "accept";
+    private static final String FRINDSHIP_RESPONSE_STATUS_REJECT = "reject";
     private final int SEARCH_USERS_SERVICE_ID = 0;
 
     private TabbedActivity tabOwnerActivity;
@@ -166,9 +168,13 @@ public class FriendsTabScreen implements TabScreen{
     }
 
     private void respondFriendshipRequest(User possibleFriend, boolean accepted) {
+        String status = this.FRIENDSHIP_RESPONSE_STATUS_ACCEPT;
+        if(!accepted){
+            status = this.FRINDSHIP_RESPONSE_STATUS_REJECT;
+        }
         // Hacemos el llamado al servicio de confirmación
         FriendshipResponseHttpAsynkTask service = new FriendshipResponseHttpAsynkTask(this.tabOwnerActivity, this,
-                possibleFriend.getId(), possibleFriend.getFriendshipRequestId());
+                possibleFriend.getFriendshipRequestId(), status);
         service.execute(this.FRIENDSHIP_CONFIRMATION_ENDPOINT_URL);
     }
 }

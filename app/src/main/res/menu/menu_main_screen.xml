@@ -10,6 +10,4 @@
         android:icon="@drawable/ic_action_person"
         android:title="Profile"
         app:showAsAction="always"/>
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
 </menu>

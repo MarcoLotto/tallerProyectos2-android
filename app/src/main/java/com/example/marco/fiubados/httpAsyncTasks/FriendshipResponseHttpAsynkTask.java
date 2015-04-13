@@ -25,6 +25,7 @@ public class FriendshipResponseHttpAsynkTask extends HttpAsyncTask {
     protected void configureRequestFields() {
         this.addRequestField("friendshipRequestId", this.friendshipRequestId);
         this.addRequestField("friendshipRequestResponse", this.friendshipRequestResponse);
+        this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
         this.addRequestFieldAndForceAsGetParameter("userToken", ContextManager.getInstance().getUserToken());
     }
 
