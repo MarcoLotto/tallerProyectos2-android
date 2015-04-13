@@ -13,6 +13,8 @@ import com.example.marco.fiubados.httpAsyncTasks.SignUpHttpAsyncTask;
 
 public class SignUpActivity extends ActionBarActivity {
 
+    private static final String SIGNUP_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/sign_up";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +60,7 @@ public class SignUpActivity extends ActionBarActivity {
         EditText email = (EditText) findViewById(R.id.emailTextBox);
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
         SignUpHttpAsyncTask signUpRequest = new SignUpHttpAsyncTask(this, firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), padron.getText().toString(), password.getText().toString());
-        signUpRequest.execute("http://fiuba-campus-movil.herokuapp.com/api/users/sign_up");
+        signUpRequest.execute(this.SIGNUP_ENDPOINT_URL);
         // signUpRequest.execute("http://www.mocky.io/v2/552993f222258fe902a378a4");
     }
 }

@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class FriendsTabScreen implements TabScreen{
 
+    private static final String FRIENDS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends";
     private final int SEARCH_USERS_SERVICE_ID = 0;
 
     private TabbedActivity tabOwnerActivity;
@@ -63,7 +64,7 @@ public class FriendsTabScreen implements TabScreen{
         SearchUsersHttpAsyncTask httpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
                 SEARCH_USERS_SERVICE_ID, "TODO");
         //httpService.execute("http://www.mocky.io/v2/5529a3a422258fe902a378b1");
-        httpService.execute(ContextManager.WS_SERVER_URL + "/api/friends");
+        httpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
     }
 
     @Override
