@@ -61,6 +61,8 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
                     fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Nombre"));
                     fieldName = "lastName";
                     fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Apellido"));
+                    fieldName = "padron";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Padrón"));
                     fieldName = "biography";
                     fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Biografia"));
                     fieldName = "nationality";
