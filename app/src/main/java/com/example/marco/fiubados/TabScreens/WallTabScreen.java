@@ -45,12 +45,16 @@ public class WallTabScreen implements TabScreen{
 
     @Override
     public void onFocus() {
+        this.addFriendButton.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
             // Seteamos como titulo del muro el nombre de la persona
             this.wallTitle.setText(this.userOwnerOfTheWall.getName());
 
-            // TODO: Acá hay que hacer una llamada al servicio para ver el estado de amistad
-            this.addFriendButton.setVisibility(View.VISIBLE);
+            // Manejamos cuando mostrar el botón de enviar amistad
+            boolean isCurrentUserMyUser = this.userOwnerOfTheWall.getId() == ContextManager.getInstance().getMyUser().getId();
+            if(!isCurrentUserMyUser && this.userOwnerOfTheWall.getFriendshipStatus() == User.FRIENDSHIP_STATUS_UNKNOWN) {
+                this.addFriendButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 

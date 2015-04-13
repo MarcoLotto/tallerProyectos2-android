@@ -33,7 +33,7 @@ import java.util.List;
 public class FriendsTabScreen implements TabScreen{
 
     private static final String FRIENDS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends";
-    private static final String FRIENDSHIP_CONFIRMATION_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/";
+    private static final String FRIENDSHIP_CONFIRMATION_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/TODOTODOTODO";
     private final int SEARCH_USERS_SERVICE_ID = 0;
 
     private TabbedActivity tabOwnerActivity;
@@ -88,6 +88,9 @@ public class FriendsTabScreen implements TabScreen{
 
     @Override
     public void onFocus() {
+        this.users.clear();
+        this.pendingFriends.clear();
+
         // Vamos a hacer el pedido de amigos al web service
         SearchUsersHttpAsyncTask httpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
                 SEARCH_USERS_SERVICE_ID, "TODO");
