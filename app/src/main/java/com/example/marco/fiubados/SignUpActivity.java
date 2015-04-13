@@ -1,7 +1,6 @@
 package com.example.marco.fiubados;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -63,7 +62,7 @@ public class SignUpActivity extends ActionBarActivity {
         EditText email = (EditText) findViewById(R.id.emailTextBox);
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
 
-        if(!checkPasswordLenght(password)){
+        if(!checkPasswordLength(password)){
             AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención ! !", "El largo mínimo de la password es de 8 caracteres");
             helpDialog.show();
             return;
@@ -74,7 +73,7 @@ public class SignUpActivity extends ActionBarActivity {
         // signUpRequest.execute("http://www.mocky.io/v2/552993f222258fe902a378a4");
     }
 
-    private boolean checkPasswordLenght(EditText password){
+    private boolean checkPasswordLength(EditText password){
         String passwordString = password.getText().toString();
         if (passwordString.length() < 8){
             return false;

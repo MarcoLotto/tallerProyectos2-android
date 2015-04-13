@@ -36,7 +36,8 @@ public class SignUpHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureResponseFields() {
-
+        this.addResponseField("result");
+        this.addResponseField("message");
     }
 
     @Override
