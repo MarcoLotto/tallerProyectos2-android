@@ -47,17 +47,18 @@ public class MainScreenActivity extends TabbedActivity {
             }
         });
         this.tabHost.setup();
-        this.addTabSpectToTabHost(this.tabHost, "Inicio", R.id.TabInicio);
-        this.addTabSpectToTabHost(this.tabHost, "Muro", R.id.TabMuro);
-        this.addTabSpectToTabHost(this.tabHost, "Grupos", R.id.TabGrupos);
-        this.addTabSpectToTabHost(this.tabHost, "Amigos", R.id.TabAmigos);
+        this.addTabSpectToTabHost(this.tabHost, "I", R.id.TabInicio);  // INICIO
+        this.addTabSpectToTabHost(this.tabHost, "M", R.id.TabMuro);      // MURO
+        this.addTabSpectToTabHost(this.tabHost, "G", R.id.TabGrupos);  // GRUPOS
+        this.addTabSpectToTabHost(this.tabHost, "A", R.id.TabAmigos);  // AMIGOS
 
         // Inicializamos los controladores de los tabs
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
         this.wallTabScreen = new WallTabScreen(this, addFriendButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
-        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+        ListView pendingFriendsListView = (ListView) findViewById(R.id.pendingFriendsListView);
+        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView, pendingFriendsListView);
     }
 
     /**

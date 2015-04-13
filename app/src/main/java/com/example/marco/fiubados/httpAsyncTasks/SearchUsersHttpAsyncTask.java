@@ -60,16 +60,15 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    String friendsField = (new JSONObject(dataField)).getString("friends");
-                    JSONArray jObject = new JSONArray(friendsField);
-                    for (int i = 0; i < jObject.length(); i++) {
-                        JSONObject jsonObject = jObject.getJSONObject(i);
+                    String containerField = (new JSONObject(dataField)).getString("friends");
+                    this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_UNKNOWN, false);
 
-                        String name = jsonObject.getString("email");  // TODO: Despues va a ser el name real
-                        String userId = jsonObject.getString("id");
-                        User user = new User(userId, name);
-                        users.add(user);
-                    }
+                    containerField = (new JSONObject(dataField)).getString("usersWithPendingFriendshipRequest");
+                    this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_WAITING, true);
+
+                    containerField = (new JSONObject(dataField)).getString("usersWithSentFriendshipRequest");
+                    this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_REQUESTED, true);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -84,6 +83,22 @@ public class SearchUsersHttpAsyncTask extends HttpAsyncTask {
         else{
             this.dialog.setMessage("Error en la conexión con el servidor");
             this.dialog.show();
+        }
+    }
+
+    private void fillUsers(List<User> users, String containerField, String friendshipStatus, boolean isFriendshipRequest) throws JSONException {
+        JSONArray jObject = new JSONArray(containerField);
+        for (int i = 0; i < jObject.length(); i++) {
+            JSONObject jsonObject = jObject.getJSONObject(i);
+
+            String name = jsonObject.getString("email");
+            String userId = jsonObject.getString("userId");
+            User user = new User(userId, name);
+            user.setFriendshipStatus(friendshipStatus);
+            if(isFriendshipRequest){
+                user.setFriendshipRequestId(jsonObject.getString("friendshipRequestId"));
+            }
+            users.add(user);
         }
     }
 

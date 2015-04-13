@@ -7,8 +7,14 @@ package com.example.marco.fiubados.model;
  */
 public class User extends DatabaseObject{
 
+    public static final String FRIENDSHIP_STATUS_FRIEND = "F";    // Es amigo
+    public static final String FRIENDSHIP_STATUS_WAITING = "W";   // Espera confirmacion
+    public static final String FRIENDSHIP_STATUS_REQUESTED = "R"; // Fue preguntado para amigo
+    public static final String FRIENDSHIP_STATUS_UNKNOWN = "U";   // No es amigo
+
     private String name;
     private String friendshipStatus;
+    private String friendshipRequestId;  // REVIEW: Ya se que esto no va pero son las 5:30 de la mañana
 
     public User(String id, String name){
         super(id);
@@ -29,5 +35,14 @@ public class User extends DatabaseObject{
 
     public void setFriendshipStatus(String friendshipStatus) {
         this.friendshipStatus = friendshipStatus;
+    }
+
+    // REVIEW: Sacar de acá, esto no va
+    public String getFriendshipRequestId() {
+        return friendshipRequestId;
+    }
+
+    public void setFriendshipRequestId(String friendshipRequestId) {
+        this.friendshipRequestId = friendshipRequestId;
     }
 }
