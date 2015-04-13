@@ -33,7 +33,7 @@ import javax.xml.datatype.Duration;
 
 public class ProfileEditActivity extends ActionBarActivity implements TabScreen {
 
-    private static final String EDIT_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/552a755422258feb02a378c4";
+    private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;

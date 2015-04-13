@@ -1,7 +1,9 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
+import android.content.Context;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.ProfileField;
 
@@ -29,6 +31,12 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureRequestFields() {
+        // Terminamos de armar la ultima parte de la url dependiendo del usuario
+        this.addUrlRequestField(ContextManager.getInstance().getMyUser().getId());
+        this.addUrlRequestField("edit");
+        this.addRequestFieldAndForceAsGetParameter("userToken", ContextManager.getInstance().getUserToken());
+
+        // Mandamos los parametros
         Map<String, String> fieldsToSend = new HashMap<String, String>();
         Iterator<ProfileField> it = this.editedFields.iterator();
         while(it.hasNext()){
@@ -40,7 +48,6 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void configureResponseFields() {
-        // TODO: Esto puede venir dividido en diferentes secciones, tener en cuenta
         this.addResponseField("result");
     }
 

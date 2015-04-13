@@ -207,7 +207,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
                 finalUrl += "&";
             }
             String paramName = getForceIt.next();
-            String paramValue = this.requestFields.get(paramName);
+            String paramValue = this.forcedGetRequestFields.get(paramName);
             finalUrl += paramName + "=" + paramValue;
         }
         // Ahora agregamos los parametros que se envian por get
