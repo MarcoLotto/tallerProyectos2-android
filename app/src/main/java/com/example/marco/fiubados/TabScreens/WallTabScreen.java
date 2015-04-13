@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
@@ -59,6 +60,8 @@ public class WallTabScreen implements TabScreen{
             if(responseElements.size() > 0 && responseElements.get(0).equals("ok")){
                 // Si se envio la solicitud de amistad quitamos el boton
                 this.addFriendButton.setVisibility(View.GONE);
+                Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Solicitud enviada", Toast.LENGTH_SHORT);
+                toast.show();
             }
         }
     }

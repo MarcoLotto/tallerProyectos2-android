@@ -1,6 +1,7 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
@@ -53,6 +54,10 @@ public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");
             this.dialog.show();
+        }
+        else if(this.responseCode == HttpURLConnection.HTTP_CONFLICT){
+            Toast toast = Toast.makeText(this.callingActivity.getApplicationContext(), "Solicitud anterior pendiente", Toast.LENGTH_SHORT);
+            toast.show();
         }
         else{
             this.dialog.setMessage("Error en la conexión con el servidor");
