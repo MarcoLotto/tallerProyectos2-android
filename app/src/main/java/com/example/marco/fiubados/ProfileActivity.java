@@ -93,7 +93,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             ProfileField field = it.next();
-            finalListViewLines.add(field.getName() + ": " + field.getValue());
+            finalListViewLines.add(field.getDisplayName() + ": " + field.getValue());
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.profileFieldsListView.setAdapter(adapter);

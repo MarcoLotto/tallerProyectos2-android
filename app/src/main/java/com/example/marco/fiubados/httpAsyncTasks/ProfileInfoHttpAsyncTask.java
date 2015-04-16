@@ -57,11 +57,18 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
                 try {
                     String profileField = (new JSONObject(dataField)).getString("profile");
                     JSONObject jsonProfileField = new JSONObject(profileField);
-                    fields.add(new ProfileField("Nombre", jsonProfileField.getString("firstName")));
-                    fields.add(new ProfileField("Apellido", jsonProfileField.getString("lastName")));
-                    fields.add(new ProfileField("Biografia", jsonProfileField.getString("biography")));
-                    fields.add(new ProfileField("Nacionalidad", jsonProfileField.getString("nationality")));
-                    fields.add(new ProfileField("Ciudad", jsonProfileField.getString("city")));
+                    String fieldName = "firstName";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Nombre"));
+                    fieldName = "lastName";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Apellido"));
+                    fieldName = "padron";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Padrón"));
+                    fieldName = "biography";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Biografia"));
+                    fieldName = "nationality";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Nacionalidad"));
+                    fieldName = "city";
+                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Ciudad"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

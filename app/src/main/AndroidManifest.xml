@@ -11,7 +11,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,24 +21,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginOkActivity"
-            android:label="@string/title_activity_login_ok" >
-        </activity>
-        <activity
             android:name=".MainScreenActivity"
-            android:label="@string/title_activity_news" >
+            android:label="@string/title_activity_news"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SignUpActivity"
-            android:label="@string/title_activity_sign_up" >
+            android:label="@string/title_activity_sign_up"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
 		</activity>
 		<activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile" >
+            android:label="Perfil"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ProfileEditActivity"
-            android:label="@string/title_activity_profile_edit" >
+            android:label="Edición de perfil"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

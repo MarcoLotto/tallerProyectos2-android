@@ -5,10 +5,11 @@ package com.example.marco.fiubados.model;
  */
 public class ProfileField {
 
-    private String name, value;
+    private String displayName, name, value;
 
-    public ProfileField(String name, String value){
+    public ProfileField(String name, String value, String displayName){
         this.name = name;
+        this.displayName = displayName;
         this.value = value;
     }
 
@@ -26,5 +27,13 @@ public class ProfileField {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

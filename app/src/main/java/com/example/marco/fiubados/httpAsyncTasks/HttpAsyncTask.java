@@ -36,8 +36,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     protected static final String POST_REQUEST_TYPE = "POST";
 
     private Map<String, String> requestFields, responseFields, forcedGetRequestFields;
-    private Map<String, Map<String, String>> requestArrays;
     private List<String> urlRequestFields;
+    private JSONObject requestPostData;
     protected ProgressDialog dialog;
     protected Activity callingActivity;
     protected int responseCode;
@@ -49,7 +49,6 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         this.responseFields = new HashMap<String, String>();
         this.forcedGetRequestFields = new HashMap<String, String>();
         this.urlRequestFields = new ArrayList<String>();
-        this.requestArrays = new HashMap<String, Map<String, String>>();
         this.responseCode = -1;
     }
 
@@ -117,7 +116,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             return handleError();
         }
         // Si tenemos como respuesta un codigo distinto a 200, nos guardamos el codigo y terminamos
-        if (this.responseCode != HttpURLConnection.HTTP_OK) {
+        if (!this.isHTTPValidResponse(this.responseCode)) {
             try {
                 return new JSONObject("{}");
             } catch (JSONException e) {
@@ -142,6 +141,12 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         return json;
     }
 
+    private boolean isHTTPValidResponse(int responseCode) {
+        // TODO: Hacelo mas lindo, pero ahora tengo la cabeza quemada
+        return (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED ||
+            responseCode == HttpURLConnection.HTTP_ACCEPTED);
+    }
+
     private void addPostData(HttpURLConnection urlToRequest) throws IOException, JSONException {
         // Agregamos los parametros informando del contenido
         urlToRequest.setRequestMethod("POST");
@@ -151,19 +156,16 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         urlToRequest.setRequestProperty("Content-Type","application/json");
         urlToRequest.connect();
 
-        // Ahora parseamos la data del post a JSON y se la damos al request
-        JSONObject jsonParam = new JSONObject();
-        Iterator<String> it1 = this.requestFields.keySet().iterator();
-        while(it1.hasNext()){
-            String fieldName = it1.next();
-            jsonParam.put(fieldName, this.requestFields.get(fieldName));
-        }
-        Iterator<String> it2 = this.requestArrays.keySet().iterator();
-        while(it2.hasNext()){
-            String externalFieldName = it2.next();
-            Map<String, String> fields = this.requestArrays.get(externalFieldName);
-            JSONObject jsonToSend = this.getJSONObjectForRequest(fields);
-            jsonParam.put(externalFieldName, jsonToSend);
+        // Si no cargamos una data de POST personalizada, utilizamos la standart, sino la personalizada
+        JSONObject jsonParam = this.requestPostData;
+        if(jsonParam == null) {
+            // Ahora parseamos la data del post a JSON y se la damos al request
+            jsonParam = new JSONObject();
+            Iterator<String> it1 = this.requestFields.keySet().iterator();
+            while (it1.hasNext()) {
+                String fieldName = it1.next();
+                jsonParam.put(fieldName, this.requestFields.get(fieldName));
+            }
         }
         Writer printout = new OutputStreamWriter(urlToRequest.getOutputStream(), "UTF-8");
         String finalPostData = jsonParam.toString();
@@ -173,21 +175,6 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         }
         printout.flush ();
         printout.close ();
-    }
-
-    private JSONObject getJSONObjectForRequest(Map<String, String> fields) {
-        JSONObject jsonArray = new JSONObject();
-        Iterator<String> it = fields.keySet().iterator();
-        while(it.hasNext()){
-            String fieldName = it.next();
-            String fieldValue = fields.get(fieldName);
-            try {
-                jsonArray.put(fieldName, fieldValue);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return jsonArray;
     }
 
     private String appendParametersToURL(String url) {
@@ -265,15 +252,19 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         this.requestFields.put(name, value);
     }
 
-    public void addRequestField(String arrayFieldName, Map<String, String> fieldsToSend) {
-        this.requestArrays.put(arrayFieldName, fieldsToSend);
-    }
-
     public void addUrlRequestField(String value) {
         this.urlRequestFields.add(value);
     }
 
     public void addRequestFieldAndForceAsGetParameter(String name, String value) {
         this.forcedGetRequestFields.put(name, value);
+    }
+
+    /**
+     * Se provee el json object ya formateado para su envio. Tener en cuenta que al setear esto se ignoran otros campos de request
+     * @param mainJsonObject
+     */
+    public void setResquestPostData(JSONObject mainJsonObject) {
+        this.requestPostData = mainJsonObject;
     }
 }

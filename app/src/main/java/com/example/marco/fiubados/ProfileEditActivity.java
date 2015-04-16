@@ -85,12 +85,6 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -118,7 +112,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             ProfileField field = it.next();
-            finalListViewLines.add(field.getName() + ": " + field.getValue());
+            finalListViewLines.add(field.getDisplayName() + ": " + field.getValue());
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.profileEditListView.setAdapter(adapter);
@@ -178,7 +172,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         if(this.fields.size() > position) {
             this.lastFieldClicked = this.fields.get(position);
             // Abrimos el popup de modificación del parámetro
-            Dialog editDialog = this.createDialog(this.lastFieldClicked.getName(), this.lastFieldClicked.getValue());
+            Dialog editDialog = this.createDialog(this.lastFieldClicked.getDisplayName(), this.lastFieldClicked.getValue());
             editDialog.show();
         }
     }

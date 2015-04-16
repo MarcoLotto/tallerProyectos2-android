@@ -7,6 +7,9 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.ProfileField;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,14 +39,22 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
         this.addUrlRequestField("edit");
         this.addRequestFieldAndForceAsGetParameter("userToken", ContextManager.getInstance().getUserToken());
 
-        // Mandamos los parametros
-        Map<String, String> fieldsToSend = new HashMap<String, String>();
-        Iterator<ProfileField> it = this.editedFields.iterator();
-        while(it.hasNext()){
-            ProfileField field = it.next();
-            fieldsToSend.put(field.getName(), field.getValue());
+        // Armamos la data personalizada para el envio por POST
+        try {
+            JSONObject profileObject = new JSONObject();
+            Iterator<ProfileField> it = this.editedFields.iterator();
+            while(it.hasNext()){
+                ProfileField field = it.next();
+                profileObject.put(field.getName(), field.getValue());
+            }
+            JSONObject dataObject = new JSONObject();
+            dataObject.put("profile", profileObject);
+            JSONObject mainJsonObject = new JSONObject();
+            mainJsonObject.put("data", dataObject);
+            this.setResquestPostData(mainJsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        this.addRequestField("profile", fieldsToSend);
     }
 
     @Override
@@ -53,7 +64,7 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void onResponseArrival() {
-        if(this.responseCode == HttpURLConnection.HTTP_OK){
+        if(this.responseCode == HttpURLConnection.HTTP_OK || this.responseCode == HttpURLConnection.HTTP_CREATED){
             if(!this.getResponseField("result").equals("ok")){
                 this.dialog.setMessage("La edición no se pudo realizar, por favor verifique los datos ingresados");
                 this.dialog.show();

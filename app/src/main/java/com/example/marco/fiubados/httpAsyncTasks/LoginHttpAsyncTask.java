@@ -2,6 +2,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.MainScreenActivity;
@@ -61,13 +62,13 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
-            this.dialog.setMessage("Error en los datos de usuario. Revise los datos ingresados");
-            this.dialog.show();
+            Toast toast = Toast.makeText(this.callingActivity.getApplicationContext(), "Error en los datos de usuario. Revise los datos ingresados", Toast.LENGTH_SHORT);
+            toast.show();
         }
         else{
-            this.dialog.setMessage("Error en la conexión con el servidor");
-            this.dialog.show();
-        }
+            Toast toast = Toast.makeText(this.callingActivity.getApplicationContext(), "Error en la conexión con el servidor", Toast.LENGTH_SHORT);
+            toast.show();
+          }
     }
 
     @Override
