@@ -22,7 +22,7 @@ public class LoginActivity extends ActionBarActivity {
         setContentView(R.layout.activity_login);
 
         // Cargamos el onClick listener al boton de login
-        Button loginButton = (Button) findViewById(R.id.signUpButton);
+        Button loginButton = (Button) findViewById(R.id.signInButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -31,8 +31,8 @@ public class LoginActivity extends ActionBarActivity {
         });
 
         // Cargamos el onClick listener al boton de signUp
-        Button signUpButton = (Button) findViewById(R.id.loginSignUpButton);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        Button loginSignUpButton = (Button) findViewById(R.id.loginSignUpButton);
+        loginSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showSignUpMenu();
