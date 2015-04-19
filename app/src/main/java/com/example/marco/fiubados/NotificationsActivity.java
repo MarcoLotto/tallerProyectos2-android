@@ -29,7 +29,8 @@ import java.util.List;
 public class NotificationsActivity extends ActionBarActivity implements TabScreen {
 
     private static final int GET_PENDING_FRIEND_REQUESTS_USERS_SERVICE_ID = 0;
-    private static final String PENDING_FRIEND_REQUESTS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/pending_friendship_requests";
+    private static final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
+    public static final String PENDING_FRIEND_REQUESTS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/pending_friendship_requests";
     public static final String FRIENDSHIP_CONFIRMATION_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/respond_friendship_request";
     public static final String FRIENDSHIP_RESPONSE_STATUS_ACCEPT = "accept";
     public static final String FRINDSHIP_RESPONSE_STATUS_REJECT = "reject";
@@ -93,7 +94,7 @@ public class NotificationsActivity extends ActionBarActivity implements TabScree
             status = this.FRINDSHIP_RESPONSE_STATUS_REJECT;
         }
         // Hacemos el llamado al servicio de confirmación
-        FriendshipResponseHttpAsynkTask service = new FriendshipResponseHttpAsynkTask(this, this,
+        FriendshipResponseHttpAsynkTask service = new FriendshipResponseHttpAsynkTask(this, this, RESPOND_FRIEND_REQUEST_SERVICE_ID,
                 possibleFriend.getFriendshipRequestId(), status);
         service.execute(this.FRIENDSHIP_CONFIRMATION_ENDPOINT_URL);
     }

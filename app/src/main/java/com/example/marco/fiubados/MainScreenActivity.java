@@ -49,8 +49,9 @@ public class MainScreenActivity extends TabbedActivity {
 
         // Inicializamos los controladores de los tabs
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
+        Button sendFriendRequestButton = (Button) findViewById(R.id.sendFriendRequestButton);
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
-        this.wallTabScreen = new WallTabScreen(this, addFriendButton, wallTitleTextView);
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
 

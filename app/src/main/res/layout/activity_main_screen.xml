@@ -59,6 +59,13 @@
                         android:id="@+id/addFriendButton"
                         android:layout_gravity="center_horizontal" />
 
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Aceptar como amigo"
+                        android:id="@+id/sendFriendRequestButton"
+                        android:layout_gravity="center_horizontal" />
+
                     <TableLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
