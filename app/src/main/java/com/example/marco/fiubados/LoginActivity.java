@@ -8,7 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
 
 
@@ -59,9 +61,15 @@ public class LoginActivity extends ActionBarActivity {
     private void makeLogin(){
         EditText username = (EditText) findViewById(R.id.usernameTextBox);
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
-        LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
-        loginRequest.execute(this.LOGIN_ENDPOINT_URL);
-        //loginRequest.execute("http://www.mocky.io/v2/55298a2c22258fea02a378a1");
+
+        if(!FieldsValidator.isTextFieldValid(password.getText().toString(), 8)){
+            Toast toast = Toast.makeText(getApplicationContext(), "La contraseña debe tener un mínimo de 8 caracteres", Toast.LENGTH_LONG);
+            toast.show();
+        }
+        else {
+            LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
+            loginRequest.execute(this.LOGIN_ENDPOINT_URL);
+        }
     }
 
     private void showSignUpMenu(){

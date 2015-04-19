@@ -76,7 +76,8 @@ public class SignUpActivity extends ActionBarActivity {
             return;
         }
         List<String> validationList = new ArrayList<String>();
-        validationList.add("@fiuba.com");
+        validationList.add("@");
+        validationList.add(".");
         if(!FieldsValidator.isTextFieldValid(email.getText().toString(), 1, validationList)){
             AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo email no puede estar vacío y debe corresponder a un mail fiuba");
             helpDialog.show();
