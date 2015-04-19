@@ -1,7 +1,10 @@
 package com.example.marco.fiubados;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -102,6 +105,10 @@ public class MainScreenActivity extends TabbedActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_screen, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -153,6 +160,8 @@ public class MainScreenActivity extends TabbedActivity {
                  return this.openNotificationsActivity();
             case R.id.profileAction:
                 return this.openProfileActivity();
+            case R.id.action_search:
+                return this.onSearchRequested();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -189,6 +198,15 @@ public class MainScreenActivity extends TabbedActivity {
         // El icono de notificaciones lo mostramos siempre
         menu.findItem(R.id.notificationAction).setVisible(true);
 
+        // El icono de busquedas
+        menu.findItem(R.id.action_search).setVisible(true);
+
         return true;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.handleTabChange();
     }
 }

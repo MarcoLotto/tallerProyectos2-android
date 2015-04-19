@@ -19,4 +19,7 @@
     <string name="lastNameSignUpHint">Apellido</string>
     <string name="titleSignUpLabel">Completá con tus datos</string>
     <string name="padronPassportSignUpHint">Padrón o Pasaporte</string>
+    <string name="title_activity_search_users">SearchUsersActivity</string>
+    <string name="search_hint">Usuario a buscar</string>
+    <string name="action_serach">Search</string>
 </resources>

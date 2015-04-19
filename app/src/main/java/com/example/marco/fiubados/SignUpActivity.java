@@ -79,7 +79,7 @@ public class SignUpActivity extends ActionBarActivity {
         validationList.add("@");
         validationList.add(".");
         if(!FieldsValidator.isTextFieldValid(email.getText().toString(), 1, validationList)){
-            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo email no puede estar vacío y debe corresponder a un mail fiuba");
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo email no puede estar vacío y debe corresponder a un formato de mail válido");
             helpDialog.show();
             return;
         }

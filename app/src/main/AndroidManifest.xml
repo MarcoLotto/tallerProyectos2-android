@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.marco.fiubados" >
-    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-sdk android:minSdkVersion="16" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +35,7 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_news"
             android:screenOrientation="portrait" >
+            <meta-data android:name="android.app.default_searchable" android:value=".SearchUsersActivity" />
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -49,6 +60,14 @@
             android:configChanges="orientation"
             android:label="Notificaciones"
             android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".SearchUsersActivity"
+            android:label="Busqueda de usuario" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
         </activity>
     </application>
 
