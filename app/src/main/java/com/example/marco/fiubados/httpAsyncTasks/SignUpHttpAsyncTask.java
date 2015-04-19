@@ -50,7 +50,7 @@ public class SignUpHttpAsyncTask extends HttpAsyncTask {
             AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this.callingActivity, "Error", "El usuario ingresado ya existe");
             helpDialog.show();
         } else {
-            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this.callingActivity, "Error", "Error en la conexión con el servidor");
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this.callingActivity, "Error", "No se pueden validar los campos ingresados");
             helpDialog.show();
         }
     }

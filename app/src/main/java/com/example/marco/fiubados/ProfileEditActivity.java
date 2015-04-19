@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.ProfileField;
@@ -118,7 +119,7 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         this.profileEditListView.setAdapter(adapter);
     }
 
-    public Dialog createDialog(String fieldName, String fieldOriginalValue) {
+    public Dialog createDialog(final String fieldName, String fieldOriginalValue, final boolean numeric, final int minFieldSize) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -137,8 +138,21 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        EditText paramValue = (EditText) dialogView.findViewById(R.id.profileValueEditText);
-                        saveParameterValue(paramValue.getText().toString());
+                        String paramValue = ((EditText) dialogView.findViewById(R.id.profileValueEditText)).getText().toString();
+                        // Validamos el campo y mandamos a guardar el valor
+                        if (numeric && FieldsValidator.isNumericFieldValid(paramValue) || !numeric) {
+                            if (FieldsValidator.isTextFieldValid(paramValue, minFieldSize)) {
+                                saveParameterValue(paramValue);
+                            }
+                            else{
+                                Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe tener un mínimo de " + minFieldSize + " caracteres", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        }
+                        else{
+                            Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe ser numérico", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -171,8 +185,22 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         // Se hizo click en un usuario, preparo al muro y lo invoco
         if(this.fields.size() > position) {
             this.lastFieldClicked = this.fields.get(position);
+
+            // Indicamos que campos deben ser validados
+            boolean numeric = false;
+            int minFieldSize = 0;
+            if(this.lastFieldClicked.getName().equals("padron")){
+                numeric = true;
+                minFieldSize = 5;
+            }
+            else if(this.lastFieldClicked.getName().equals("firstName")){
+                minFieldSize = 1;
+            }
+            else if(this.lastFieldClicked.getName().equals("lastName")){
+                minFieldSize = 1;
+            }
             // Abrimos el popup de modificación del parámetro
-            Dialog editDialog = this.createDialog(this.lastFieldClicked.getDisplayName(), this.lastFieldClicked.getValue());
+            Dialog editDialog = this.createDialog(this.lastFieldClicked.getDisplayName(), this.lastFieldClicked.getValue(), numeric, minFieldSize);
             editDialog.show();
         }
     }

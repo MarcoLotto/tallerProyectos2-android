@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
@@ -40,12 +41,6 @@ public class MainScreenActivity extends TabbedActivity {
 
     private void configureTabHost() {
         this.tabHost = (TabHost) findViewById(R.id.tabHost);
-        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-               handleTabChange();
-            }
-        });
         this.tabHost.setup();
         this.addTabSpectToTabHost(this.tabHost, "Inicio", R.id.TabInicio);  // INICIO
         this.addTabSpectToTabHost(this.tabHost, "Muro", R.id.TabMuro);      // MURO
@@ -58,6 +53,13 @@ public class MainScreenActivity extends TabbedActivity {
         this.wallTabScreen = new WallTabScreen(this, addFriendButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+
+        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                handleTabChange();
+            }
+        });
     }
 
     /**
@@ -67,17 +69,19 @@ public class MainScreenActivity extends TabbedActivity {
         int currentTabIndex = this.tabHost.getCurrentTab();
         switch(currentTabIndex){
             case 0:
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de inicio
                 break;
             case 1:
                 // Tab de muro
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 this.wallTabScreen.onFocus();
                 break;
             case 2:
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de grupos
                 break;
             case 3:
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de amigos
                 this.friendsTabScreen.onFocus();
                 break;

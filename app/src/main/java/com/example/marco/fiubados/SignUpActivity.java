@@ -10,7 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.marco.fiubados.commons.AlertDialogBuilder;
+import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.SignUpHttpAsyncTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SignUpActivity extends ActionBarActivity {
@@ -56,23 +60,35 @@ public class SignUpActivity extends ActionBarActivity {
         EditText email = (EditText) findViewById(R.id.emailTextBox);
         EditText password = (EditText) findViewById(R.id.passwordTextBox);
 
-        if(!checkPasswordLength(password)){
-            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención ! !", "El largo mínimo de la password es de 8 caracteres");
+        if(!FieldsValidator.isTextFieldValid(firstName.getText().toString(), 1)){
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo nombre no puede estar vacío");
+            helpDialog.show();
+            return;
+        }
+        if(!FieldsValidator.isTextFieldValid(lastName.getText().toString(), 1)){
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo apellido no puede estar vacío");
+            helpDialog.show();
+            return;
+        }
+        if(!FieldsValidator.isNumericFieldValid(padron.getText().toString(), 5)){
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo padrón debe ser numerico y tener un mínimo de 5 digitos");
+            helpDialog.show();
+            return;
+        }
+        List<String> validationList = new ArrayList<String>();
+        validationList.add("@fiuba.com");
+        if(!FieldsValidator.isTextFieldValid(email.getText().toString(), 1, validationList)){
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo email no puede estar vacío y debe corresponder a un mail fiuba");
+            helpDialog.show();
+            return;
+        }
+        if(!FieldsValidator.isTextFieldValid(password.getText().toString(), 8)){
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo contraseña debe tenér como mínimo 8 caracteres");
             helpDialog.show();
             return;
         }
 
         SignUpHttpAsyncTask signUpRequest = new SignUpHttpAsyncTask(this, firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), padron.getText().toString(), password.getText().toString());
         signUpRequest.execute(this.SIGNUP_ENDPOINT_URL);
-        // signUpRequest.execute("http://www.mocky.io/v2/552993f222258fe902a378a4");
     }
-
-    private boolean checkPasswordLength(EditText password){
-        String passwordString = password.getText().toString();
-        if (passwordString.length() < 8){
-            return false;
-        }
-        return true;
-    }
-
 }
