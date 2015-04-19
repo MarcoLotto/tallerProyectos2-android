@@ -6,10 +6,17 @@
     <string name="title_activity_login_ok">LoginOkActivity</string>
     <string name="title_activity_news"></string>
     <string name="title_activity_sign_up">Registrarse</string>
-    <string name="title_activity_profile">ProfileActivity</string>
-    <string name="title_activity_profile_edit">ProfileEditActivity</string>
+    <string name="title_activity_profile">Perfil</string>
+    <string name="title_activity_profile_edit">Edición de perfil</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
-    <string name="title_activity_notifications">NotificationsActivity</string>
+    <string name="title_activity_notifications">Notificaciones</string>
     <string name="notAccept">Rechazar</string>
+    <string name="LabelSignUpButton">Registrarse</string>
+    <string name="SignUpPasswordHint">Contraseña</string>
+    <string name="SignUpNameHint">Nombre</string>
+    <string name="emailSignUpHint">E-Mail</string>
+    <string name="lastNameSignUpHint">Apellido</string>
+    <string name="titleSignUpLabel">Completá con tus datos</string>
+    <string name="padronPassportSignUpHint">Padrón o Pasaporte</string>
 </resources>
