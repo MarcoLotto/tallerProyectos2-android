@@ -12,11 +12,9 @@
         android:text="Iniciar Sesión"
         android:id="@+id/signInButton"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/passwordTextBox"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="250dp"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false" />
+        android:layout_marginTop="40dp" />
 
     <EditText
         android:layout_width="220dp"
@@ -26,10 +24,10 @@
         android:id="@+id/passwordTextBox"
         android:layout_gravity="center"
         android:hint="Contraseña"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="170dp"
-        android:singleLine="true" />
+        android:layout_marginTop="44dp"
+        android:singleLine="true"
+        android:layout_below="@+id/usernameTextBox"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="220dp"
@@ -37,11 +35,12 @@
         android:id="@+id/usernameTextBox"
         android:layout_gravity="center_horizontal|top"
         android:hint="E-mail"
+        android:layout_marginTop="44dp"
+        android:singleLine="true"
+        android:inputType="textEmailAddress"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/passwordTextBox"
-        android:layout_alignStart="@+id/passwordTextBox"
-        android:layout_marginTop="100dp"
-        android:singleLine="true" />
+        android:layout_alignStart="@+id/passwordTextBox" />
 
     <Button
         android:layout_width="wrap_content"
