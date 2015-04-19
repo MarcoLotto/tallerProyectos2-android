@@ -47,18 +47,17 @@ public class MainScreenActivity extends TabbedActivity {
             }
         });
         this.tabHost.setup();
-        this.addTabSpectToTabHost(this.tabHost, "I", R.id.TabInicio);  // INICIO
-        this.addTabSpectToTabHost(this.tabHost, "M", R.id.TabMuro);      // MURO
-        this.addTabSpectToTabHost(this.tabHost, "G", R.id.TabGrupos);  // GRUPOS
-        this.addTabSpectToTabHost(this.tabHost, "A", R.id.TabAmigos);  // AMIGOS
+        this.addTabSpectToTabHost(this.tabHost, "Inicio", R.id.TabInicio);  // INICIO
+        this.addTabSpectToTabHost(this.tabHost, "Muro", R.id.TabMuro);      // MURO
+        this.addTabSpectToTabHost(this.tabHost, "Grupos", R.id.TabGrupos);  // GRUPOS
+        this.addTabSpectToTabHost(this.tabHost, "Amigos", R.id.TabAmigos);  // AMIGOS
 
         // Inicializamos los controladores de los tabs
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
         this.wallTabScreen = new WallTabScreen(this, addFriendButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
-        ListView pendingFriendsListView = (ListView) findViewById(R.id.pendingFriendsListView);
-        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView, pendingFriendsListView);
+        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
     }
 
     /**
@@ -72,6 +71,7 @@ public class MainScreenActivity extends TabbedActivity {
                 break;
             case 1:
                 // Tab de muro
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 this.wallTabScreen.onFocus();
                 break;
             case 2:
@@ -145,13 +145,18 @@ public class MainScreenActivity extends TabbedActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.notificationAction:
-                // TODO: this.notificationScreen.onFocus();
-                return true;
+                 return this.openNotificationsActivity();
             case R.id.profileAction:
                 return this.openProfileActivity();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private boolean openNotificationsActivity() {
+        Intent intent = new Intent(this, NotificationsActivity.class);
+        this.startActivity(intent);
+        return true;
     }
 
     private boolean openProfileActivity() {

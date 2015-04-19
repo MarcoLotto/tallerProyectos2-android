@@ -95,8 +95,8 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             e.printStackTrace();
             return handleError();
         }
-        urlToRequest.setReadTimeout(1000000);
-        urlToRequest.setConnectTimeout(100000);
+        urlToRequest.setReadTimeout(10000000);
+        urlToRequest.setConnectTimeout(10000000);
 
         // Si hace falta enviamos la data del POST
         if(this.getRequestMethod().equals(POST_REQUEST_TYPE)) {
@@ -112,8 +112,6 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         try {
             this.responseCode = urlToRequest.getResponseCode();
         } catch (IOException e) {
-            e.printStackTrace();
-            return handleError();
         }
         // Si tenemos como respuesta un codigo distinto a 200, nos guardamos el codigo y terminamos
         if (!this.isHTTPValidResponse(this.responseCode)) {
@@ -195,7 +193,10 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             }
             String paramName = getForceIt.next();
             String paramValue = this.forcedGetRequestFields.get(paramName);
-            finalUrl += paramName + "=" + paramValue;
+            finalUrl += paramName;
+            if(paramValue != null){
+                finalUrl += "=" + paramValue;
+            }
         }
         // Ahora agregamos los parametros que se envian por get
         if(this.getRequestMethod().equals(GET_REQUEST_TYPE)) {
@@ -206,7 +207,10 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
                 }
                 String paramName = it.next();
                 String paramValue = this.requestFields.get(paramName);
-                finalUrl += paramName + "=" + paramValue;
+                finalUrl += paramName;
+                if(paramValue != null){
+                    finalUrl += "=" + paramValue;
+                }
             }
         }
         return finalUrl;

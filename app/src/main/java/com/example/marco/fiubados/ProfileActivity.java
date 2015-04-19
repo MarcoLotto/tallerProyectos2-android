@@ -51,6 +51,14 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+
+        // Si estoy viendo el perfil de mi usuario, permito editarlo
+        if(this.user.equals(ContextManager.getInstance().getMyUser())) {
+            menu.findItem(R.id.profileEditAction).setVisible(true);
+        }
+        else{
+            menu.findItem(R.id.profileEditAction).setVisible(false);
+        }
         return true;
     }
 

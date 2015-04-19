@@ -10,4 +10,6 @@
     <string name="title_activity_profile_edit">ProfileEditActivity</string>
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
+    <string name="title_activity_notifications">NotificationsActivity</string>
+    <string name="notAccept">Rechazar</string>
 </resources>

@@ -45,4 +45,12 @@ public class User extends DatabaseObject{
     public void setFriendshipRequestId(String friendshipRequestId) {
         this.friendshipRequestId = friendshipRequestId;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        return ((User) o).getId().equals(this.getId());
+    }
 }
