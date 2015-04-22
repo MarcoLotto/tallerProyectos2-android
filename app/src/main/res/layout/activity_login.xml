@@ -61,4 +61,5 @@
         android:id="@+id/textSignUp"
         android:layout_above="@+id/loginSignUpButton"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

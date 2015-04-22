@@ -31,11 +31,13 @@ public class MainScreenActivity extends TabbedActivity {
     private TabHost tabHost;
     private FriendsTabScreen friendsTabScreen;
     private WallTabScreen wallTabScreen;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
+        ContextManager.getInstance().setMainScreenActivity(this);
 
         // Configuramos los tabs
         this.configureTabHost();
@@ -107,8 +109,8 @@ public class MainScreenActivity extends TabbedActivity {
         getMenuInflater().inflate(R.menu.menu_main_screen, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        this.searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        this.searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 

@@ -1,5 +1,7 @@
 package com.example.marco.fiubados;
 
+import android.app.Activity;
+
 import com.example.marco.fiubados.model.User;
 
 /**
@@ -7,12 +9,13 @@ import com.example.marco.fiubados.model.User;
  */
 public class ContextManager {
 
-    public static final String WS_SERVER_URL = "https://fiuba-campus-movil2.herokuapp.com";
+    public static final String WS_SERVER_URL = "https://fiuba-campus-movil-sprint2.herokuapp.com";
     //public static final String WS_SERVER_URL = "10.20.13.217:3000";
 
     private static ContextManager instance = null;
     private String userToken;
     private User myUser;
+    private MainScreenActivity mainScreenActivity;
 
     private ContextManager(){
     }
@@ -42,5 +45,13 @@ public class ContextManager {
 
     public void setMyUser(User myUser) {
         this.myUser = myUser;
+    }
+
+    public MainScreenActivity getMainScreenActivity() {
+        return mainScreenActivity;
+    }
+
+    public void setMainScreenActivity(MainScreenActivity mainScreenActivity) {
+        this.mainScreenActivity = mainScreenActivity;
     }
 }

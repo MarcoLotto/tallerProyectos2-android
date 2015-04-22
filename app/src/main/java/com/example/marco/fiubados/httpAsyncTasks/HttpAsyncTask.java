@@ -221,13 +221,22 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     }
 
     private JSONObject handleError() {
-        this.dialog.dismiss();
+        try {
+            this.dialog.dismiss();
+        }
+        catch(IllegalArgumentException e){
+        }
         Toast.makeText(this.callingActivity.getApplicationContext(), "Error de Conexión", Toast.LENGTH_LONG).show();
         return null;
     }
 
     public void onPostExecute(JSONObject result) {
-        this.dialog.dismiss();
+        try {
+            this.dialog.dismiss();
+        }
+        catch(IllegalArgumentException e){
+            return;
+        }
         if (result != null) {
             // Conseguimos los valores de todos los campos que pedimos
             Iterator<String> it = this.responseFields.keySet().iterator();

@@ -1,21 +1,14 @@
 package com.example.marco.fiubados.TabScreens;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
-import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetFriendsHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.SearchUsersHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.SearchFriendsHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
@@ -70,7 +63,7 @@ public class FriendsTabScreen implements TabScreen{
         this.users.clear();
 
         // Vamos a hacer el pedido de busqueda de usuarios
-        SearchUsersHttpAsyncTask searchUsersHttpService = new SearchUsersHttpAsyncTask(this.tabOwnerActivity, this,
+        SearchFriendsHttpAsyncTask searchUsersHttpService = new SearchFriendsHttpAsyncTask(this.tabOwnerActivity, this,
                 SEARCH_USERS_SERVICE_ID, "TODO");
         searchUsersHttpService.execute(this.SEARCH_USERS_ENDPOINT_URL);
 

@@ -33,7 +33,7 @@ public class FieldsValidator {
      */
     public static boolean isNumericFieldValid(String fieldValue){
         try {
-            Integer.parseInt(fieldValue);
+            Long.parseLong(fieldValue);
         } catch (NumberFormatException nfe){
             return false;
         }

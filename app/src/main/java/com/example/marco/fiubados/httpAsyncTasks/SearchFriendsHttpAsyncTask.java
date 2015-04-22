@@ -6,7 +6,6 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,20 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marco on 21/04/2015.
+ * Created by Marco on 18/04/2015.
  */
-public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
+public class SearchFriendsHttpAsyncTask extends GetFriendsHttpAsyncTask {
 
 
-    public SearchUsersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
+    public SearchFriendsHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
         super(callingActivity, screen, serviceId, searchName);
     }
 
     @Override
     protected void configureRequestFields() {
         this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
-        this.addRequestField("query", this.searchName);
-   }
+        //this.addRequestField("query", this.searchName);
+        this.addRequestField("query", null);  // TODO: Reemplazar por la linea de arriba cuando se implemente
+    }
 
     @Override
     protected void onResponseArrival() {
@@ -58,23 +58,4 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
             this.dialog.show();
         }
     }
-
-    @Override
-    protected void fillUsers(List<User> users, String containerField, String friendshipStatus, boolean isFriendshipRequest) throws JSONException {
-        JSONArray jObject = new JSONArray(containerField);
-        for (int i = 0; i < jObject.length(); i++) {
-            JSONObject jsonObject = jObject.getJSONObject(i);
-
-            // TODO: Esto va a cambiar todo cuando tengamos el sevicio final
-            String id = jsonObject.getString("userId");
-            String email = jsonObject.getString("email");
-            String name = jsonObject.getString("firstName");
-            String lastName = jsonObject.getString("lastName");
-            String friendship = jsonObject.getString("friendship");
-            User user = new User(id, name + " " + lastName);
-            user.setFriendshipStatus(friendshipStatus);
-            users.add(user);
-        }
-    }
 }
-
