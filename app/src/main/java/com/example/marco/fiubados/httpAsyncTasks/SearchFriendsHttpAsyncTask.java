@@ -39,7 +39,7 @@ public class SearchFriendsHttpAsyncTask extends GetFriendsHttpAsyncTask {
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    String containerField = (new JSONObject(dataField)).getString("users");
+                    String containerField = (new JSONObject(dataField)).getString("usersByName");
                     this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_UNKNOWN, false);
 
                 } catch (JSONException e) {

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import com.example.marco.fiubados.R;
+
 public class AlertDialogBuilder {
 
     public static AlertDialog generateAlertWithCustomBehavior(Context context, Intent intent, String alertName, String alertContent) {
@@ -15,15 +17,17 @@ public class AlertDialogBuilder {
         return AlertDialogBuilder.generateAlert(context, null, alertName, alertContent);
     }
 
+
+
     private static AlertDialog generateAlert(final Context context, final Intent intent, String alertName, String alertContent) {
 
         AlertDialog.Builder helpBuilder = new AlertDialog.Builder(context);
         helpBuilder.setTitle(alertName);
         helpBuilder.setMessage(alertContent);
-        helpBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        helpBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
-                if (intent != null){
+                if (intent != null) {
                     context.startActivity(intent);
                 }
             }

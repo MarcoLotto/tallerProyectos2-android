@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -20,6 +21,10 @@ import java.util.List;
 
 public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
+    private final int PERSONAL_TAB_INDEX = 0;
+    private final int JOBS_TAB_INDEX = 1;
+    private final int ACADEMIC_TAB_INDEX = 2;
+
     // Parametros que recibe este activity via extra info
     public static final String USER_ID_PARAMETER = "userIdParameter";
     //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/552afe974787d0c5012fa58e";
@@ -29,6 +34,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     private List<ProfileField> fields = new ArrayList<ProfileField>();
     private ListView profileFieldsListView;
     private User user;
+    private TabHost tabHost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +50,55 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         this.user = new User(userOwnerId, "");
         ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
         profileInfoService.execute(this.SHOW_PROFILE_ENDPOINT_URL);
+
+        // Configuramos los tabs
+        this.configureTabHost();
+
     }
 
+    private void configureTabHost() {
+        this.tabHost = (TabHost) findViewById(R.id.profileTabHost);
+        this.tabHost.setup();
+        this.addTabSpectToTabHost(this.tabHost, "Personal", R.id.ProfileTabPersonal);
+        this.addTabSpectToTabHost(this.tabHost, "Empleo", R.id.ProfileTabJobs);
+        this.addTabSpectToTabHost(this.tabHost, "Académico", R.id.ProfileTabAcademic);
+
+        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                handleTabChange();
+            }
+        });
+    }
+
+    private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, int tabId) {
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tabLabel);
+        tabSpec.setContent(tabId);
+        tabSpec.setIndicator(tabLabel);
+        tabHost.addTab(tabSpec);
+    }
+
+    /**
+     * Maneja el cambio de pestañas
+     */
+    private void handleTabChange() {
+        int currentTabIndex = this.tabHost.getCurrentTab();
+        switch(currentTabIndex){
+            case 0:
+                //this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                // Tab de inicio
+                break;
+            case 1:
+                // Tab de muro
+                //this.wallTabScreen.onFocus();
+                break;
+            case 2:
+                //this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                // Tab de grupos
+                break;
+        };
+        this.invalidateOptionsMenu();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,7 +156,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             ProfileField field = it.next();
             finalListViewLines.add(field.getDisplayName() + ": " + field.getValue());
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.profileFieldsListView.setAdapter(adapter);
     }
 }
