@@ -23,9 +23,7 @@ import java.util.List;
 public class FriendsTabScreen implements TabScreen{
 
     public static final String FRIENDS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends";
-    private static final String SEARCH_USERS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/search";
-    private final int SEARCH_USERS_SERVICE_ID = 0;
-    private static final int SEARCH_FRIENDS_SERVICE_ID = 1;
+    private static final int SEARCH_FRIENDS_SERVICE_ID = 0;
 
     private TabbedActivity tabOwnerActivity;
     private List<User> users;
@@ -62,11 +60,6 @@ public class FriendsTabScreen implements TabScreen{
     public void onFocus() {
         this.users.clear();
 
-        // Vamos a hacer el pedido de busqueda de usuarios
-        SearchFriendsHttpAsyncTask searchUsersHttpService = new SearchFriendsHttpAsyncTask(this.tabOwnerActivity, this,
-                SEARCH_USERS_SERVICE_ID, "TODO");
-        searchUsersHttpService.execute(this.SEARCH_USERS_ENDPOINT_URL);
-
         // Vamos a hacer el pedido de amigos al web service
         GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this.tabOwnerActivity, this,
                 this.SEARCH_FRIENDS_SERVICE_ID, "TODO");
@@ -75,10 +68,8 @@ public class FriendsTabScreen implements TabScreen{
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.SEARCH_USERS_SERVICE_ID){
-            this.fillUserLists(responseElements);
-        }
         if(serviceId == this.SEARCH_FRIENDS_SERVICE_ID){
+            this.users = responseElements;
             Iterator<User> it = this.users.iterator();
             while(it.hasNext()){
                 User user = it.next();
@@ -104,11 +95,7 @@ public class FriendsTabScreen implements TabScreen{
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            String finalString = user.getName();
-            if(user.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_FRIEND)){
-                finalString += " - Amigo";
-            }
-            finalListViewLines.add(finalString);
+            finalListViewLines.add(user.getName());
         }
         ArrayAdapter adapter = new ArrayAdapter<String>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         usersListView.setAdapter(adapter);
