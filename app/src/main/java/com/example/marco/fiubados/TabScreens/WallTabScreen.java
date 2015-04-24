@@ -72,9 +72,14 @@ public class WallTabScreen implements TabScreen{
             // Seteamos como titulo del muro el nombre de la persona
             this.wallTitle.setText(this.userOwnerOfTheWall.getName());
 
-            // Hacemos la llamada al servicio de busqueda de solicitudes de amistad
-            GetPendingRequestsHttpAsyncTask httpService = new GetPendingRequestsHttpAsyncTask(this.tabOwnerActivity, this, this.GET_FRIEND_REQUESTS_SERVICE_ID, "TODO");
-            httpService.execute(NotificationsActivity.PENDING_FRIEND_REQUESTS_ENDPOINT_URL);
+            // Hago visibles o no los botones de amistad
+            if(!this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())) {
+                if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_UNKNOWN)) {
+                    this.addFriendButton.setVisibility(View.VISIBLE);
+                } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_WAITING)) {
+                    this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -87,25 +92,6 @@ public class WallTabScreen implements TabScreen{
                 this.confirmFriendRequestButton.setVisibility(View.GONE);
                 Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Solicitud enviada", Toast.LENGTH_SHORT);
                 toast.show();
-            }
-        }
-        else if(serviceId == GET_FRIEND_REQUESTS_SERVICE_ID){
-            // Si el usuario del muro me mando una solicitud de amistad, ponemos el botón de responder solicitud de amistad
-            Iterator<User> it = responseElements.iterator();
-            while(it.hasNext()){
-                User user = it.next();
-                if(this.userOwnerOfTheWall.equals(user)){
-                    this.addFriendButton.setVisibility(View.GONE);
-                    this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
-                    this.userOwnerOfTheWall = user; // Equals es distinto de =, esto es necesario
-                    return;
-                }
-            }
-            // No nos mandó una solicitud, manejamos cuando mostrar el botón de enviar amistad
-            boolean isCurrentUserMyUser = this.userOwnerOfTheWall.getId() == ContextManager.getInstance().getMyUser().getId();
-            if(!isCurrentUserMyUser && this.userOwnerOfTheWall.getFriendshipStatus() == User.FRIENDSHIP_STATUS_UNKNOWN) {
-                this.addFriendButton.setVisibility(View.VISIBLE);
-                this.confirmFriendRequestButton.setVisibility(View.GONE);
             }
         }
         else if(serviceId == this.RESPOND_FRIEND_REQUEST_SERVICE_ID){
