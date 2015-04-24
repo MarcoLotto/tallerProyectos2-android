@@ -1,5 +1,8 @@
 package com.example.marco.fiubados.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Marco on 07/04/2015.
  *
@@ -16,6 +19,13 @@ public class User extends DatabaseObject{
     private String friendshipStatus;
     private String friendshipRequestId;  // REVIEW: Ya se que esto no va pero son las 5:30 de la mañana
     private String matchParameter;
+    private String lastName;
+    private String padron;
+    private String biography;
+    private String nationality;
+    private String city;
+    private List<Job> jobs = new ArrayList<Job>();
+    private List<Academic> academicInfo = new ArrayList<Academic>();
 
     public User(String id, String name){
         super(id);
@@ -67,5 +77,61 @@ public class User extends DatabaseObject{
 
     public String getMatchParameter() {
         return matchParameter;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setPadron(String padron) {
+        this.padron = padron;
+    }
+
+    public String getPadron() {
+        return padron;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
+    }
+
+    public List<Academic> getAcademicInfo() {
+        return academicInfo;
+    }
+
+    public void setAcademicInfo(List<Academic> academicInfo) {
+        this.academicInfo = academicInfo;
     }
 }

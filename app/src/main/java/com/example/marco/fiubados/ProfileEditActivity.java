@@ -38,8 +38,9 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;
-    private List<ProfileField> fields;
+    private List<ProfileField> fields = new ArrayList<ProfileField>();
     private ProfileField lastFieldClicked;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,8 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
         // Primero conseguimos los datos del perfil
         Bundle params = getIntent().getExtras();
         String userOwnerId = params.getString(ProfileActivity.USER_ID_PARAMETER);
-        ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
+        this.user = new User(userOwnerId, "");
+        ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.user);
         profileInfoService.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
 
         // Manejamos el on click del boton de guardar perfil
@@ -96,7 +98,11 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
-            this.fields = responseElements;
+            this.fields.clear();
+
+            // TODO: Dependiendo de que se este editando, completar fields con diferente info
+            this.fillFieldsListWithPersonalProfileData();
+
             this.addProfileFieldsToUIList();
         }
         else if(serviceId == this.EDIT_PROFILE_INFO_SERVICE_ID){
@@ -105,6 +111,14 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
             toast.show();
             this.finish();
         }
+    }
+
+    private void fillFieldsListWithPersonalProfileData() {
+        this.fields.add(new ProfileField("firstName", this.user.getName(), "Nombre"));
+        this.fields.add(new ProfileField("lastName", this.user.getLastName(), "Apellido"));
+        this.fields.add(new ProfileField("biography", this.user.getBiography(), "Biografia"));
+        this.fields.add(new ProfileField("nationality", this.user.getNationality(), "Nacionalidad"));
+        this.fields.add(new ProfileField("city", this.user.getCity(), "Ciudad"));
     }
 
     private void addProfileFieldsToUIList() {

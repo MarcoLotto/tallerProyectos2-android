@@ -4,6 +4,9 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.model.Academic;
+import com.example.marco.fiubados.model.Job;
+import com.example.marco.fiubados.model.ProfileArray;
 import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
@@ -22,20 +25,20 @@ import java.util.List;
  */
 public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     private static final String SHOW_PROFILE_RESULT_OK = "ok";
-    private String userId;
+    private User user;
     private TabScreen screen;
     private int serviceId;
 
-    public ProfileInfoHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String userId) {
+    public ProfileInfoHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, User user) {
         super(callingActivity);
-        this.userId = userId;
+        this.user = user;
         this.screen = screen;
         this.serviceId = serviceId;
     }
 
     @Override
     protected void configureRequestFields() {
-        this.addUrlRequestField(this.userId);
+        this.addUrlRequestField(this.user.getId());
         this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
     }
 
@@ -49,32 +52,20 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            List<ProfileField> fields = new ArrayList<ProfileField>();
-
             String result = this.getResponseField("result");
             if(result.equals(this.SHOW_PROFILE_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
                     String profileField = (new JSONObject(dataField)).getString("profile");
-                    JSONObject jsonProfileField = new JSONObject(profileField);
-                    String fieldName = "firstName";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Nombre"));
-                    fieldName = "lastName";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Apellido"));
-                    fieldName = "padron";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Padrón"));
-                    fieldName = "biography";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Biografia"));
-                    fieldName = "nationality";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Nacionalidad"));
-                    fieldName = "city";
-                    fields.add(new ProfileField(fieldName, jsonProfileField.getString(fieldName), "Ciudad"));
+                    this.processPersonalProfileData(profileField, this.user);
+                    this.processJobsProfileData(profileField, this.user.getJobs());
+                    this.processAcademicProfileData(profileField, this.user.getAcademicInfo());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            // Le devolvemos a la pantalla que nos llamó todos los campos que conseguimos
-            screen.onServiceCallback(fields, this.serviceId);
+            // Guardamos la info en el user que nos pasaron por parámetro, no por callback, pero igual avisamos que terminamos
+            screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");
@@ -84,6 +75,37 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
             this.dialog.setMessage("Error en la conexión con el servidor");
             this.dialog.show();
         }
+    }
+
+    private void processAcademicProfileData(String profileField, List<Academic> academicInfo) {
+        // TODO: Esperar a que este hecho el servicio de backend
+    }
+
+    private void processJobsProfileData(String profileField, List<Job> jobs) throws JSONException {
+        JSONObject jsonProfileField = new JSONObject(profileField);
+        JSONArray jobsArray = jsonProfileField.getJSONArray("jobs");
+        for(int i=0; i < jobsArray.length(); i++){
+            JSONObject jobData = (JSONObject) jobsArray.get(i);
+            Job job = new Job(jobData.getString("id"));
+            job.setCompany(jobData.getString("company"));
+            job.setPosition(jobData.getString("position"));
+            JSONObject dateIntervalData = new JSONObject(jobData.getString("dateInterval"));
+            job.setStartDate(dateIntervalData.getString("init"));
+            try {
+                job.setEndDate(dateIntervalData.getString("end"));
+            }catch(Exception e){}
+            jobs.add(job);
+        }
+    }
+
+    private void processPersonalProfileData(String profileField, User user) throws JSONException {
+        JSONObject jsonProfileField = new JSONObject(profileField);
+        user.setName(jsonProfileField.getString("firstName"));
+        user.setLastName(jsonProfileField.getString("lastName"));
+        user.setPadron(jsonProfileField.getString("padron"));
+        user.setBiography(jsonProfileField.getString("biography"));
+        user.setNationality(jsonProfileField.getString("nationality"));
+        user.setCity(jsonProfileField.getString("city"));
     }
 
     @Override

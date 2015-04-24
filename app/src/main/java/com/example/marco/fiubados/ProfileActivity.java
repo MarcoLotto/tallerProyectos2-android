@@ -11,6 +11,8 @@ import android.widget.TabHost;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
+import com.example.marco.fiubados.model.Academic;
+import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
@@ -30,11 +32,9 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 */
     // Parametros que recibe este activity via extra info
     public static final String USER_ID_PARAMETER = "userIdParameter";
-    //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/552afe974787d0c5012fa58e";
     public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
+    //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/553ad168e2eb2fc80790a10e";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
-    private final int SEARCH_JOB_INFO_SERVICE_ID = 1;
-    private final int SEARCH_ACADEMIC_INFO_SERVICE_ID = 2;
 
     private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
@@ -62,18 +62,11 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         String userOwnerId = params.getString(USER_ID_PARAMETER);
         this.user = new User(userOwnerId, "");
 
-        ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, userOwnerId);
-        personalInfoService.execute(SHOW_PROFILE_ENDPOINT_URL);
-
-        ProfileInfoHttpAsyncTask jobsInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_JOB_INFO_SERVICE_ID, userOwnerId);
-        jobsInfoService.execute(SHOW_PROFILE_ENDPOINT_URL);
-
-        ProfileInfoHttpAsyncTask academicInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_ACADEMIC_INFO_SERVICE_ID, userOwnerId);
-        academicInfoService.execute(SHOW_PROFILE_ENDPOINT_URL);
+        // La magia
+        this.onFocus();
 
         // Configuramos los tabs
         this.configureTabHost();
-
     }
 
     private void configureTabHost() {
@@ -125,8 +118,6 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         // Si estoy viendo el perfil de mi usuario, permito editarlo
         menu.findItem(R.id.profileEditAction).setVisible(this.user.equals(ContextManager.getInstance().getMyUser()));
 
-        // TODO Agregar el icono de +
-
         return true;
     }
 
@@ -168,23 +159,51 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     @Override
     public void onFocus() {
+        // Vamos a buscar la informacion del perfil
+        ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.user);
+        personalInfoService.execute(SHOW_PROFILE_ENDPOINT_URL);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
-            this.fields = responseElements;
-            this.addProfileFieldsToUIList();
+            this.addPersonalProfileFieldsToUIList();
+            this.addJobsProfileFieldsToUIList();
+            this.addAcademicProfileFieldsToUIList();
         }
     }
 
-    private void addProfileFieldsToUIList() {
+    private void addAcademicProfileFieldsToUIList() {
         List<String> finalListViewLines = new ArrayList<>();
-
-        for (ProfileField field : this.fields) {
+        for (Academic academic : this.user.getAcademicInfo()) {
+            // TODO
             // Agregamos a la lista de campos todos los fields encontrados
-            finalListViewLines.add(field.getDisplayName() + ": " + field.getValue());
+            // finalListViewLines.add(academic.getDisplayName() + ": " + field.getValue());
         }
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        this.academicFieldsListView.setAdapter(adapter);
+    }
+
+    private void addJobsProfileFieldsToUIList() {
+        List<String> finalListViewLines = new ArrayList<>();
+        for (Job job : this.user.getJobs()) {
+            // Agrego a la lista de trabajos todos los trabajos
+            finalListViewLines.add(job.getCompany() + " - " + job.getPosition());
+            // TODO: Agregar en una segunda linea los intervalos de tiempo
+        }
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        this.jobsFieldsListView.setAdapter(adapter);
+    }
+
+    private void addPersonalProfileFieldsToUIList() {
+        List<String> finalListViewLines = new ArrayList<>();
+        // Agregamos a la lista de campos de personal de usuario todos los campos
+        finalListViewLines.add("Nombre" + ": " + this.user.getName());
+        finalListViewLines.add("Apellido" + ": " + this.user.getLastName());
+        finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
+        finalListViewLines.add("Biografía" + ": " + this.user.getBiography());
+        finalListViewLines.add("Nacionalidad" + ": " + this.user.getNationality());
+        finalListViewLines.add("Ciudad" + ": " + this.user.getCity());
 
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.personalFieldsListView.setAdapter(adapter);
