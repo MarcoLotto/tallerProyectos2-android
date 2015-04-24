@@ -1,6 +1,7 @@
 package com.example.marco.fiubados;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -84,7 +85,7 @@ public class SignUpActivity extends ActionBarActivity {
             return;
         }
         if(!FieldsValidator.isTextFieldValid(password.getText().toString(), 8)){
-            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo contraseña debe tenér como mínimo 8 caracteres");
+            AlertDialog helpDialog = AlertDialogBuilder.generateAlert(this, "Atención", "El campo contraseña debe tener como mínimo 8 caracteres");
             helpDialog.show();
             return;
         }

@@ -4,7 +4,7 @@
     tools:context="com.example.marco.fiubados.MainScreenActivity">
     <item android:id="@+id/action_search"
         android:icon="@drawable/ic_action_search"
-        android:title="@string/action_serach"
+        android:title="@string/action_search"
         app:showAsAction="always"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
     <item android:id="@+id/notificationAction"
