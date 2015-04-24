@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by Marco on 21/03/2015.
  *
- * Para procesar pedidos para pedir informacion del perfil
+ * Para procesar pedidos de informacion del perfil
  */
 public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     private static final String SHOW_PROFILE_RESULT_OK = "ok";

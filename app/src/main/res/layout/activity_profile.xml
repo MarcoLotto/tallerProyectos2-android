@@ -52,14 +52,12 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical" >
 
-                    <TextView
+                    <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Proximamente Empleos"
-                        android:id="@+id/textView4"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="100dp" />
+                        android:id="@+id/jobsFieldsListView"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -68,15 +66,12 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                    <TextView
+                    <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Proximamente Academico"
-                        android:id="@+id/textView5"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="100dp" />
-
+                        android:id="@+id/academicFieldsListView"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
