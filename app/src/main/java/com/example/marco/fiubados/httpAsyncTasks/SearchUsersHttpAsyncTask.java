@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
@@ -39,8 +40,7 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    String containerField = (new JSONObject(dataField)).getString("users");
-                    this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_UNKNOWN, false);
+                   this.fillUsers(users, dataField, User.FRIENDSHIP_STATUS_UNKNOWN, false);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -61,19 +61,53 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
 
     @Override
     protected void fillUsers(List<User> users, String containerField, String friendshipStatus, boolean isFriendshipRequest) throws JSONException {
+        JSONObject jsonData = new JSONObject(containerField);
+        try {
+            this.fillUserData(users, jsonData.getString("usersByName"), false);
+        }catch(Exception e){}
+        try {
+            this.fillUserData(users, jsonData.getString("usersByCity"), true);
+        }catch(Exception e){}
+        try {
+            this.fillUserData(users, jsonData.getString("usersByNationality"), true);
+        }catch(Exception e){}
+    }
+
+    private void fillUserData(List<User> users, String containerField, boolean controlsMatch) throws JSONException {
         JSONArray jObject = new JSONArray(containerField);
         for (int i = 0; i < jObject.length(); i++) {
             JSONObject jsonObject = jObject.getJSONObject(i);
 
-            // TODO: Esto va a cambiar todo cuando tengamos el sevicio final
             String id = jsonObject.getString("userId");
             String email = jsonObject.getString("email");
             String name = jsonObject.getString("firstName");
             String lastName = jsonObject.getString("lastName");
+
+            User user = new User(id, name + " " + lastName, email);
             String friendship = jsonObject.getString("friendship");
-            User user = new User(id, name + " " + lastName);
-            user.setFriendshipStatus(friendshipStatus);
-            users.add(user);
+            if(controlsMatch){
+                String matchLabel = jsonObject.getString("match");
+                user.setMatchParameter(matchLabel);
+            }
+            if(friendship.equals("pendingFriendshipRequest")){
+                user.setFriendshipStatus(User.FRIENDSHIP_STATUS_WAITING);
+            }
+            else if(friendship.equals("friendshipRequestSent")){
+                user.setFriendshipStatus(User.FRIENDSHIP_STATUS_REQUESTED);
+            }
+            else if(friendship.equals("noFriends")){
+                user.setFriendshipStatus(User.FRIENDSHIP_STATUS_UNKNOWN);
+            }
+            else if(friendship.equals("friends")){
+                user.setFriendshipStatus(User.FRIENDSHIP_STATUS_FRIEND);
+            }
+            try {
+                user.setFriendshipRequestId(jsonObject.getString("friendshipRequestId"));
+            }catch(Exception e){}
+
+            if(!users.contains(user)) {
+                users.add(user);
+            }
         }
     }
 }

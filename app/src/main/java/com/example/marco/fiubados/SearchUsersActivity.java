@@ -103,14 +103,6 @@ public class SearchUsersActivity extends ActionBarActivity implements TabScreen 
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_USERS_SERVICE_ID){
             this.users = responseElements;
-            Iterator<User> it = this.users.iterator();
-            while(it.hasNext()){
-                User user = it.next();
-                if(responseElements.contains(user)){
-                    // Mi usuario y este usuario son amigos
-                    user.setFriendshipStatus(User.FRIENDSHIP_STATUS_FRIEND);
-                }
-            }
             this.addUsersToUserUIList(this.users, this.usersListView);
         }
     }
@@ -122,7 +114,7 @@ public class SearchUsersActivity extends ActionBarActivity implements TabScreen 
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
             String finalString = user.getName();
-            finalListViewLines.add(new DualField(new Field("Nombre", user.getName()), new Field("SearchDesc", "TODO")));
+            finalListViewLines.add(new DualField(new Field("Nombre", user.getName()), new Field("SearchDesc", user.getMatchParameter())));
         }
         usersListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }

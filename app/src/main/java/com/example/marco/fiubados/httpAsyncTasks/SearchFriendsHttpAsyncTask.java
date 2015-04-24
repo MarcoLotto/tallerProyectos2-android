@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class SearchFriendsHttpAsyncTask extends GetFriendsHttpAsyncTask {
 
-
     public SearchFriendsHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
         super(callingActivity, screen, serviceId, searchName);
     }
@@ -33,7 +32,7 @@ public class SearchFriendsHttpAsyncTask extends GetFriendsHttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
 
             String result = this.getResponseField("result");
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {
@@ -41,7 +40,6 @@ public class SearchFriendsHttpAsyncTask extends GetFriendsHttpAsyncTask {
                 try {
                     String containerField = (new JSONObject(dataField)).getString("usersByName");
                     this.fillUsers(users, containerField, User.FRIENDSHIP_STATUS_UNKNOWN, false);
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
