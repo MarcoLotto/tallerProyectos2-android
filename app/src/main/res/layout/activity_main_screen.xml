@@ -85,7 +85,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/imageView"
-                                android:background="@drawable/ic_action_picture"
+                                android:background="@drawable/ic_action_picture_holo_light"
                                 android:layout_gravity="top|left" />
                         </TableRow>
                     </TableLayout>
