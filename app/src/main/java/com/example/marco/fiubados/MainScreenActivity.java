@@ -3,6 +3,7 @@ package com.example.marco.fiubados;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -47,10 +48,10 @@ public class MainScreenActivity extends TabbedActivity {
     private void configureTabHost() {
         this.tabHost = (TabHost) findViewById(R.id.tabHost);
         this.tabHost.setup();
-        this.addTabSpectToTabHost(this.tabHost, "Inicio", R.id.TabInicio);  // INICIO
-        this.addTabSpectToTabHost(this.tabHost, "Muro", R.id.TabMuro);      // MURO
-        this.addTabSpectToTabHost(this.tabHost, "Grupos", R.id.TabGrupos);  // GRUPOS
-        this.addTabSpectToTabHost(this.tabHost, "Amigos", R.id.TabAmigos);  // AMIGOS
+        this.addTabSpectToTabHost(this.tabHost, "Inicio", getResources().getDrawable(R.drawable.ic_action_news_holo_light), R.id.TabInicio);  // INICIO
+        this.addTabSpectToTabHost(this.tabHost, "Muro", getResources().getDrawable(R.drawable.ic_action_chat_holo_light), R.id.TabMuro);      // MURO
+        this.addTabSpectToTabHost(this.tabHost, "Grupos", getResources().getDrawable(R.drawable.ic_action_group_holo_light), R.id.TabGrupos);  // GRUPOS
+        this.addTabSpectToTabHost(this.tabHost, "Amigos", getResources().getDrawable(R.drawable.ic_action_person_holo_light), R.id.TabAmigos);  // AMIGOS
 
         // Inicializamos los controladores de los tabs
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
@@ -95,13 +96,12 @@ public class MainScreenActivity extends TabbedActivity {
         this.invalidateOptionsMenu();
     }
 
-    private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, int tabId) {
+    private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, Drawable icon, int tabId) {
         TabHost.TabSpec tabSpec = tabHost.newTabSpec(tabLabel);
         tabSpec.setContent(tabId);
-        tabSpec.setIndicator(tabLabel);
+        tabSpec.setIndicator("", icon);
         tabHost.addTab(tabSpec);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
