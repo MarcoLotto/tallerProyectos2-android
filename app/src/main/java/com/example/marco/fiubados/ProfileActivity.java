@@ -10,30 +10,30 @@ import android.widget.ListView;
 import android.widget.TabHost;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.Academic;
+import com.example.marco.fiubados.model.DualField;
+import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
 public class ProfileActivity extends ActionBarActivity implements TabScreen {
-/*
+
     private final int PERSONAL_TAB_INDEX = 0;
     private final int JOBS_TAB_INDEX = 1;
     private final int ACADEMIC_TAB_INDEX = 2;
 
-    // Ejemplo
-    boolean isPersonalInfoTagActive = this.tabHost.getCurrentTab() == PERSONAL_TAB_INDEX;
-
-*/
     // Parametros que recibe este activity via extra info
     public static final String USER_ID_PARAMETER = "userIdParameter";
-    public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
-    //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/553ad168e2eb2fc80790a10e";
+    //public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
+    public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/553bac10e2eb2f841f90a126";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
 
     private List<ProfileField> fields = new ArrayList<>();
@@ -97,13 +97,13 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     private void handleTabChange() {
         int currentTabIndex = this.tabHost.getCurrentTab();
         switch(currentTabIndex){
-            case 0:
+            case PERSONAL_TAB_INDEX:
                 // Tab de informacion personal
                 break;
-            case 1:
+            case JOBS_TAB_INDEX:
                 // Tab de empleos
                 break;
-            case 2:
+            case ACADEMIC_TAB_INDEX:
                 // Tab de informacion academica
                 break;
         }
@@ -132,25 +132,18 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     }
 
     private boolean openProfileEditActivity() {
-        Intent intent = new Intent(this, ProfileEditActivity.class);
-        intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
-        this.startActivity(intent);
-        this.finish();
-        return true;
-    }
-
-    private boolean openJobEditActivity() {
-        // TODO
-        Intent intent = new Intent(this, ProfileEditActivity.class);
-        intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
-        this.startActivity(intent);
-        this.finish();
-        return true;
-    }
-
-    private boolean openAcademicEditActivity() {
-        // TODO
-        Intent intent = new Intent(this, ProfileEditActivity.class);
+        // Segun en que tab esté, abro un activity de edición diferente
+        Intent intent;
+        if(this.tabHost.getCurrentTab() == PERSONAL_TAB_INDEX) {
+            intent = new Intent(this, ProfileEditActivity.class);
+        }
+        else if(this.tabHost.getCurrentTab() == JOBS_TAB_INDEX) {
+            intent = new Intent(this, JobsProfileEditActivity.class);
+        }
+        else{
+            // TODO
+            intent = new Intent(this, ProfileEditActivity.class);
+        }
         intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
         this.startActivity(intent);
         this.finish();
@@ -185,14 +178,20 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     }
 
     private void addJobsProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<>();
+        List<DualField> finalListViewLines = new ArrayList<DualField>();
         for (Job job : this.user.getJobs()) {
             // Agrego a la lista de trabajos todos los trabajos
-            finalListViewLines.add(job.getCompany() + " - " + job.getPosition());
-            // TODO: Agregar en una segunda linea los intervalos de tiempo
+            String line1 = job.getCompany() + " - " + job.getPosition();
+            String line2 = job.getStartDate() + " - ";
+            if(job.getEndDate().isEmpty()){
+                line2 += "Actualidad";
+            }
+            else{
+                line2 += job.getEndDate();
+            }
+            finalListViewLines.add(new DualField(new Field("", line1), new Field("", line2)));
         }
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
-        this.jobsFieldsListView.setAdapter(adapter);
+        this.jobsFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
     private void addPersonalProfileFieldsToUIList() {
