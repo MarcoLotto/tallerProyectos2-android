@@ -26,7 +26,8 @@
         android:layout_marginTop="50dp"
         android:layout_alignLeft="@+id/passwordTextBox"
         android:layout_alignStart="@+id/passwordTextBox"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:inputType="textCapWords|textPersonName" />
 
     <EditText
         android:layout_width="220dp"
@@ -39,7 +40,8 @@
         android:layout_alignLeft="@+id/firstNameTextBox"
         android:layout_alignStart="@+id/firstNameTextBox"
         android:layout_marginTop="10dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:layout_width="220dp"
@@ -64,7 +66,8 @@
         android:layout_below="@+id/firstNameTextBox"
         android:layout_alignLeft="@+id/emailTextBox"
         android:layout_alignStart="@+id/emailTextBox"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:inputType="textCapWords|textPersonName" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -87,6 +90,7 @@
         android:layout_alignLeft="@+id/emailTextBox"
         android:layout_alignStart="@+id/emailTextBox"
         android:layout_marginTop="10dp"
-        android:singleLine="true" />
+        android:singleLine="true"
+        android:inputType="number" />
 
 </RelativeLayout>
