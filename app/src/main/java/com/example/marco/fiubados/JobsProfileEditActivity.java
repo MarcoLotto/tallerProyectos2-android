@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
@@ -35,7 +36,7 @@ import java.util.List;
 
 public class JobsProfileEditActivity extends ActionBarActivity implements TabScreen{
 
-    private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
+    private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;
@@ -69,10 +70,13 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
     }
 
     private void saveProfile() {
-        // Llamamos al servicio de edición de perfil
-        // TODO
-        //ProfileEditHttpAsyncTask profileEditService = new ProfileEditHttpAsyncTask(this, this, EDIT_PROFILE_INFO_SERVICE_ID, this.user.getJobs());
-        //profileEditService.execute(this.EDIT_PROFILE_ENDPOINT_URL);
+        // Por cada servicio que se edite tiramos un tiro al servicio
+        for(Job job : this.user.getJobs()) {
+            if(job.isDirty()) {
+                JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(this, this, EDIT_PROFILE_INFO_SERVICE_ID, job);
+                service.execute(this.EDIT_PROFILE_ENDPOINT_URL + job.getId() + "/edit");
+            }
+        }
     }
 
     @Override
@@ -85,11 +89,22 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
             this.addProfileFieldsToUIList();
         }
         else if(serviceId == this.EDIT_PROFILE_INFO_SERVICE_ID){
-            // Pudimos editar correctamente, volvemos a la pantalla de vista de perfil
-            Toast toast = Toast.makeText(this.getApplicationContext(), "Edición exitosa", Toast.LENGTH_SHORT);
-            toast.show();
-            this.finish();
+            // Revisamos que nos hayan devuelto todos los tiros que mandamos
+            if(this.areAllJobsUpdated()) {
+                // Pudimos editar correctamente, volvemos a la pantalla de vista de perfil
+                Toast toast = Toast.makeText(this.getApplicationContext(), "Edición exitosa", Toast.LENGTH_SHORT);
+                toast.show();
+                this.finish();
+            }
         }
+    }
+
+    private boolean areAllJobsUpdated() {
+        for(Job job : this.user.getJobs()){
+            if(job.isDirty())
+                return false;
+        }
+        return true;
     }
 
     private void saveParameterValue(String value) {
@@ -99,6 +114,7 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
             this.lastFieldClicked.setPosition("TODO");
             this.lastFieldClicked.setStartDate("TODO");
             this.lastFieldClicked.setEndDate("TODO");
+            this.lastFieldClicked.setDirty(true);
             this.addProfileFieldsToUIList();
         }
     }
