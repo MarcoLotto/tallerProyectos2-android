@@ -24,4 +24,7 @@
     <string name="action_search">Search</string>
     <string name="ok">Ok</string>
     <string name="title_activity_jobs_profile_edit">JobsProfileEditActivity</string>
+    <string name="delete">Eliminar</string>
+    <string name="save">Guardar</string>
+    <string name="modify">Modificar</string>
 </resources>

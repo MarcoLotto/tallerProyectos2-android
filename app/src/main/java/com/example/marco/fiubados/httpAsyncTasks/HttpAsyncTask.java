@@ -116,6 +116,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         // Si tenemos como respuesta un codigo distinto a 200, nos guardamos el codigo y terminamos
         if (!this.isHTTPValidResponse(this.responseCode)) {
             try {
+                Log.d("ERROR RESPONSE CODE", Integer.toString(this.responseCode));
                 return new JSONObject("{}");
             } catch (JSONException e) {
                 e.printStackTrace();

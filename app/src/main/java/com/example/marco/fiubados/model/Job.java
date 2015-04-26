@@ -15,6 +15,14 @@ public class Job extends DatabaseObject {
         super(id);
     }
 
+    public Job(String id, String company, String position, String startDate, String endDate) {
+        super(id);
+        this.company = company;
+        this.position = position;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public void setCompany(String company) {
         this.company = company;
     }

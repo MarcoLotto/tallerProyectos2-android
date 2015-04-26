@@ -2,6 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.marco.fiubados.ProfileActivity">
+    <item android:id="@+id/profileAddAction"
+        android:icon="@drawable/ic_action_new"
+        android:title="Profile Add"
+        app:showAsAction="always"/>
     <item android:id="@+id/profileEditAction"
         android:icon="@drawable/ic_action_edit_holo_dark"
         android:title="Profile Edit"

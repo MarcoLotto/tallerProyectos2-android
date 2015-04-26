@@ -1,5 +1,6 @@
 package com.example.marco.fiubados;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -107,18 +108,6 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
         return true;
     }
 
-    private void saveParameterValue(String value) {
-        if(this.lastFieldClicked != null){
-            // Guardamos cada uno de los campos del job
-            this.lastFieldClicked.setCompany(value);
-            this.lastFieldClicked.setPosition("TODO");
-            this.lastFieldClicked.setStartDate("TODO");
-            this.lastFieldClicked.setEndDate("TODO");
-            this.lastFieldClicked.setDirty(true);
-            this.addProfileFieldsToUIList();
-        }
-    }
-
     private void configureComponents() {
         // Configuramos el handler del onClick del friendsListView
         this.profileEditListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -136,8 +125,7 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
             this.lastFieldClicked = this.user.getJobs().get(position);
 
            // Abrimos el popup de modificación del parámetro
-            // TODO: hay que hacer un dialog mas grande
-            Dialog editDialog = this.createDialog("Nombre", this.lastFieldClicked.getCompany(), false, 1);
+            Dialog editDialog = this.createDialog();
             editDialog.show();
         }
     }
@@ -159,48 +147,61 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
         this.profileEditListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
-    public Dialog createDialog(final String fieldName, String fieldOriginalValue, final boolean numeric, final int minFieldSize) {
+    public Dialog createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_edit_parameter, null);
+        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
 
-        // Asignamos los valores iniciales
-        TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.profileFieldNameTextView);
-        fieldNameTextView.setText(fieldName);
-        EditText fieldValueEditText = (EditText) dialogView.findViewById(R.id.profileValueEditText);
-        fieldValueEditText.setText(fieldOriginalValue);
+        // Cargamos los valores originales en los campos
+        if(this.lastFieldClicked != null) {
+            ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).setText(this.lastFieldClicked.getCompany());
+            ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).setText(this.lastFieldClicked.getPosition());
+            ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).setText(this.lastFieldClicked.getStartDate());
+            ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).setText(this.lastFieldClicked.getEndDate());
+        }
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
         builder.setView(dialogView)
                 // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        String paramValue = ((EditText) dialogView.findViewById(R.id.profileValueEditText)).getText().toString();
-                        // Validamos el campo y mandamos a guardar el valor
-                        if (numeric && FieldsValidator.isNumericFieldValid(paramValue) || !numeric) {
-                            if (FieldsValidator.isTextFieldValid(paramValue, minFieldSize)) {
-                                saveParameterValue(paramValue);
-                            }
-                            else{
-                                Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe tener un mínimo de " + minFieldSize + " caracteres", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }
-                        else{
-                            Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe ser numérico", Toast.LENGTH_LONG);
+                        // Conseguimos todos los valores de los campos
+                        String company = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
+                        String position = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
+                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
+                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
+
+                        // Validamos los campos
+                        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
+                                && FieldsValidator.isTextFieldValid(startDate, 1)) {
+                            Job job = new Job("", company, position, startDate, endDate);
+                            saveJob(job);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
                             toast.show();
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // No hace falta hacer ninguna acción
+                        // Llamamos al servicio de eliminación
+                        // TODO
                     }
                 });
         return builder.create();
+    }
+
+    private void saveJob(Job job) {
+        if(this.lastFieldClicked != null){
+            // Guardamos cada uno de los campos del job
+            this.lastFieldClicked.setCompany(job.getCompany());
+            this.lastFieldClicked.setPosition(job.getPosition());
+            this.lastFieldClicked.setStartDate(job.getStartDate());
+            this.lastFieldClicked.setEndDate(job.getEndDate());
+            this.lastFieldClicked.setDirty(true);
+            this.addProfileFieldsToUIList();
+        }
     }
 
     @Override

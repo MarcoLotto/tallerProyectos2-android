@@ -1,16 +1,27 @@
 package com.example.marco.fiubados;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.DualField;
@@ -23,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.datatype.Duration;
+
 
 public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
@@ -32,10 +45,11 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     // Parametros que recibe este activity via extra info
     public static final String USER_ID_PARAMETER = "userIdParameter";
+    private static final String CREATE_JOB_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/create_job";
     public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
-    //public static final String SHOW_PROFILE_ENDPOINT_URL = "http://www.mocky.io/v2/553bac10e2eb2f841f90a126";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
-
+    private static final int CREATE_JOB_SERVICE_ID = 1;
+    
     private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
     private ListView jobsFieldsListView;
@@ -114,9 +128,19 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
 
         // Si estoy viendo el perfil de mi usuario, permito editarlo
         menu.findItem(R.id.profileEditAction).setVisible(this.user.equals(ContextManager.getInstance().getMyUser()));
+
+        // Si estoy viendo el perfil de mi usuario y en los tabs de academico o jobs, permito editarlo
+        menu.findItem(R.id.profileAddAction).setVisible(this.user.equals(ContextManager.getInstance().getMyUser()) &&
+            (this.tabHost.getCurrentTab() != PERSONAL_TAB_INDEX));
 
         return true;
     }
@@ -127,8 +151,20 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         switch (item.getItemId()) {
             case R.id.profileEditAction:
                 return this.openProfileEditActivity();
+            case R.id.profileAddAction:
+                return this.openProfileAddDialog();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean openProfileAddDialog() {
+        if(this.tabHost.getCurrentTab() == JOBS_TAB_INDEX){
+            this.createAddJobDialog(this, this);
+        }
+        else if(this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
+            // TODO
+        }
+        return true;
     }
 
     private boolean openProfileEditActivity() {
@@ -163,6 +199,11 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             this.addPersonalProfileFieldsToUIList();
             this.addJobsProfileFieldsToUIList();
             this.addAcademicProfileFieldsToUIList();
+        }
+        else if(serviceId == this.CREATE_JOB_SERVICE_ID){
+            this.onFocus();
+            Toast toast = Toast.makeText(this.getApplicationContext(), "Creación exitosa", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
@@ -206,5 +247,43 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.personalFieldsListView.setAdapter(adapter);
+    }
+
+
+    public void createAddJobDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos todos los valores de los campos       
+                        String company = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
+                        String position = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
+                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
+                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
+
+                        // Validamos los campos
+                        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
+                                && FieldsValidator.isTextFieldValid(startDate, 1)) {
+                            Job job = new Job("", company, position, startDate, endDate);
+                            JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_JOB_SERVICE_ID, job);
+                            service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        builder.create().show();
     }
 }
