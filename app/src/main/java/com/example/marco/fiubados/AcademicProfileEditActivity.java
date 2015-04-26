@@ -194,8 +194,7 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
                 })
                 .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Llamamos al servicio de eliminación
-                        // TODO
+                        deleteEducation();
                     }
                 });
         return builder.create();
