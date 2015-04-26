@@ -4,17 +4,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".SignUpActivity"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/relativeLayout"
+    android:focusableInTouchMode="true">
 
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/LabelSignUpButton"
-        android:id="@+id/signUpButton"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/titleSignUpLabel"
+        android:id="@+id/titleText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="220dp"
@@ -23,11 +23,38 @@
         android:layout_gravity="center"
         android:hint="@string/SignUpNameHint"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_alignLeft="@+id/passwordTextBox"
         android:layout_alignStart="@+id/passwordTextBox"
         android:singleLine="true"
         android:inputType="textCapWords|textPersonName" />
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastNameTextBox"
+        android:layout_gravity="center"
+        android:hint="@string/lastNameSignUpHint"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/firstNameTextBox"
+        android:layout_alignLeft="@+id/emailTextBox"
+        android:layout_alignStart="@+id/emailTextBox"
+        android:singleLine="true"
+        android:inputType="textCapWords|textPersonName" />
+
+    <EditText
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/padronTextBox"
+        android:layout_gravity="center"
+        android:hint="@string/padronPassportSignUpHint"
+        android:layout_below="@+id/lastNameTextBox"
+        android:layout_alignLeft="@+id/emailTextBox"
+        android:layout_alignStart="@+id/emailTextBox"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:inputType="number" />
 
     <EditText
         android:layout_width="220dp"
@@ -56,41 +83,13 @@
         android:layout_centerHorizontal="true"
         android:singleLine="true" />
 
-    <EditText
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/lastNameTextBox"
-        android:layout_gravity="center"
-        android:hint="@string/lastNameSignUpHint"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/firstNameTextBox"
-        android:layout_alignLeft="@+id/emailTextBox"
-        android:layout_alignStart="@+id/emailTextBox"
-        android:singleLine="true"
-        android:inputType="textCapWords|textPersonName" />
-
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/titleSignUpLabel"
-        android:id="@+id/titleText"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
+        android:text="@string/LabelSignUpButton"
+        android:id="@+id/signUpButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/padronTextBox"
-        android:layout_gravity="center"
-        android:hint="@string/padronPassportSignUpHint"
-        android:layout_below="@+id/lastNameTextBox"
-        android:layout_alignLeft="@+id/emailTextBox"
-        android:layout_alignStart="@+id/emailTextBox"
-        android:layout_marginTop="10dp"
-        android:singleLine="true"
-        android:inputType="number" />
 
 </RelativeLayout>
