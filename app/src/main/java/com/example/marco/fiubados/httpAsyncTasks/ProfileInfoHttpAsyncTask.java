@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.Academic;
+import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.ProfileArray;
 import com.example.marco.fiubados.model.ProfileField;
@@ -59,7 +60,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
                     String profileField = (new JSONObject(dataField)).getString("profile");
                     this.processPersonalProfileData(profileField, this.user);
                     this.processJobsProfileData(profileField, this.user.getJobs());
-                    this.processAcademicProfileData(profileField, this.user.getAcademicInfo());
+                    this.processEducationsProfileData(profileField, this.user.getEducationInfo());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -77,8 +78,24 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
         }
     }
 
-    private void processAcademicProfileData(String profileField, List<Academic> academicInfo) {
-        // TODO: Esperar a que este hecho el servicio de backend
+    private void processEducationsProfileData(String profileField, List<Education> educationInfo) throws JSONException {
+        JSONObject jsonProfileField = new JSONObject(profileField);
+        JSONArray jobsArray = jsonProfileField.getJSONArray("educations");
+        for(int i=0; i < jobsArray.length(); i++){
+            JSONObject jobData = (JSONObject) jobsArray.get(i);
+            Education education = new Education(jobData.getString("id"));
+            education.setDiploma(jobData.getString("diploma"));
+
+            JSONObject instituteData = new JSONObject(jobData.getString("institute"));
+            education.setInstitute(instituteData.getString("name"));
+
+            JSONObject dateIntervalData = new JSONObject(jobData.getString("dateInterval"));
+            education.setStartDate(dateIntervalData.getString("init"));
+            try {
+                education.setEndDate(dateIntervalData.getString("end"));
+            }catch(Exception e){}
+            educationInfo.add(education);
+        }
     }
 
     private void processJobsProfileData(String profileField, List<Job> jobs) throws JSONException {

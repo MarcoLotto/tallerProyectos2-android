@@ -21,10 +21,12 @@ import android.widget.Toast;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.DualField;
+import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.ProfileField;
@@ -47,8 +49,11 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     public static final String USER_ID_PARAMETER = "userIdParameter";
     private static final String CREATE_JOB_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/create_job";
     public static final String SHOW_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
+    private static final String CREATE_EDUCATION_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/educations/create_education";
+
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private static final int CREATE_JOB_SERVICE_ID = 1;
+    private static final int CREATE_EDUCATION_SERVICE_ID = 2;
     
     private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
@@ -163,7 +168,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             this.createAddJobDialog(this, this);
         }
         else if(this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
-            // TODO
+            this.createAddEducationDialog(this, this);
         }
         return true;
     }
@@ -178,8 +183,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             intent = new Intent(this, JobsProfileEditActivity.class);
         }
         else{
-            // TODO
-            intent = new Intent(this, ProfileEditActivity.class);
+            intent = new Intent(this, AcademicProfileEditActivity.class);
         }
         intent.putExtra(ProfileActivity.USER_ID_PARAMETER, this.user.getId());
         this.startActivity(intent);
@@ -203,24 +207,24 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             this.user = temporalUser;
             this.addPersonalProfileFieldsToUIList();
             this.addJobsProfileFieldsToUIList();
-            this.addAcademicProfileFieldsToUIList();
+            this.addEducationsProfileFieldsToUIList();
         }
-        else if(serviceId == this.CREATE_JOB_SERVICE_ID){
+        else if(serviceId == this.CREATE_JOB_SERVICE_ID || serviceId == this.CREATE_EDUCATION_SERVICE_ID){
             this.onFocus();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Creación exitosa", Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
-    private void addAcademicProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<>();
-        for (Academic academic : this.user.getAcademicInfo()) {
-            // TODO
-            // Agregamos a la lista de campos todos los fields encontrados
-            // finalListViewLines.add(academic.getDisplayName() + ": " + field.getValue());
+    private void addEducationsProfileFieldsToUIList() {
+        List<DualField> finalListViewLines = new ArrayList<DualField>();
+        for (Education education : this.user.getEducationInfo()) {
+            // Agrego a la lista de educación, todas las educaciones
+            String line1 = education.getDiploma() + " - " + education.getInstitute();
+            String line2 = education.getStartDate() + " - " + education.getEndDate();
+            finalListViewLines.add(new DualField(new Field("", line1), new Field("", line2)));
         }
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
-        this.academicFieldsListView.setAdapter(adapter);
+        this.academicFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
     private void addJobsProfileFieldsToUIList() {
@@ -280,6 +284,49 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
                             service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
                         } else {
                             Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        builder.create().show();
+    }
+
+    public void createAddEducationDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
+
+        // Como estamos reutilizando el layout de jobs, le cambiamos los nombres a los campos
+        ((TextView) dialogView.findViewById(R.id.fieldNameCompany)).setText("Diploma");
+        ((TextView) dialogView.findViewById(R.id.fieldNamePosition)).setText("Instituto");
+        ((TextView) dialogView.findViewById(R.id.fieldNameStartDate)).setText("Fecha inicio");
+        ((TextView) dialogView.findViewById(R.id.fieldNameEndDate)).setText("Fecha fin");
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos todos los valores de los campos
+                        String diploma = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
+                        String institute = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
+                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
+                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
+
+                        // Validamos los campos
+                        if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(institute, 1)
+                                && FieldsValidator.isTextFieldValid(startDate, 1) && FieldsValidator.isTextFieldValid(endDate, 1)) {
+                            Education education = new Education("", diploma, institute, startDate, endDate);
+                            EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_EDUCATION_SERVICE_ID, education);
+                            service.execute(CREATE_EDUCATION_SERVICE_ENDPOINT_URL);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, no puede haber campos en blanco", Toast.LENGTH_LONG);
                             toast.show();
                         }
                     }

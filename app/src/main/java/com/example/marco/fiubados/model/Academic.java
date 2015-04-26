@@ -8,4 +8,5 @@ public class Academic extends DatabaseObject {
     Academic(String id) {
         super(id);
     }
+
 }

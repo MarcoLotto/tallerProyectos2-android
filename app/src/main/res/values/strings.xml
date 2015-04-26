@@ -26,4 +26,7 @@
     <string name="delete">Eliminar</string>
     <string name="save">Guardar</string>
     <string name="modify">Modificar</string>
+    <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

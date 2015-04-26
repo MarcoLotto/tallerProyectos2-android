@@ -9,7 +9,6 @@ public class Job extends DatabaseObject {
     private String position;
     private String startDate;
     private String endDate;
-    private boolean dirty;
 
     public Job(String id) {
         super(id);
@@ -53,13 +52,5 @@ public class Job extends DatabaseObject {
 
     public String getEndDate() {
         return endDate;
-    }
-
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
-    }
-
-    public boolean isDirty() {
-        return dirty;
     }
 }
