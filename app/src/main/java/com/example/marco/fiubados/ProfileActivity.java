@@ -55,6 +55,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     private ListView jobsFieldsListView;
     private ListView academicFieldsListView;
     private User user;
+    private User temporalUser;
     private TabHost tabHost;
 
     @Override
@@ -188,14 +189,18 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
     @Override
     public void onFocus() {
+        // Creamos un usuario temporal en donde se guardará la data
+        this.temporalUser = new User(this.user.getId(), "");
+
         // Vamos a buscar la informacion del perfil
-        ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.user);
+        ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.temporalUser);
         personalInfoService.execute(SHOW_PROFILE_ENDPOINT_URL);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
+            this.user = temporalUser;
             this.addPersonalProfileFieldsToUIList();
             this.addJobsProfileFieldsToUIList();
             this.addAcademicProfileFieldsToUIList();
