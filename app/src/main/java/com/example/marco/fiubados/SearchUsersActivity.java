@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
@@ -104,6 +105,11 @@ public class SearchUsersActivity extends ActionBarActivity implements TabScreen 
         if(serviceId == this.SEARCH_USERS_SERVICE_ID){
             this.users = responseElements;
             this.addUsersToUserUIList(this.users, this.usersListView);
+
+            if(this.users.isEmpty()){
+                Toast toast = Toast.makeText(this.getApplicationContext(), "No hay contactos para la búsqueda", Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 
