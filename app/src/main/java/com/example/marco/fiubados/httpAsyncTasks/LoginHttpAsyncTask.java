@@ -59,6 +59,7 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
                 // Pudimos logueanos correctamente, vamos a la pantalla de inicio
                 Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
                 this.callingActivity.startActivity(intent);
+                this.callingActivity.finish();
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
