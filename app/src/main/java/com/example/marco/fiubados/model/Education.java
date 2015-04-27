@@ -1,5 +1,7 @@
 package com.example.marco.fiubados.model;
 
+import com.example.marco.fiubados.commons.FormatTranslator;
+
 /**
  * Created by Marco on 26/04/2015.
  */
@@ -44,7 +46,7 @@ public class Education extends DatabaseObject {
     }
 
     public void setStartDate(String startDate) {
-        this.startDate = startDate;
+        this.startDate = FormatTranslator.adaptDate(startDate);
     }
 
     public String getEndDate() {
@@ -52,6 +54,6 @@ public class Education extends DatabaseObject {
     }
 
     public void setEndDate(String endDate) {
-        this.endDate = endDate;
+        this.endDate = FormatTranslator.adaptDate(endDate);
     }
 }

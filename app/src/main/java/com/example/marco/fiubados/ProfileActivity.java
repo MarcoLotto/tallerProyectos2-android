@@ -285,13 +285,18 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
                         // Validamos los campos
                         if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
-                                && FieldsValidator.isTextFieldValid(startDate, 1)) {
+                                && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
                             Job job = new Job("", company, position, startDate, endDate);
                             JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_JOB_SERVICE_ID, job);
                             service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
                         } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
-                            toast.show();
+                            if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
+                                toast.show();
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin (o bien tener formato fecha válido)", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
                         }
                     }
                 })
@@ -328,13 +333,18 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
 
                         // Validamos los campos
                         if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(institute, 1)
-                                && FieldsValidator.isTextFieldValid(startDate, 1) && FieldsValidator.isTextFieldValid(endDate, 1)) {
+                                && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
                             Education education = new Education("", diploma, institute, startDate, endDate);
                             EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_EDUCATION_SERVICE_ID, education);
                             service.execute(CREATE_EDUCATION_SERVICE_ENDPOINT_URL);
                         } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, no puede haber campos en blanco", Toast.LENGTH_LONG);
-                            toast.show();
+                            if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
+                                toast.show();
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin (o bien tener formato fecha válido)", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
                         }
                     }
                 })

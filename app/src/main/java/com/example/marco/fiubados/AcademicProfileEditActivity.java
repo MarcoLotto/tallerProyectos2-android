@@ -270,12 +270,17 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
 
                         // Validamos los campos
                         if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(diploma, 1)
-                                && FieldsValidator.isTextFieldValid(startDate, 1) && FieldsValidator.isTextFieldValid(endDate, 1)) {
+                                && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
                             Education education = new Education("", diploma, institute, startDate, endDate);
                             save(education);
                         } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, no puede haber campos vacíos", Toast.LENGTH_LONG);
-                            toast.show();
+                            if (!FieldsValidator.isDateValid(startDate) || FieldsValidator.isDateValid(endDate)) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
+                                toast.show();
+                            } else {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que no puede haber campos vacíos y el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
                         }
                     }
                 })

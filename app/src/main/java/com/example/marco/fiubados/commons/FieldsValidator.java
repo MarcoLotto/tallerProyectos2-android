@@ -47,4 +47,34 @@ public class FieldsValidator {
     public static boolean isNumericFieldValid(String fieldValue, int minSize){
         return isNumericFieldValid(fieldValue) && isTextFieldValid(fieldValue, minSize);
     }
+
+    public static boolean isDateValid(String date){
+        if(date.length() > 10)
+            return false;
+        int index = date.indexOf("/");
+        if(index == -1)
+            return false;
+        String days = date.substring(0, index);
+        String aux = date.substring(index + 1);
+        index = aux.indexOf("/");
+        if(index == -1)
+            return false;
+        String month = aux.substring(0, index);
+        String year = aux.substring(index + 1);
+
+        try {
+            long parsedDay = Long.parseLong(days);
+            if (parsedDay > 31 || parsedDay < 1)
+                return false;
+            long parsedMonth = Long.parseLong(month);
+            if (parsedMonth > 12 || parsedMonth < 1)
+                return false;
+            long parsedYear = Long.parseLong(year);
+            if(parsedYear < 1000)
+                return false;
+        }catch(Exception e){
+            return false;
+        }
+        return true;
+    }
 }

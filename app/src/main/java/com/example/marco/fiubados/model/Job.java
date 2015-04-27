@@ -1,5 +1,8 @@
 package com.example.marco.fiubados.model;
 
+import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.commons.FormatTranslator;
+
 /**
  * Created by Marco on 24/04/2015.
  */
@@ -39,7 +42,7 @@ public class Job extends DatabaseObject {
     }
 
     public void setStartDate(String startDate) {
-        this.startDate = startDate;
+        this.startDate = FormatTranslator.adaptDate(startDate);
     }
 
     public String getStartDate() {
@@ -47,7 +50,12 @@ public class Job extends DatabaseObject {
     }
 
     public void setEndDate(String endDate) {
-        this.endDate = endDate;
+        if(!endDate.isEmpty()){
+            this.endDate = FormatTranslator.adaptDate(endDate);
+        }
+        else {
+            this.endDate = endDate;
+        }
     }
 
     public String getEndDate() {
