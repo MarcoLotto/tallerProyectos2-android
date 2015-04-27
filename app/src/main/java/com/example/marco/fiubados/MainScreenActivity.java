@@ -2,6 +2,7 @@ package com.example.marco.fiubados;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -272,5 +273,36 @@ public class MainScreenActivity extends TabbedActivity {
     public void onResume() {
         super.onResume();
         this.handleTabChange();
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.createExitDialog(this).show();
+    }
+
+    public Dialog createExitDialog(final Activity ownerActivity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_question_popup, null);
+
+        // Asignamos los valores iniciales
+        TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
+        fieldNameTextView.setText("¿Desea salir de la aplicación?");
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Matamos al activity principal para salir de la app
+                        ownerActivity.finish();
+                    }
+                })
+                .setNegativeButton(R.string.notAccept, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No es necesario hacer nada
+                    }
+                });
+        return builder.create();
     }
 }
