@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.AcademicEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileDeleteHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -35,9 +37,12 @@ import java.util.List;
 public class AcademicProfileEditActivity extends ActionBarActivity implements TabScreen {
 
     private static final String EDIT_EDUCATIONS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/educations/";
+    private static final int CAREER_POSITION_IN_ACADEMICS_LIST = 0;
+    private static final String EDIT_ACADEMICS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/academic_info/edit_career";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
-    private ListView profileEditListView;
+    private ListView educationsEditListView;
+    private ListView academicEditListView;
     private Education lastEducationFieldClicked;
     private User user;
 
@@ -47,7 +52,8 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
         setContentView(R.layout.activity_academic_profile_edit);
 
         // Nos guardamos la list view para mostrar los campos del perfil para su edición
-        this.profileEditListView = (ListView) findViewById(R.id.profileEditListView);
+        this.educationsEditListView = (ListView) findViewById(R.id.educationsFieldsListView);
+        this.academicEditListView = (ListView) findViewById(R.id.academicFieldsListView);
         this.configureComponents();
 
         // Primero conseguimos los datos del perfil
@@ -81,6 +87,10 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
                 }
             }
         }
+        if(this.user.getAcademicInfo().isDirty()){
+            AcademicEditHttpAsyncTask service = new AcademicEditHttpAsyncTask(this, this, EDIT_PROFILE_INFO_SERVICE_ID, this.user.getAcademicInfo());
+            service.execute(this.EDIT_ACADEMICS_PROFILE_ENDPOINT_URL);
+        }
     }
 
     @Override
@@ -90,7 +100,8 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
-            this.addProfileFieldsToUIList();
+            this.addEducationProfileFieldsToUIList();
+            this.addAcademicsProfileFieldsToUIList();
         }
         else if(serviceId == this.EDIT_PROFILE_INFO_SERVICE_ID){
             // Revisamos que nos hayan devuelto todos los tiros que mandamos
@@ -104,9 +115,8 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
     }
 
     private boolean areAllAcademicsAndEducationsUpdated() {
-        for(Academic academic : this.user.getAcademicInfo()){
-            if(academic.isDirty())
-                return false;
+        if( this.user.getAcademicInfo().isDirty()){
+            return false;
         }
         for(Education education : this.user.getEducationInfo()){
             if(education.isDirty())
@@ -116,17 +126,23 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
     }
 
     private void configureComponents() {
-        // Configuramos el handler del onClick del friendsListView
-        this.profileEditListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.educationsEditListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                onParameterClickedOnList(position);
+                onEducationParameterClickedOnList(position);
+            }
+        });
+        this.academicEditListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                onAcademicParameterClickedOnList(position);
             }
         });
     }
 
-    private void onParameterClickedOnList(int position) {
+    private void onEducationParameterClickedOnList(int position) {
         // Se hizo click en un usuario, preparo al muro y lo invoco
         if(this.user.getEducationInfo().size() > position) {
             this.lastEducationFieldClicked = this.user.getEducationInfo().get(position);
@@ -137,7 +153,69 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
         }
     }
 
-    private void addProfileFieldsToUIList() {
+    private void onAcademicParameterClickedOnList(int position) {
+        // Abrimos el popup de modificación del parámetro
+        Academic academic = this.user.getAcademicInfo();
+        if (position == this.CAREER_POSITION_IN_ACADEMICS_LIST){
+            Dialog editDialog = this.createAcademicParameterDialog(this.CAREER_POSITION_IN_ACADEMICS_LIST, "Carrera", academic.getCareer(), false, 1);
+            editDialog.show();
+        }
+    }
+
+    public Dialog createAcademicParameterDialog(final int positionInList, final String fieldName, String fieldOriginalValue, final boolean numeric, final int minFieldSize) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_edit_parameter, null);
+
+        // Asignamos los valores iniciales
+        TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.profileFieldNameTextView);
+        fieldNameTextView.setText(fieldName);
+        EditText fieldValueEditText = (EditText) dialogView.findViewById(R.id.profileValueEditText);
+        fieldValueEditText.setText(fieldOriginalValue);
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        String paramValue = ((EditText) dialogView.findViewById(R.id.profileValueEditText)).getText().toString();
+                        // Validamos el campo y mandamos a guardar el valor
+                        if (numeric && FieldsValidator.isNumericFieldValid(paramValue) || !numeric) {
+                            if (FieldsValidator.isTextFieldValid(paramValue, minFieldSize)) {
+                                saveAcademicParameterValue(positionInList, paramValue);
+                            }
+                            else{
+                                Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe tener un mínimo de " + minFieldSize + " caracteres", Toast.LENGTH_LONG);
+                                toast.show();
+                            }
+                        }
+                        else{
+                            Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe ser numérico", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        return builder.create();
+    }
+
+    private void saveAcademicParameterValue(int positionInList, String paramValue) {
+        if(positionInList == this.CAREER_POSITION_IN_ACADEMICS_LIST){
+            this.user.getAcademicInfo().setCareer(paramValue);
+            this.user.getAcademicInfo().setDirty(true);
+            this.addEducationProfileFieldsToUIList();
+            this.addAcademicsProfileFieldsToUIList();
+        }
+    }
+
+    private void addEducationProfileFieldsToUIList() {
         List<DualField> finalListViewLines = new ArrayList<DualField>();
         for (Education education : this.user.getEducationInfo()) {
             // Agrego a la lista de de info de educación a todos los items
@@ -147,7 +225,16 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
                 finalListViewLines.add(new DualField(new Field("", line1), new Field("", line2)));
             }
         }
-        this.profileEditListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
+        this.educationsEditListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
+    }
+
+    private void addAcademicsProfileFieldsToUIList() {
+        List<String> finalListViewLines = new ArrayList<String>();
+        finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
+        finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
+
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        this.academicEditListView.setAdapter(adapter);
     }
 
     public Dialog createEducationDialog() {
@@ -204,7 +291,8 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
         if(this.lastEducationFieldClicked != null){
             this.lastEducationFieldClicked.setDeleted(true);
             this.lastEducationFieldClicked.setDirty(true);
-            this.addProfileFieldsToUIList();
+            this.addEducationProfileFieldsToUIList();
+            this.addAcademicsProfileFieldsToUIList();
         }
     }
 
@@ -216,7 +304,8 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
             this.lastEducationFieldClicked.setStartDate(education.getStartDate());
             this.lastEducationFieldClicked.setEndDate(education.getEndDate());
             this.lastEducationFieldClicked.setDirty(true);
-            this.addProfileFieldsToUIList();
+            this.addEducationProfileFieldsToUIList();
+            this.addAcademicsProfileFieldsToUIList();
         }
     }
 

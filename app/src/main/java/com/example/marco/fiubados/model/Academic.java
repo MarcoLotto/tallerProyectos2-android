@@ -5,8 +5,17 @@ package com.example.marco.fiubados.model;
  */
 public class Academic extends DatabaseObject {
 
+    private String career;
+
     Academic(String id) {
         super(id);
     }
 
+    public String getCareer() {
+        return career;
+    }
+
+    public void setCareer(String career) {
+        this.career = career;
+    }
 }

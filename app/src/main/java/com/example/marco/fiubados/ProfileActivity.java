@@ -2,7 +2,6 @@ package com.example.marco.fiubados;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -24,7 +23,6 @@ import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
-import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Field;
@@ -33,10 +31,7 @@ import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.datatype.Duration;
 
 
 public class ProfileActivity extends ActionBarActivity implements TabScreen {
@@ -58,10 +53,11 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
     private ListView jobsFieldsListView;
-    private ListView academicFieldsListView;
+    private ListView educationsFieldsListView;
     private User user;
     private User temporalUser;
     private TabHost tabHost;
+    private ListView academicsFieldsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +70,9 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
         // Nos guardamos la list view para mostrar los campos del empleo
         this.jobsFieldsListView = (ListView) findViewById(R.id.jobsFieldsListView);
 
-        // Nos guardamos la list view para mostrar los campos academicos
-        this.academicFieldsListView = (ListView) findViewById(R.id.academicFieldsListView);
+        // Nos guardamos la list view para mostrar los campos academicos y de educations
+        this.educationsFieldsListView = (ListView) findViewById(R.id.educationsFieldsListView);
+        this.academicsFieldsListView = (ListView) findViewById(R.id.academicFieldsListView);
 
         // Conseguimos el parametro que nos paso el activity que nos llamó
         Bundle params = getIntent().getExtras();
@@ -208,6 +205,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             this.addPersonalProfileFieldsToUIList();
             this.addJobsProfileFieldsToUIList();
             this.addEducationsProfileFieldsToUIList();
+            this.addAcademicsProfileFieldsToUIList();
         }
         else if(serviceId == this.CREATE_JOB_SERVICE_ID || serviceId == this.CREATE_EDUCATION_SERVICE_ID){
             this.onFocus();
@@ -224,7 +222,16 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
             String line2 = education.getStartDate() + " - " + education.getEndDate();
             finalListViewLines.add(new DualField(new Field("", line1), new Field("", line2)));
         }
-        this.academicFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
+        this.educationsFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
+    }
+
+    private void addAcademicsProfileFieldsToUIList() {
+        List<String> finalListViewLines = new ArrayList<String>();
+        finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
+        finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
+
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        this.academicsFieldsListView.setAdapter(adapter);
     }
 
     private void addJobsProfileFieldsToUIList() {

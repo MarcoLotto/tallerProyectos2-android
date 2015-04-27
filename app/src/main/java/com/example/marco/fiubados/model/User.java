@@ -25,7 +25,7 @@ public class User extends DatabaseObject{
     private String nationality;
     private String city;
     private List<Job> jobs = new ArrayList<Job>();
-    private List<Academic> academicInfo = new ArrayList<Academic>();
+    private Academic academicInfo = new Academic("");
     private List<Education> educationInfo = new ArrayList<Education>();
 
     public User(String id, String name){
@@ -128,11 +128,11 @@ public class User extends DatabaseObject{
         this.jobs = jobs;
     }
 
-    public List<Academic> getAcademicInfo() {
+    public Academic getAcademicInfo() {
         return academicInfo;
     }
 
-    public void setAcademicInfo(List<Academic> academicInfo) {
+    public void setAcademicInfo(Academic academicInfo) {
         this.academicInfo = academicInfo;
     }
 
