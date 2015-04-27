@@ -70,7 +70,7 @@ public class WallTabScreen implements TabScreen{
         this.confirmFriendRequestButton.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
             // Seteamos como titulo del muro el nombre de la persona
-            this.wallTitle.setText(this.userOwnerOfTheWall.getName());
+            this.wallTitle.setText(this.userOwnerOfTheWall.getName() + " " + this.userOwnerOfTheWall.getLastName());
 
             // Hago visibles o no los botones de amistad
             if(!this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())) {

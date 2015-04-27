@@ -89,7 +89,8 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             String lastName = jsonObject.getString("lastName");
             String userId = jsonObject.getString("userId");
             String email = jsonObject.getString("email");
-            User user = new User(userId, firstName + " " + lastName, email);
+            User user = new User(userId, firstName, email);
+            user.setLastName(lastName);
             user.setFriendshipStatus(friendshipStatus);
             if(isFriendshipRequest){
                 user.setFriendshipRequestId(jsonObject.getString("friendshipRequestId"));

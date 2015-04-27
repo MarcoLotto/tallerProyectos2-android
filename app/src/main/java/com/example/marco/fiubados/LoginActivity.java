@@ -10,13 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
+import com.example.marco.fiubados.model.User;
+
+import java.util.List;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity implements TabScreen {
 
     private static final String LOGIN_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/sign_in";
+    private static final int LOGIN_SERVICE_ID = 0;
+    private static final int SEARCH_PROFILE_INFO_SERVICE_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +74,7 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
         else {
-            LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, username.getText().toString(), password.getText().toString());
+            LoginHttpAsyncTask loginRequest = new LoginHttpAsyncTask(this, this, this.LOGIN_SERVICE_ID, username.getText().toString(), password.getText().toString());
             loginRequest.execute(this.LOGIN_ENDPOINT_URL);
         }
     }
@@ -75,5 +82,26 @@ public class LoginActivity extends ActionBarActivity {
     private void showSignUpMenu(){
         Intent intent = new Intent(this, SignUpActivity.class);
         this.startActivity(intent);
+    }
+
+    @Override
+    public void onFocus() {
+
+    }
+
+    @Override
+    public void onServiceCallback(List responseElements, int serviceId) {
+        if(serviceId == this.LOGIN_SERVICE_ID){
+            // Pedimos el perfil del usuario para llenarlo
+            User myUser = ContextManager.getInstance().getMyUser();
+            ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, this.SEARCH_PROFILE_INFO_SERVICE_ID, myUser);
+            personalInfoService.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
+        }
+        else if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
+            // Abrimos la pantalla principal
+            Intent intent = new Intent(this, MainScreenActivity.class);
+            this.startActivity(intent);
+            this.finish();
+        }
     }
 }

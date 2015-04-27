@@ -35,6 +35,7 @@ import javax.xml.datatype.Duration;
 public class ProfileEditActivity extends ActionBarActivity implements TabScreen {
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
+    private static final int UPDATE_PROFILE_INFO_SERVICE_ID = 2;
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;
@@ -106,7 +107,13 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
             this.addProfileFieldsToUIList();
         }
         else if(serviceId == this.EDIT_PROFILE_INFO_SERVICE_ID){
-            // Pudimos editar correctamente, volvemos a la pantalla de vista de perfil
+            // Mandamos a recargar el perfil para actualizar los datos del usuario
+            User myUser = ContextManager.getInstance().getMyUser();
+            ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, this.UPDATE_PROFILE_INFO_SERVICE_ID, myUser);
+            personalInfoService.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
+        }
+        else if(serviceId == this.UPDATE_PROFILE_INFO_SERVICE_ID){
+            // Pudimos actualizar los datos correctamente, le decimos al usuario
             Toast toast = Toast.makeText(this.getApplicationContext(), "Edición exitosa", Toast.LENGTH_SHORT);
             toast.show();
             this.finish();

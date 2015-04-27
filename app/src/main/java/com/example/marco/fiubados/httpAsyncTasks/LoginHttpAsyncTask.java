@@ -6,12 +6,14 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.MainScreenActivity;
+import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 
 /**
  * Created by Marco on 21/03/2015.
@@ -21,11 +23,15 @@ import java.net.HttpURLConnection;
 public class LoginHttpAsyncTask extends HttpAsyncTask {
     private static final String LOGIN_RESULT_OK = "ok";
     String username, password;
+    TabScreen screen;
+    int serviceId;
 
-    public LoginHttpAsyncTask(Activity callingActivity, String username, String password) {
+    public LoginHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String username, String password) {
         super(callingActivity);
         this.username = username;
         this.password = password;
+        this.screen = screen;
+        this.serviceId = serviceId;
     }
 
     @Override
@@ -57,9 +63,7 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
                     e.printStackTrace();
                 }
                 // Pudimos logueanos correctamente, vamos a la pantalla de inicio
-                Intent intent = new Intent(this.callingActivity, MainScreenActivity.class);
-                this.callingActivity.startActivity(intent);
-                this.callingActivity.finish();
+                this.screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
