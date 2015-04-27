@@ -29,4 +29,5 @@
     <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_group_create">GroupCreateActivity</string>
 </resources>

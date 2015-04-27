@@ -76,15 +76,19 @@
         </activity>
         <activity
             android:name=".JobsProfileEditActivity"
-            android:label="Edición de perfil"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:label="Edición de perfil"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".AcademicProfileEditActivity"
-            android:label="Edicion de perfil"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
+            android:label="Edicion de perfil"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".GroupCreateActivity"
+            android:label="@string/title_activity_group_create" >
         </activity>
     </application>
 

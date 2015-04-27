@@ -1,23 +1,34 @@
 package com.example.marco.fiubados;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.GroupsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
+import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
+import com.example.marco.fiubados.model.Group;
+import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.User;
 
 /**
@@ -35,6 +46,9 @@ public class MainScreenActivity extends TabbedActivity {
     private WallTabScreen wallTabScreen;
     private GroupsTabScreen groupsTabScreen;
     private SearchView searchView;
+
+    private static final String CREATE_GROUP_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
+    private static final int CREATE_GROUP_SERVICE_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +140,7 @@ public class MainScreenActivity extends TabbedActivity {
 
     @Override
     public TabScreen getGroupsTabScreen() {
-        return null;  // TODO
+        return this.groupsTabScreen;
     }
 
     @Override
@@ -197,8 +211,44 @@ public class MainScreenActivity extends TabbedActivity {
     }
 
     private boolean openAddGroupActivity() {
-
+        //Intent intent = new Intent(this, GroupCreateActivity.class);
+        //this.startActivity(intent);
+        this.createAddGroupDialog(this, this.groupsTabScreen);
         return true;
+    }
+
+    public void createAddGroupDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_add_group_dialog, null);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos todos los valores de los campos
+                        String groupName = ((EditText) dialogView.findViewById(R.id.fieldValueName)).getText().toString();
+                        String groupDescription = ((EditText) dialogView.findViewById(R.id.fieldValueDescription)).getText().toString();
+
+                        // Validamos los campos
+                        if (FieldsValidator.isTextFieldValid(groupName, 1)) {
+                            Group group = new Group("", groupName, groupDescription);
+                            GroupEditAndCreateHttpAsyncTask service = new GroupEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_GROUP_SERVICE_ID, group);
+                            service.execute(CREATE_GROUP_SERVICE_ENDPOINT_URL);
+                        } else {
+                            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la descripcion del grupo", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        builder.create().show();
     }
 
     @Override
