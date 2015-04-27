@@ -26,9 +26,7 @@ import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
-import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.User;
 
 /**
@@ -184,7 +182,7 @@ public class MainScreenActivity extends TabbedActivity {
             case R.id.action_search:
                 return this.onSearchRequested();
             case R.id.addAction:
-                return this.openAddGroupActivity();
+                return this.openAddGroupDialog();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -210,9 +208,7 @@ public class MainScreenActivity extends TabbedActivity {
         return true;
     }
 
-    private boolean openAddGroupActivity() {
-        //Intent intent = new Intent(this, GroupCreateActivity.class);
-        //this.startActivity(intent);
+    private boolean openAddGroupDialog() {
         this.createAddGroupDialog(this, this.groupsTabScreen);
         return true;
     }

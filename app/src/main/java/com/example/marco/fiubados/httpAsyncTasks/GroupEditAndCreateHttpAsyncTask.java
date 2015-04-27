@@ -63,6 +63,7 @@ public class GroupEditAndCreateHttpAsyncTask extends HttpAsyncTask{
             }
                 // Le indicamos al servicio que nos llamo que terminó la creacion
                 screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+                screen.onFocus();
 
         } else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

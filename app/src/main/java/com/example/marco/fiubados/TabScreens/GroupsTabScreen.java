@@ -1,11 +1,21 @@
 package com.example.marco.fiubados.TabScreens;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
+import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
+import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupsHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
 
 import java.util.ArrayList;
@@ -18,7 +28,9 @@ public class GroupsTabScreen implements TabScreen {
 
     public static final String GROUPS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     // public static final String GROUPS_SEARCH_ENDPOINT_URL = "http://www.mocky.io/v2/553e70fa2f711b4f27a5d287";
+    private static final String CREATE_GROUP_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     private static final int SEARCH_GROUPS_SERVICE_ID = 0;
+    private static final int CREATE_GROUP_SERVICE_ID = 1;
 
     private TabbedActivity tabOwnerActivity;
     private List<Group> groups;
@@ -41,7 +53,7 @@ public class GroupsTabScreen implements TabScreen {
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == SEARCH_GROUPS_SERVICE_ID){
+        if(serviceId == SEARCH_GROUPS_SERVICE_ID || serviceId == CREATE_GROUP_SERVICE_ID){
             this.groups = responseElements;
             this.addGroupsToGroupUIList(this.groups, this.groupsListView);
         }
@@ -57,4 +69,5 @@ public class GroupsTabScreen implements TabScreen {
         ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         groupsListView.setAdapter(adapter);
     }
+
 }
