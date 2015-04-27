@@ -15,4 +15,8 @@
         android:icon="@drawable/ic_action_person_holo_dark"
         android:title="Profile"
         app:showAsAction="always"/>
+    <item android:id="@+id/addAction"
+        android:icon="@drawable/ic_action_new"
+        android:title="Profile Add"
+        app:showAsAction="always"/>
 </menu>

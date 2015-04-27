@@ -15,6 +15,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
+import com.example.marco.fiubados.TabScreens.GroupsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
 import com.example.marco.fiubados.model.User;
@@ -32,6 +33,7 @@ public class MainScreenActivity extends TabbedActivity {
     private TabHost tabHost;
     private FriendsTabScreen friendsTabScreen;
     private WallTabScreen wallTabScreen;
+    private GroupsTabScreen groupsTabScreen;
     private SearchView searchView;
 
     @Override
@@ -60,6 +62,8 @@ public class MainScreenActivity extends TabbedActivity {
         this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+        ListView groupsListView = (ListView) findViewById(R.id.groupsListView);
+        this.groupsTabScreen = new GroupsTabScreen(this, groupsListView);
 
         this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -84,8 +88,9 @@ public class MainScreenActivity extends TabbedActivity {
                 this.wallTabScreen.onFocus();
                 break;
             case 2:
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de grupos
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                this.groupsTabScreen.onFocus();
                 break;
             case 3:
                 this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
@@ -164,6 +169,8 @@ public class MainScreenActivity extends TabbedActivity {
                 return this.openProfileActivity();
             case R.id.action_search:
                 return this.onSearchRequested();
+            case R.id.addAction:
+                return this.openAddGroupActivity();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -189,6 +196,11 @@ public class MainScreenActivity extends TabbedActivity {
         return true;
     }
 
+    private boolean openAddGroupActivity() {
+
+        return true;
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -202,6 +214,10 @@ public class MainScreenActivity extends TabbedActivity {
 
         // El icono de busquedas
         menu.findItem(R.id.action_search).setVisible(true);
+
+        // Mostramos el boton de agregar grupo si estamos en la pantalla de grupos
+        boolean isGroupTagActive = this.tabHost.getCurrentTab() == GROUPS_TAB_INDEX;
+        menu.findItem(R.id.addAction).setVisible(isGroupTagActive);
 
         return true;
     }
