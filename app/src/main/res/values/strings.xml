@@ -7,10 +7,10 @@
     <string name="title_activity_sign_up">Registrarse</string>
     <string name="title_activity_profile">Perfil</string>
     <string name="title_activity_profile_edit">Edición de perfil</string>
-    <string name="accept">Aceptar</string>
+    <string name="accept">Salir</string>
     <string name="cancel">Cancelar</string>
     <string name="title_activity_notifications">Notificaciones</string>
-    <string name="notAccept">Rechazar</string>
+    <string name="notAccept">Quedarse</string>
     <string name="LabelSignUpButton">Registrarse</string>
     <string name="SignUpPasswordHint">Contraseña</string>
     <string name="SignUpNameHint">Nombre</string>
@@ -19,7 +19,7 @@
     <string name="titleSignUpLabel">Completá con tus datos</string>
     <string name="padronPassportSignUpHint">Padrón o Pasaporte</string>
     <string name="title_activity_search_users">SearchUsersActivity</string>
-    <string name="search_hint">Usuario a buscar</string>
+    <string name="search_hint">Nombre, nacionalidad, etc.</string>
     <string name="action_search">Search</string>
     <string name="ok">OK</string>
     <string name="title_activity_jobs_profile_edit">JobsProfileEditActivity</string>
@@ -27,7 +27,4 @@
     <string name="save">Guardar</string>
     <string name="modify">Modificar</string>
     <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_group_create">GroupCreateActivity</string>
 </resources>

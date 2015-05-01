@@ -129,6 +129,7 @@ public class MainScreenActivity extends TabbedActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         this.searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        this.searchView.setQueryHint(getString(R.string.search_hint));
         this.searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
