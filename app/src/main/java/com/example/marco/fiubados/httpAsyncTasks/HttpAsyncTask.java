@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.marco.fiubados.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,15 +70,14 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
 
     /**
      * Indica el tipo de request que se utilizará (REST, POST, etc)
-     * @return
      */
     protected abstract String getRequestMethod();
 
     public void onPreExecute() {
         this.configureRequestFields();
         this.configureResponseFields();
-        this.dialog.setMessage("Esperando Respuesta ...");
         this.dialog.show();
+        dialog.setContentView(R.layout.progress_dialog);
     }
 
     @Override
@@ -84,7 +85,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         // Armamos la url final apendeando atributos GET de ser necesario
         String url = this.appendParametersToURL(params[0]);
         Log.d("REQUEST", url);
-        HttpURLConnection urlToRequest = null;
+        HttpURLConnection urlToRequest;
         try {
             urlToRequest = (HttpURLConnection) (new URL(url)).openConnection();
         } catch (MalformedURLException e) {

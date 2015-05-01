@@ -55,7 +55,6 @@ public class MainScreenActivity extends TabbedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
         ContextManager.getInstance().setMainScreenActivity(this);
-
         // Configuramos los tabs
         this.configureTabHost();
 
