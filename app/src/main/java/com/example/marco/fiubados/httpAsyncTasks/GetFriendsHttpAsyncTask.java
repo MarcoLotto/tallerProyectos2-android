@@ -5,10 +5,8 @@ package com.example.marco.fiubados.httpAsyncTasks;
  */
 
 import android.app.Activity;
-import android.content.Intent;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.MainScreenActivity;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
 
@@ -54,7 +52,7 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
 
             String result = this.getResponseField("result");
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {

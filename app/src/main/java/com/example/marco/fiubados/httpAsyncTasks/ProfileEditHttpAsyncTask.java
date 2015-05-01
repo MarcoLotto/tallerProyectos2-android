@@ -1,7 +1,6 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
@@ -12,10 +11,8 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Marco on 12/04/2015.

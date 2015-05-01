@@ -1,21 +1,11 @@
 package com.example.marco.fiubados.TabScreens;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
-import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupsHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
 
 import java.util.ArrayList;

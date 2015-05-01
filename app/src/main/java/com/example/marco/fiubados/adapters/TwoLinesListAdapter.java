@@ -1,7 +1,6 @@
 package com.example.marco.fiubados.adapters;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 import android.widget.TwoLineListItem;
 
 import com.example.marco.fiubados.model.DualField;
-import com.example.marco.fiubados.model.User;
 
 import java.util.List;
 

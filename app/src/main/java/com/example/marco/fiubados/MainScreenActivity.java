@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -110,7 +111,7 @@ public class MainScreenActivity extends TabbedActivity {
                 // Tab de amigos
                 this.friendsTabScreen.onFocus();
                 break;
-        };
+        }
         this.invalidateOptionsMenu();
     }
 
@@ -127,7 +128,7 @@ public class MainScreenActivity extends TabbedActivity {
         getMenuInflater().inflate(R.menu.menu_main_screen, menu);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        this.searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        this.searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         this.searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }

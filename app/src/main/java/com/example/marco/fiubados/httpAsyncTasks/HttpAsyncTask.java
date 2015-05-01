@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,10 +44,10 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     public HttpAsyncTask(Activity callingActivity) {
         this.dialog = new ProgressDialog(callingActivity);
         this.callingActivity = callingActivity;
-        this.requestFields = new HashMap<String, String>();
-        this.responseFields = new HashMap<String, String>();
-        this.forcedGetRequestFields = new HashMap<String, String>();
-        this.urlRequestFields = new ArrayList<String>();
+        this.requestFields = new HashMap<>();
+        this.responseFields = new HashMap<>();
+        this.forcedGetRequestFields = new HashMap<>();
+        this.urlRequestFields = new ArrayList<>();
         this.responseCode = -1;
     }
 

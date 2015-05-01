@@ -5,7 +5,6 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
-import com.example.marco.fiubados.model.User;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
                 this.dialog.show();
             }
             // Le indicamos a la pantalla que nos llamo que terminamos y el resultado de esto
-            List<String> results = new ArrayList<String>();
+            List<String> results = new ArrayList<>();
             results.add(resultValue);
             screen.onServiceCallback(results, this.serviceId);
         }

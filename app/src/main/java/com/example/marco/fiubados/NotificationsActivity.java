@@ -3,8 +3,8 @@ package com.example.marco.fiubados;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,10 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
-import com.example.marco.fiubados.httpAsyncTasks.GetFriendsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetPendingRequestsHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
@@ -26,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class NotificationsActivity extends ActionBarActivity implements TabScreen {
+public class NotificationsActivity extends AppCompatActivity implements TabScreen {
 
     private static final int GET_PENDING_FRIEND_REQUESTS_USERS_SERVICE_ID = 0;
     private static final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
@@ -35,7 +33,7 @@ public class NotificationsActivity extends ActionBarActivity implements TabScree
     public static final String FRIENDSHIP_RESPONSE_STATUS_ACCEPT = "accept";
     public static final String FRINDSHIP_RESPONSE_STATUS_REJECT = "reject";
 
-    private List<User> pendingFriends = new ArrayList<User>();
+    private List<User> pendingFriends = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,14 +128,14 @@ public class NotificationsActivity extends ActionBarActivity implements TabScree
     }
 
     private void addUsersToUserUIList(List<User> usersList, ListView usersListView) {
-        List<String> finalListViewLines = new ArrayList<String>();
+        List<String> finalListViewLines = new ArrayList<>();
         Iterator<User> it = usersList.iterator();
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
             finalListViewLines.add(user.getName());
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         usersListView.setAdapter(adapter);
     }
 

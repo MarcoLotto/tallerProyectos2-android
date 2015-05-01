@@ -8,7 +8,6 @@ import android.widget.ListView;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.GetFriendsHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.SearchFriendsHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class FriendsTabScreen implements TabScreen{
     public FriendsTabScreen(TabbedActivity tabOwnerActivity, ListView friendsListView){
         this.tabOwnerActivity = tabOwnerActivity;
         this.friendsListView = friendsListView;
-        this.users = new ArrayList<User>();
+        this.users = new ArrayList<>();
         this.configureComponents();
     }
 
@@ -90,14 +89,14 @@ public class FriendsTabScreen implements TabScreen{
     }
 
     private void addUsersToUserUIList(List<User> usersList, ListView usersListView) {
-        List<String> finalListViewLines = new ArrayList<String>();
+        List<String> finalListViewLines = new ArrayList<>();
         Iterator<User> it = usersList.iterator();
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
             finalListViewLines.add(user.getName() + " " + user.getLastName());
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
+        ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         usersListView.setAdapter(adapter);
     }
 }

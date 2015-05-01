@@ -5,14 +5,12 @@ import android.app.Activity;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.Job;
-import com.example.marco.fiubados.model.ProfileField;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Created by Marco on 25/04/2015.

@@ -2,12 +2,9 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.example.marco.fiubados.LoginActivity;
-import com.example.marco.fiubados.SignUpActivity;
 import com.example.marco.fiubados.commons.AlertDialogBuilder;
 
 import java.net.HttpURLConnection;

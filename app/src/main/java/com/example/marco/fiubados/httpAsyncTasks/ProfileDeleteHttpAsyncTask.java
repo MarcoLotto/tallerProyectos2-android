@@ -5,7 +5,6 @@ import android.app.Activity;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.DatabaseObject;
-import com.example.marco.fiubados.model.Job;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;

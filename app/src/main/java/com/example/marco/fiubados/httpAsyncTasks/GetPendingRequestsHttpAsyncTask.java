@@ -26,7 +26,7 @@ public class GetPendingRequestsHttpAsyncTask extends GetFriendsHttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if (this.responseCode == HttpURLConnection.HTTP_OK) {
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
 
             String result = this.getResponseField("result");
             if (result.equals(this.GET_FRIEND_RESULT_OK)) {

@@ -3,8 +3,8 @@ package com.example.marco.fiubados;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,17 +28,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.xml.datatype.Duration;
 
-
-public class ProfileEditActivity extends ActionBarActivity implements TabScreen {
+public class ProfileEditActivity extends AppCompatActivity implements TabScreen {
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
     private static final int UPDATE_PROFILE_INFO_SERVICE_ID = 2;
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private ListView profileEditListView;
-    private List<ProfileField> fields = new ArrayList<ProfileField>();
+    private List<ProfileField> fields = new ArrayList<>();
     private ProfileField lastFieldClicked;
     private User user;
 
@@ -129,14 +126,14 @@ public class ProfileEditActivity extends ActionBarActivity implements TabScreen 
     }
 
     private void addProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<String>();
+        List<String> finalListViewLines = new ArrayList<>();
         Iterator<ProfileField> it = this.fields.iterator();
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             ProfileField field = it.next();
             finalListViewLines.add(field.getDisplayName() + ": " + field.getValue());
         }
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.profileEditListView.setAdapter(adapter);
     }
 

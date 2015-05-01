@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProfileActivity extends ActionBarActivity implements TabScreen {
+public class ProfileActivity extends AppCompatActivity implements TabScreen {
 
     private final int PERSONAL_TAB_INDEX = 0;
     private final int JOBS_TAB_INDEX = 1;
@@ -215,7 +215,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     }
 
     private void addEducationsProfileFieldsToUIList() {
-        List<DualField> finalListViewLines = new ArrayList<DualField>();
+        List<DualField> finalListViewLines = new ArrayList<>();
         for (Education education : this.user.getEducationInfo()) {
             // Agrego a la lista de educación, todas las educaciones
             String line1 = education.getDiploma() + " - " + education.getInstitute();
@@ -226,7 +226,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     }
 
     private void addAcademicsProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<String>();
+        List<String> finalListViewLines = new ArrayList<>();
         finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
         finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
 
@@ -235,7 +235,7 @@ public class ProfileActivity extends ActionBarActivity implements TabScreen {
     }
 
     private void addJobsProfileFieldsToUIList() {
-        List<DualField> finalListViewLines = new ArrayList<DualField>();
+        List<DualField> finalListViewLines = new ArrayList<>();
         for (Job job : this.user.getJobs()) {
             // Agrego a la lista de trabajos todos los trabajos
             String line1 = job.getCompany() + " - " + job.getPosition();

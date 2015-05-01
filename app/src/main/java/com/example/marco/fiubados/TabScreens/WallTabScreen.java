@@ -1,24 +1,17 @@
 package com.example.marco.fiubados.TabScreens;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.NotificationsActivity;
-import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
-import com.example.marco.fiubados.httpAsyncTasks.GetPendingRequestsHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**

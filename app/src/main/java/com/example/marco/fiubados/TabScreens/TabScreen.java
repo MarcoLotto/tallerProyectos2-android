@@ -1,9 +1,5 @@
 package com.example.marco.fiubados.TabScreens;
 
-import android.app.Activity;
-
-import com.example.marco.fiubados.httpAsyncTasks.HttpAsyncTask;
-
 import java.util.List;
 
 /**

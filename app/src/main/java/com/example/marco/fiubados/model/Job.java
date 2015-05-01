@@ -1,6 +1,5 @@
 package com.example.marco.fiubados.model;
 
-import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.commons.FormatTranslator;
 
 /**

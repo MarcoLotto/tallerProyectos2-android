@@ -1,6 +1,6 @@
 package com.example.marco.fiubados;
 
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.TabScreen;
@@ -10,7 +10,7 @@ import com.example.marco.fiubados.TabScreens.WallTabScreen;
  * Created by Marco on 08/04/2015.
  * Aquellas activities que funcionan como contenedor de tabs
  */
-public abstract class TabbedActivity extends ActionBarActivity {
+public abstract class TabbedActivity extends AppCompatActivity {
 
     /**
      * Accessors para los tabs

@@ -1,11 +1,9 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.MainScreenActivity;
 import com.example.marco.fiubados.TabScreens.TabScreen;
 import com.example.marco.fiubados.model.User;
 

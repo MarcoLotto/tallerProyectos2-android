@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
-import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
@@ -34,7 +33,7 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
 
             String result = this.getResponseField("result");
             if(result.equals(this.GET_FRIEND_RESULT_OK)) {

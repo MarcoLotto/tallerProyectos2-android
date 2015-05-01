@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.marco.fiubados" >
 
-    <uses-sdk android:minSdkVersion="16" />
+    <uses-sdk android:minSdkVersion="9" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
@@ -85,10 +85,6 @@
             android:configChanges="orientation"
             android:label="Edicion de perfil"
             android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".GroupCreateActivity"
-            android:label="@string/title_activity_group_create" >
         </activity>
     </application>
 

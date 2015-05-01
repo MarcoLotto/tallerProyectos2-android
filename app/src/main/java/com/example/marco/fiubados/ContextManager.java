@@ -1,7 +1,5 @@
 package com.example.marco.fiubados;
 
-import android.app.Activity;
-
 import com.example.marco.fiubados.model.User;
 
 /**
@@ -29,7 +27,7 @@ public class ContextManager {
 
     /**
      * Devuelve el id de login del usuario
-     * @return
+     * @return id de login del usuario
      */
     public String getUserToken() {
         return userToken;

@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class ProfileArray {
 
-    private List<ProfileField> fields = new ArrayList<ProfileField>();
+    private List<ProfileField> fields = new ArrayList<>();
 
     public List<ProfileField> getFields() {
         return fields;

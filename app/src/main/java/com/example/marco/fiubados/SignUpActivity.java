@@ -1,9 +1,8 @@
 package com.example.marco.fiubados;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SignUpActivity extends ActionBarActivity {
+public class SignUpActivity extends AppCompatActivity {
 
     private static final String SIGNUP_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/sign_up";
 
@@ -76,7 +75,7 @@ public class SignUpActivity extends ActionBarActivity {
             helpDialog.show();
             return;
         }
-        List<String> validationList = new ArrayList<String>();
+        List<String> validationList = new ArrayList<>();
         validationList.add("@");
         validationList.add(".");
         if(!FieldsValidator.isTextFieldValid(email.getText().toString(), 1, validationList)){

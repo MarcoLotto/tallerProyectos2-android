@@ -3,8 +3,8 @@ package com.example.marco.fiubados;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,8 +33,7 @@ import com.example.marco.fiubados.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class AcademicProfileEditActivity extends ActionBarActivity implements TabScreen {
+public class AcademicProfileEditActivity extends AppCompatActivity implements TabScreen {
 
     private static final String EDIT_EDUCATIONS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/educations/";
     private static final int CAREER_POSITION_IN_ACADEMICS_LIST = 0;
@@ -216,7 +215,7 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
     }
 
     private void addEducationProfileFieldsToUIList() {
-        List<DualField> finalListViewLines = new ArrayList<DualField>();
+        List<DualField> finalListViewLines = new ArrayList<>();
         for (Education education : this.user.getEducationInfo()) {
             // Agrego a la lista de de info de educación a todos los items
             if(!education.isDeleted()) {
@@ -229,7 +228,7 @@ public class AcademicProfileEditActivity extends ActionBarActivity implements Ta
     }
 
     private void addAcademicsProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<String>();
+        List<String> finalListViewLines = new ArrayList<>();
         finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
         finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
 

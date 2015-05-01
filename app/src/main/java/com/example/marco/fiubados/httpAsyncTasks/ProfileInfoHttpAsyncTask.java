@@ -4,11 +4,8 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
-import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Job;
-import com.example.marco.fiubados.model.ProfileArray;
-import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;

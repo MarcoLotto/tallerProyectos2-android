@@ -4,9 +4,7 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.TabScreen;
-import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.Education;
-import com.example.marco.fiubados.model.Job;
 
 import org.json.JSONException;
 import org.json.JSONObject;

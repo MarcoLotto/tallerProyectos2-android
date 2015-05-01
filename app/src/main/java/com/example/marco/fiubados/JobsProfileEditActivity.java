@@ -1,21 +1,18 @@
 package com.example.marco.fiubados;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
@@ -23,21 +20,16 @@ import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileDeleteHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
-import com.example.marco.fiubados.model.DatabaseObject;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Job;
-import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-
-public class JobsProfileEditActivity extends ActionBarActivity implements TabScreen{
+public class JobsProfileEditActivity extends AppCompatActivity implements TabScreen{
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/";
     private static final String DELETE_JOB_SERVICE_ENDPOINT_URL = EDIT_PROFILE_ENDPOINT_URL;
@@ -143,7 +135,7 @@ public class JobsProfileEditActivity extends ActionBarActivity implements TabScr
     }
 
     private void addProfileFieldsToUIList() {
-        List<DualField> finalListViewLines = new ArrayList<DualField>();
+        List<DualField> finalListViewLines = new ArrayList<>();
         for (Job job : this.user.getJobs()) {
             if (!job.isDeleted()) {
                 // Agrego a la lista de trabajos todos los trabajos

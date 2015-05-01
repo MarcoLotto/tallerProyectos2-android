@@ -24,9 +24,9 @@ public class User extends DatabaseObject{
     private String biography;
     private String nationality;
     private String city;
-    private List<Job> jobs = new ArrayList<Job>();
+    private List<Job> jobs = new ArrayList<>();
     private Academic academicInfo = new Academic("");
-    private List<Education> educationInfo = new ArrayList<Education>();
+    private List<Education> educationInfo = new ArrayList<>();
 
     public User(String id, String name){
         super(id);
