@@ -49,7 +49,8 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private static final int CREATE_JOB_SERVICE_ID = 1;
     private static final int CREATE_EDUCATION_SERVICE_ID = 2;
-    
+    private static final int SUBJECTS_INFO_SERVICE_ID = 3;
+
     private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
     private ListView jobsFieldsListView;
@@ -58,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
     private User temporalUser;
     private TabHost tabHost;
     private ListView academicsFieldsListView;
+    private List<String> fiubaAcademicsViewLines = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,12 +207,15 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
             this.addPersonalProfileFieldsToUIList();
             this.addJobsProfileFieldsToUIList();
             this.addEducationsProfileFieldsToUIList();
-            this.addAcademicsProfileFieldsToUIList();
+            this.prepareAcademicsProfileFieldsToShowUIList();
         }
         else if(serviceId == this.CREATE_JOB_SERVICE_ID || serviceId == this.CREATE_EDUCATION_SERVICE_ID){
             this.onFocus();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Creación exitosa", Toast.LENGTH_SHORT);
             toast.show();
+        }
+        else if(serviceId == this.SUBJECTS_INFO_SERVICE_ID){
+            this.addAcademicsProfileFieldsToUIList();
         }
     }
 
@@ -225,12 +230,18 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
         this.educationsFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
-    private void addAcademicsProfileFieldsToUIList() {
-        List<String> finalListViewLines = new ArrayList<>();
-        finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
-        finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
 
-        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
+    private void prepareAcademicsProfileFieldsToShowUIList() {
+        this.fiubaAcademicsViewLines.clear();
+        this.fiubaAcademicsViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
+        this.fiubaAcademicsViewLines.add("Padrón" + ": " + this.user.getPadron());
+
+        // Llamamos al helper para conseguir todos los datos de las materias
+        SubjectsFinder subjectsFinder = new SubjectsFinder(this, this, this.SUBJECTS_INFO_SERVICE_ID, this.fiubaAcademicsViewLines);
+    }
+
+    private void addAcademicsProfileFieldsToUIList() {
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, this.fiubaAcademicsViewLines);
         this.academicsFieldsListView.setAdapter(adapter);
     }
 
