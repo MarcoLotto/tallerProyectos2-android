@@ -292,7 +292,7 @@ public class MainScreenActivity extends TabbedActivity {
         fieldNameTextView.setText("¿Desea salir de la aplicación?");
         builder.setView(dialogView)
                 // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.quit, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Matamos al activity principal para salir de la app

@@ -2,6 +2,7 @@ package com.example.marco.fiubados;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,6 +25,7 @@ import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
+import com.example.marco.fiubados.model.Academic;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Field;
@@ -35,6 +38,9 @@ import java.util.List;
 
 
 public class ProfileActivity extends AppCompatActivity implements TabScreen {
+
+    // La posición en la lista de academico del item de materias aprobadas
+    private static final int APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST = 2;
 
     private final int PERSONAL_TAB_INDEX = 0;
     private final int JOBS_TAB_INDEX = 1;
@@ -60,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
     private TabHost tabHost;
     private ListView academicsFieldsListView;
     private List<String> fiubaAcademicsViewLines = new ArrayList<>();
+    private List<String> approvedSubjects = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,28 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
 
         // Configuramos los tabs
         this.configureTabHost();
+
+        // Configuramos el comportamiento de los componentes
+        this.configureComponents();
+    }
+
+    private void configureComponents() {
+        this.academicsFieldsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                onAcademicParameterClickedOnList(position);
+            }
+        });
+    }
+
+    private void onAcademicParameterClickedOnList(int position) {
+        // Abrimos el popup de modificación del parámetro
+        Academic academic = this.user.getAcademicInfo();
+        if (position == this.APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST){
+            Dialog subjectsDialog = SubjectsFinder.createApprovedSubjectsDialog(this, this.approvedSubjects);
+            subjectsDialog.show();
+        }
     }
 
     private void configureTabHost() {
@@ -216,6 +245,10 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
         }
         else if(serviceId == this.SUBJECTS_INFO_SERVICE_ID){
             this.addAcademicsProfileFieldsToUIList();
+
+            // Me guardo la info de materias aprobadas por si la quieren ver
+            this.approvedSubjects.clear();
+            this.approvedSubjects.addAll(responseElements);
         }
     }
 
@@ -241,6 +274,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
     }
 
     private void addAcademicsProfileFieldsToUIList() {
+        // Llenamos la inforamción de FIUBA
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, this.fiubaAcademicsViewLines);
         this.academicsFieldsListView.setAdapter(adapter);
     }

@@ -7,7 +7,7 @@
     <string name="title_activity_sign_up">Registrarse</string>
     <string name="title_activity_profile">Perfil</string>
     <string name="title_activity_profile_edit">Edición de perfil</string>
-    <string name="accept">Salir</string>
+    <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
     <string name="title_activity_notifications">Notificaciones</string>
     <string name="notAccept">Quedarse</string>
@@ -27,4 +27,5 @@
     <string name="save">Guardar</string>
     <string name="modify">Modificar</string>
     <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
+    <string name="quit">Salir</string>
 </resources>

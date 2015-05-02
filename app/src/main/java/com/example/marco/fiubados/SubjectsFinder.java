@@ -1,10 +1,23 @@
 package com.example.marco.fiubados;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetSubjectsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SubjectsInfoHttpAsyncTask;
+import com.example.marco.fiubados.model.Education;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,5 +102,35 @@ public class SubjectsFinder implements TabScreen{
 
     public String getApprobedRatioString() {
         return "Materias aprobadas " + this.approvedSubjects.size() +  "/" +  this.careerSubjects.size();
+    }
+
+    /**
+     * Helper para crear un dialog para ver las materias aprobadas
+     * @param approvedSubjects
+     * @return
+     */
+    public static Dialog createApprovedSubjectsDialog(Activity callingActivity,  List<String> approvedSubjects) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(callingActivity);
+        // Get the layout inflater
+        LayoutInflater inflater = callingActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_list_dialog, null);
+
+        // Cambiamos el titulo del dialog
+        ((TextView) dialogView.findViewById(R.id.title)).setText("Materias aprobadas");
+
+        // Llenamos la lista con las materias
+        ListView listView = (ListView) dialogView.findViewById(R.id.list);
+        ArrayAdapter adapter = new ArrayAdapter<>(callingActivity, android.R.layout.simple_list_item_1, approvedSubjects);
+        listView.setAdapter(adapter);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // No hace falta hacer nada
+                    }
+                });
+        return builder.create();
     }
 }
