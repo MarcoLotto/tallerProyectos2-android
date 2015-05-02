@@ -33,12 +33,15 @@ import java.util.Scanner;
  */
 public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObject> {
 
-    protected static final String GET_REQUEST_TYPE = "GET";
-    protected static final String POST_REQUEST_TYPE = "POST";
+    private final String LOG_TAG = HttpAsyncTask.class.getSimpleName();
 
     private Map<String, String> requestFields, responseFields, forcedGetRequestFields;
     private List<String> urlRequestFields;
     private JSONObject requestPostData;
+
+    protected final String GET_REQUEST_TYPE = "GET";
+    protected final String POST_REQUEST_TYPE = "POST";
+
     protected ProgressDialog dialog;
     protected Activity callingActivity;
     protected int responseCode;
@@ -84,7 +87,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     public JSONObject doInBackground(String... params) {
         // Armamos la url final apendeando atributos GET de ser necesario
         String url = this.appendParametersToURL(params[0]);
-        Log.d("REQUEST", url);
+        Log.v(LOG_TAG, "URL REQUEST: " +  url);
         HttpURLConnection urlToRequest;
         try {
             urlToRequest = (HttpURLConnection) (new URL(url)).openConnection();
@@ -112,11 +115,15 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         try {
             this.responseCode = urlToRequest.getResponseCode();
         } catch (IOException e) {
+            Log.e(LOG_TAG, e.toString());
+            if (e.getMessage().contains("authentication challenge")) {
+                this.responseCode = HttpURLConnection.HTTP_UNAUTHORIZED;
+            }
         }
         // Si tenemos como respuesta un codigo distinto a 200, nos guardamos el codigo y terminamos
         if (!this.isHTTPValidResponse(this.responseCode)) {
             try {
-                Log.d("ERROR RESPONSE CODE", Integer.toString(this.responseCode));
+                Log.v(LOG_TAG, "RESPONSE CODE: " + Integer.toString(this.responseCode));
                 return new JSONObject("{}");
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -168,7 +175,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         }
         Writer printout = new OutputStreamWriter(urlToRequest.getOutputStream(), "UTF-8");
         String finalPostData = jsonParam.toString();
-        Log.d("REQUEST POST DATA", finalPostData);
+        Log.v(LOG_TAG, "REQUEST POST DATA" + finalPostData);
         if (printout != null) {
             printout.write(finalPostData);
         }
