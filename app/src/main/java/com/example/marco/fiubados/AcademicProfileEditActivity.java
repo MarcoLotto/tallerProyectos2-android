@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +23,11 @@ import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.AcademicEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GetCareersHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileDeleteHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.model.Academic;
+import com.example.marco.fiubados.model.Career;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Field;
@@ -40,10 +43,12 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ta
     private static final String EDIT_ACADEMICS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/academic_info/edit_career";
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
+    private static final int GET_CAREERS_SERVICE_ID = 2;
     private ListView educationsEditListView;
     private ListView academicEditListView;
     private Education lastEducationFieldClicked;
     private User user;
+    private List<Career> availableCareers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +116,10 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ta
                 this.finish();
             }
         }
+        else if(serviceId == this.GET_CAREERS_SERVICE_ID){
+            // Ya tenemos los nombres de carreras, abrimos el popup de edición
+            this.onAcademicGetCareersResponse();
+        }
     }
 
     private boolean areAllAcademicsAndEducationsUpdated() {
@@ -156,12 +165,22 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ta
         // Abrimos el popup de modificación del parámetro
         Academic academic = this.user.getAcademicInfo();
         if (position == this.CAREER_POSITION_IN_ACADEMICS_LIST){
-            Dialog editDialog = this.createAcademicParameterDialog(this.CAREER_POSITION_IN_ACADEMICS_LIST, "Carrera", academic.getCareer(), false, 1);
-            editDialog.show();
+            // Llamamos al servicio de obtención de carreras
+            GetCareersHttpAsyncTask service = new GetCareersHttpAsyncTask(this, this, this.GET_CAREERS_SERVICE_ID, this.availableCareers);
+            service.execute("http://www.mocky.io/v2/5546ac29f1598ae801776374"); // TODO: Cambiar por el servicio real cuando lo deploye en heroku
         }
     }
 
-    public Dialog createAcademicParameterDialog(final int positionInList, final String fieldName, String fieldOriginalValue, final boolean numeric, final int minFieldSize) {
+    private void onAcademicGetCareersResponse() {
+        List<String> careersName = new ArrayList<>();
+        for(Career career : this.availableCareers){
+            careersName.add(career.getName());
+        }
+        Dialog editDialog = this.createAcademicComboParameterDialog(this.CAREER_POSITION_IN_ACADEMICS_LIST, "Carrera", careersName);
+        editDialog.show();
+    }
+
+    public Dialog createAcademicTextParameterDialog(final int positionInList, final String fieldName, String fieldOriginalValue, final boolean numeric, final int minFieldSize) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -195,6 +214,42 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ta
                             Toast toast = Toast.makeText(getApplicationContext(), "El campo " + fieldName + " debe ser numérico", Toast.LENGTH_LONG);
                             toast.show();
                         }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        return builder.create();
+    }
+
+    public Dialog createAcademicComboParameterDialog(final int positionInList, final String fieldName, List<String> possibleValues) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_combo_edit_parameter, null);
+
+        // Asignamos el titulo del campo
+        TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.profileFieldNameTextView);
+        fieldNameTextView.setText(fieldName);
+
+        // Asignamos las opciones posibles
+        Spinner fieldValueSpinner = (Spinner) dialogView.findViewById(R.id.profileValueSpinner);
+        ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, possibleValues);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        fieldValueSpinner.setAdapter(adapter);
+
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos el valor de spinner y lo actualizamos
+                        String paramValue = ((Spinner) dialogView.findViewById(R.id.profileValueSpinner)).getSelectedItem().toString();
+                        saveAcademicParameterValue(positionInList, paramValue);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
