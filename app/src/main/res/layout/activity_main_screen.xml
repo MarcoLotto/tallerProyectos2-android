@@ -82,9 +82,10 @@
                         </TableRow>
                         <TableRow android:layout_width="fill_parent">
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/imageView"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:id="@+id/profileImageView"
+                                android:scaleType="centerInside"
                                 android:background="@drawable/ic_action_picture_holo_light"
                                 android:layout_gravity="top|left" />
                         </TableRow>

@@ -7,8 +7,11 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -17,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -72,7 +76,8 @@ public class MainScreenActivity extends TabbedActivity {
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
         Button sendFriendRequestButton = (Button) findViewById(R.id.sendFriendRequestButton);
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
-        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView);
+        ImageView profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, profileImageView);
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
         ListView groupsListView = (ListView) findViewById(R.id.groupsListView);
@@ -306,4 +311,17 @@ public class MainScreenActivity extends TabbedActivity {
                 });
         return builder.create();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == WallTabScreen.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            if(this.tabHost.getCurrentTab() == WALL_TAB_INDEX) {
+                // Es un cambio en la imagen de perfil, le decimos al wall que lo procese
+                this.wallTabScreen.processProfileImageChange(data);
+            }
+        }
+    }
 }
+

@@ -1,7 +1,13 @@
 package com.example.marco.fiubados.TabScreens;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,18 +29,20 @@ public class WallTabScreen implements TabScreen{
 
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
-    private final int GET_FRIEND_REQUESTS_SERVICE_ID = 1;
-    private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 2;
+    private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
+    public static final int RESULT_LOAD_IMAGE = 2;
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
     private Button addFriendButton, confirmFriendRequestButton;
     private TextView wallTitle;
+    private ImageView profileImageView;
 
-    public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitle){
+    public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitle, ImageView profileImageView){
         this.tabOwnerActivity = tabOwnerActivity;
         this.wallTitle = wallTitle;
         this.addFriendButton = addFriendButton;
         this.confirmFriendRequestButton = confirmFriendRequestButton;
+        this.profileImageView = profileImageView;
 
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +56,20 @@ public class WallTabScreen implements TabScreen{
                 onConfirmFriendRequestButtonClick();
             }
         });
+        profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onProfileImageTouch();
+            }
+        });
+    }
+
+    private void onProfileImageTouch() {
+        if(this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())){
+            // Buscamos una nueva imagen y mandamos a cambiar la imagen de perfil
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            this.tabOwnerActivity.startActivityForResult(intent, this.RESULT_LOAD_IMAGE);
+        }
     }
 
     private void onConfirmFriendRequestButtonClick() {
@@ -108,6 +130,22 @@ public class WallTabScreen implements TabScreen{
     public void setUserOwnerOfTheWall(User userOwnerOfTheWall) {
         // TODO: Si nos falta información del usuario deberiamos ir a buscarla
         this.userOwnerOfTheWall = userOwnerOfTheWall;
+    }
+
+    public void processProfileImageChange(Intent data) {
+        // Obtenemos la data de la imagen conseguida en la galería
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = this.tabOwnerActivity.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+        // TODO: Acá deberíamos llamar al servicio para subir la imagen de perfil al servidor
+
+        // Seteamos la imagen al recuadro del perfil
+        this.profileImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
     }
 }
 
