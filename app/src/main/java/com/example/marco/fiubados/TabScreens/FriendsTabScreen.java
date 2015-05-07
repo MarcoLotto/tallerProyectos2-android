@@ -19,7 +19,7 @@ import java.util.List;
  *
  * Maneja la lógica interna del tab de listado de amigos
  */
-public class FriendsTabScreen implements TabScreen{
+public class FriendsTabScreen implements CallbackScreen {
 
     public static final String FRIENDS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends";
     private static final int SEARCH_FRIENDS_SERVICE_ID = 0;

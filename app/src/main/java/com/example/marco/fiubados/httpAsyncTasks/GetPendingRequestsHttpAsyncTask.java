@@ -2,7 +2,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONException;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GetPendingRequestsHttpAsyncTask extends GetFriendsHttpAsyncTask {
 
-    public GetPendingRequestsHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
+    public GetPendingRequestsHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, String searchName) {
         super(callingActivity, screen, serviceId, searchName);
     }
 
@@ -40,7 +40,7 @@ public class GetPendingRequestsHttpAsyncTask extends GetFriendsHttpAsyncTask {
                 }
             }
             // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
-            this.screen.onServiceCallback(users, this.serviceId);
+            this.callbackScreen.onServiceCallback(users, this.serviceId);
         } else if (this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");
             this.dialog.show();

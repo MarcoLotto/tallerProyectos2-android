@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.R;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,12 +44,17 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     protected final String POST_REQUEST_TYPE = "POST";
 
     protected ProgressDialog dialog;
-    protected Activity callingActivity;
     protected int responseCode;
 
-    public HttpAsyncTask(Activity callingActivity) {
+    protected Activity callingActivity;
+    protected CallbackScreen callbackScreen;
+    protected int serviceId;
+
+    public HttpAsyncTask(Activity callingActivity, CallbackScreen callbackScreen, int serviceId) {
         this.dialog = new ProgressDialog(callingActivity);
         this.callingActivity = callingActivity;
+        this.callbackScreen = callbackScreen;
+        this.serviceId = serviceId;
         this.requestFields = new HashMap<>();
         this.responseFields = new HashMap<>();
         this.forcedGetRequestFields = new HashMap<>();

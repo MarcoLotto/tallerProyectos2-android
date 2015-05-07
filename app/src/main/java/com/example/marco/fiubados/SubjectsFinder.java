@@ -7,17 +7,12 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
-import com.example.marco.fiubados.commons.FieldsValidator;
-import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.GetSubjectsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SubjectsInfoHttpAsyncTask;
-import com.example.marco.fiubados.model.Education;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,19 +23,19 @@ import java.util.Map;
  * Created by Marco on 02/05/2015.
  * Consigue las materias que el alumno tiene aprobadas y el factor de aprobación total de la carrera
  */
-public class SubjectsFinder implements TabScreen{
+public class SubjectsFinder implements CallbackScreen {
     private static final int CAREER_SUBJECTS_SERVICE_ID = 0;
     private static final int APPROVED_SUBJECTS_SERVICE_ID = 1;
     private static final int SUBJECTS_INFO_SERVICE_ID = 2;
 
     private Activity callingActivity;
-    private TabScreen callingScreen;
+    private CallbackScreen callingScreen;
     private Map<String, String> subjectsInfo;
     private List<String> careerSubjects, approvedSubjects, fiubaAcademicToShowLines;
     private boolean careerSubjectsRetrived, approvedSubjectsRetrived, subjectsInfoRetrived;
     private int serviceId;
 
-    SubjectsFinder(Activity callingActivity, TabScreen callingScreen, int serviceId,  List<String> fiubaAcademicToShowLines){
+    SubjectsFinder(Activity callingActivity, CallbackScreen callingScreen, int serviceId,  List<String> fiubaAcademicToShowLines){
         this.callingActivity = callingActivity;
         this.callingScreen = callingScreen;
         this.subjectsInfo = new HashMap<String, String>();

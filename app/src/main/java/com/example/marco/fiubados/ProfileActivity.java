@@ -19,7 +19,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProfileActivity extends AppCompatActivity implements TabScreen {
+public class ProfileActivity extends AppCompatActivity implements CallbackScreen {
 
     // La posición en la lista de academico del item de materias aprobadas
     private static final int APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST = 2;
@@ -311,7 +311,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
     }
 
 
-    public void createAddJobDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+    public void createAddJobDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -332,7 +332,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
                         if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
                                 && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
                             Job job = new Job("", company, position, startDate, endDate);
-                            JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_JOB_SERVICE_ID, job);
+                            JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_JOB_SERVICE_ID, job);
                             service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
                         } else {
                             if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
@@ -353,7 +353,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
         builder.create().show();
     }
 
-    public void createAddEducationDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+    public void createAddEducationDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -380,7 +380,7 @@ public class ProfileActivity extends AppCompatActivity implements TabScreen {
                         if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(institute, 1)
                                 && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
                             Education education = new Education("", diploma, institute, startDate, endDate);
-                            EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_EDUCATION_SERVICE_ID, education);
+                            EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_EDUCATION_SERVICE_ID, education);
                             service.execute(CREATE_EDUCATION_SERVICE_ENDPOINT_URL);
                         } else {
                             if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {

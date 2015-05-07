@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -19,7 +19,7 @@ import com.example.marco.fiubados.model.User;
 import java.util.List;
 
 
-public class LoginActivity extends AppCompatActivity implements TabScreen {
+public class LoginActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final String LOGIN_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/sign_in";
     private static final int LOGIN_SERVICE_ID = 0;

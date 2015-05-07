@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class ProfileEditActivity extends AppCompatActivity implements TabScreen {
+public class ProfileEditActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
     private static final int UPDATE_PROFILE_INFO_SERVICE_ID = 2;

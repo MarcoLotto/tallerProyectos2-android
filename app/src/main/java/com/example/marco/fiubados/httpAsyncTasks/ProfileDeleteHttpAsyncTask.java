@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.DatabaseObject;
 
 import java.net.HttpURLConnection;
@@ -14,14 +14,10 @@ import java.util.ArrayList;
  */
 public class ProfileDeleteHttpAsyncTask extends HttpAsyncTask{
 
-    private TabScreen screen;
-    private int serviceId;
     private DatabaseObject object;
 
-    public ProfileDeleteHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, DatabaseObject object) {
-        super(callingActivity);
-        this.screen = screen;
-        this.serviceId = serviceId;
+    public ProfileDeleteHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, DatabaseObject object) {
+        super(callingActivity, screen, serviceId);
         this.object = object;
     }
 
@@ -48,7 +44,7 @@ public class ProfileDeleteHttpAsyncTask extends HttpAsyncTask{
                 this.object.setDirty(false);
 
                 // Le indicamos al servicio que nos llamo que terminó la edición
-                screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+                this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){

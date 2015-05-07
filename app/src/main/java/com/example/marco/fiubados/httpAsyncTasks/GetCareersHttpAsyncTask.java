@@ -2,7 +2,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Career;
 
 import org.json.JSONArray;
@@ -18,14 +18,10 @@ import java.util.List;
  */
 public class GetCareersHttpAsyncTask extends HttpAsyncTask {
 
-    private final TabScreen screen;
-    private final int serviceId;
     private final List<Career> careers;
 
-    public GetCareersHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, List<Career> careers) {
-        super(callingActivity);
-        this.screen = screen;
-        this.serviceId = serviceId;
+    public GetCareersHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, List<Career> careers) {
+        super(callingActivity, screen, serviceId);
         this.careers = careers;
     }
 
@@ -59,7 +55,7 @@ public class GetCareersHttpAsyncTask extends HttpAsyncTask {
                 e.printStackTrace();
             }
             // Le indicamos a la pantalla que nos llamo que terminamos
-            this.screen.onServiceCallback(subjectCodes, this.serviceId);
+            this.callbackScreen.onServiceCallback(subjectCodes, this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

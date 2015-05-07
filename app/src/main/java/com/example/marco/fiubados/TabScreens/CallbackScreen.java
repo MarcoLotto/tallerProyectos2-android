@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by Marco on 07/04/2015.
  */
-public interface TabScreen {
+public interface CallbackScreen {
     /**
      * Debe llamarse cuando la aplicación toma foco
      */

@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.AcademicEditHttpAsyncTask;
@@ -36,7 +36,7 @@ import com.example.marco.fiubados.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcademicProfileEditActivity extends AppCompatActivity implements TabScreen {
+public class AcademicProfileEditActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final String EDIT_EDUCATIONS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/educations/";
     private static final int CAREER_POSITION_IN_ACADEMICS_LIST = 0;

@@ -1,10 +1,9 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
-import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,14 +18,10 @@ import java.util.Map;
  */
 public class SubjectsInfoHttpAsyncTask extends HttpAsyncTask {
 
-    private TabScreen screen;
-    private int serviceId;
     private Map<String, String> subjects;
 
-    public SubjectsInfoHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, Map<String, String> subjects) {
-        super(callingActivity);
-        this.screen = screen;
-        this.serviceId = serviceId;
+    public SubjectsInfoHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, Map<String, String> subjects) {
+        super(callingActivity, screen, serviceId);
         this.subjects = subjects;
     }
 
@@ -59,7 +53,7 @@ public class SubjectsInfoHttpAsyncTask extends HttpAsyncTask {
                 e.printStackTrace();
             }
             // Le indicamos a la pantalla que nos llamo que terminamos
-            this.screen.onServiceCallback(new ArrayList(), this.serviceId);
+            this.callbackScreen.onServiceCallback(new ArrayList(), this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

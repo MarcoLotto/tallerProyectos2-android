@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Maneja la logica de la pestaña de grupos
  */
-public class GroupsTabScreen implements TabScreen {
+public class GroupsTabScreen implements CallbackScreen {
 
     public static final String GROUPS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     // public static final String GROUPS_SEARCH_ENDPOINT_URL = "http://www.mocky.io/v2/553e70fa2f711b4f27a5d287";

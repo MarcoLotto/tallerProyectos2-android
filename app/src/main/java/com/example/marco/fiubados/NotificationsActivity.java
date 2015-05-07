@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetPendingRequestsHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class NotificationsActivity extends AppCompatActivity implements TabScreen {
+public class NotificationsActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final int GET_PENDING_FRIEND_REQUESTS_USERS_SERVICE_ID = 0;
     private static final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;

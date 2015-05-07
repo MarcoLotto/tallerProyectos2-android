@@ -7,7 +7,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
@@ -26,14 +26,10 @@ import java.util.List;
 public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
     protected static final String GET_FRIEND_RESULT_OK = "ok";
     protected String searchName;
-    protected TabScreen screen;
-    protected int serviceId;
 
-    public GetFriendsHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String searchName) {
-        super(callingActivity);
+    public GetFriendsHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, String searchName) {
+        super(callingActivity, screen, serviceId);
         this.searchName = searchName;
-        this.screen = screen;
-        this.serviceId = serviceId;
     }
 
     @Override
@@ -66,7 +62,7 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
                 }
             }
             // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
-            screen.onServiceCallback(users, this.serviceId);
+            this.callbackScreen.onServiceCallback(users, this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

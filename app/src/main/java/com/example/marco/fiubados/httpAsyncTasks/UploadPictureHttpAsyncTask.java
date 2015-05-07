@@ -1,40 +1,56 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.model.Academic;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 /**
- * Created by Marco on 26/04/2015.
+ * Created by Marco on 06/05/2015.
  */
-public class AcademicEditHttpAsyncTask extends HttpAsyncTask{
-    private Academic academic;
+public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
 
-    public AcademicEditHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, Academic academic) {
-        super(callingActivity, screen, serviceId);
-        this.academic = academic;
+    private String filepath;
+
+    public UploadPictureHttpAsyncTask(Activity callingActivity, CallbackScreen callbackScreen, int serviceId, String filepath) {
+        super(callingActivity, callbackScreen, serviceId);
+        this.filepath = filepath;
     }
 
     @Override
     protected void configureRequestFields() {
-        this.addRequestFieldAndForceAsGetParameter("userToken", ContextManager.getInstance().getUserToken());
-
         // Armamos la data personalizada para el envio por POST
         try {
+            JSONObject imageJsonObject = new JSONObject();
+            imageJsonObject.put("filename", this.filepath);
+            imageJsonObject.put("content", this.getPictureContentParsedForRequest());
+            imageJsonObject.put("content_type", "image/jpeg");  // REVIEW
             JSONObject mainJsonObject = new JSONObject();
-            mainJsonObject.put("career", this.academic.getCareer());
+            mainJsonObject.put("userToken", ContextManager.getInstance().getUserToken());
+            mainJsonObject.put("image", imageJsonObject);
             this.setResquestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getPictureContentParsedForRequest() {
+        // Codificamos la data de la imagen en base64 para enviarla al servidor
+        Bitmap bm = BitmapFactory.decodeFile(this.filepath);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] byteArrayImage = baos.toByteArray();
+        return Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
     }
 
     @Override
@@ -46,12 +62,11 @@ public class AcademicEditHttpAsyncTask extends HttpAsyncTask{
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK || this.responseCode == HttpURLConnection.HTTP_CREATED){
             if(!this.getResponseField("result").equals("ok")){
-                this.dialog.setMessage("La edición no se pudo realizar, por favor verifique los datos ingresados");
+                this.dialog.setMessage("Ocurrió un error durante la carga de imagen");
                 this.dialog.show();
             }
             else {
-                // Le indicamos al servicio que nos llamo que terminó la edición
-                this.academic.setDirty(false);
+                // Le indicamos al servicio que nos llamo que terminó la carga con exito
                 this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
             }
         }

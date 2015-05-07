@@ -7,11 +7,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -28,7 +25,7 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.GroupsTabScreen;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
@@ -139,12 +136,12 @@ public class MainScreenActivity extends TabbedActivity {
     }
 
     @Override
-    public TabScreen getNewsTabScreen() {
+    public CallbackScreen getNewsTabScreen() {
         return null;  // TODO
     }
 
     @Override
-    public TabScreen getGroupsTabScreen() {
+    public CallbackScreen getGroupsTabScreen() {
         return this.groupsTabScreen;
     }
 
@@ -220,7 +217,7 @@ public class MainScreenActivity extends TabbedActivity {
         return true;
     }
 
-    public void createAddGroupDialog(final Activity ownerActivity, final TabScreen ownerTabScreen) {
+    public void createAddGroupDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -238,7 +235,7 @@ public class MainScreenActivity extends TabbedActivity {
                         // Validamos los campos
                         if (FieldsValidator.isTextFieldValid(groupName, 1)) {
                             Group group = new Group("", groupName, groupDescription);
-                            GroupEditAndCreateHttpAsyncTask service = new GroupEditAndCreateHttpAsyncTask(ownerActivity, ownerTabScreen, CREATE_GROUP_SERVICE_ID, group);
+                            GroupEditAndCreateHttpAsyncTask service = new GroupEditAndCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_GROUP_SERVICE_ID, group);
                             service.execute(CREATE_GROUP_SERVICE_ENDPOINT_URL);
                         } else {
                             Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la descripcion del grupo", Toast.LENGTH_LONG);

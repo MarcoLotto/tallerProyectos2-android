@@ -14,7 +14,7 @@ public class SignUpHttpAsyncTask extends HttpAsyncTask {
     String email, password, firstName, lastName, padron;
 
     public SignUpHttpAsyncTask(Activity callingActivity, String firstName, String lastName, String email, String padron, String password) {
-        super(callingActivity);
+        super(callingActivity, null, 0);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

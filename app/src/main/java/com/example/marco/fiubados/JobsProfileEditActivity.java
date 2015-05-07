@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
@@ -29,7 +29,7 @@ import com.example.marco.fiubados.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobsProfileEditActivity extends AppCompatActivity implements TabScreen{
+public class JobsProfileEditActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/";
     private static final String DELETE_JOB_SERVICE_ENDPOINT_URL = EDIT_PROFILE_ENDPOINT_URL;

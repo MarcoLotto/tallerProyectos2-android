@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Group;
 
 import org.json.JSONArray;
@@ -20,13 +20,9 @@ import java.util.List;
 public class GetGroupsHttpAsyncTask extends HttpAsyncTask {
 
     protected static final String GET_GROUPS_RESULT_OK = "ok";
-    protected TabScreen screen;
-    protected int serviceId;
 
-    public GetGroupsHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId) {
-        super(callingActivity);
-        this.screen = screen;
-        this.serviceId = serviceId;
+    public GetGroupsHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId) {
+        super(callingActivity, screen, serviceId);
     }
 
     @Override
@@ -58,7 +54,7 @@ public class GetGroupsHttpAsyncTask extends HttpAsyncTask {
                 }
             }
             // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
-            screen.onServiceCallback(groups, this.serviceId);
+            this.callbackScreen.onServiceCallback(groups, this.serviceId);
         } else {
             this.dialog.setMessage("Error en la conexión con el servidor");
             this.dialog.show();

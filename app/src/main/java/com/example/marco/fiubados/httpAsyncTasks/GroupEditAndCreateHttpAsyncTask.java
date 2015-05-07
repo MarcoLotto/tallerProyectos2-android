@@ -4,7 +4,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Group;
 
 import org.json.JSONException;
@@ -15,14 +15,10 @@ import java.util.ArrayList;
 
 public class GroupEditAndCreateHttpAsyncTask extends HttpAsyncTask{
 
-    private TabScreen screen;
-    private int serviceId;
     private Group group;
 
-    public GroupEditAndCreateHttpAsyncTask(Activity callingActivity, TabScreen tabScreen, int serviceId, Group group) {
-        super(callingActivity);
-        this.screen = tabScreen;
-        this.serviceId = serviceId;
+    public GroupEditAndCreateHttpAsyncTask(Activity callingActivity, CallbackScreen callbackScreen, int serviceId, Group group) {
+        super(callingActivity, callbackScreen, serviceId);
         this.group = group;
     }
 
@@ -62,8 +58,8 @@ public class GroupEditAndCreateHttpAsyncTask extends HttpAsyncTask{
                 this.dialog.show();
             }
                 // Le indicamos al servicio que nos llamo que terminó la creacion
-                screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
-                screen.onFocus();
+                this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+                this.callbackScreen.onFocus();
 
         } else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

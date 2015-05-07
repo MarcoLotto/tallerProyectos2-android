@@ -2,9 +2,11 @@ package com.example.marco.fiubados.TabScreens;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,8 +18,10 @@ import com.example.marco.fiubados.NotificationsActivity;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 /**
@@ -25,17 +29,20 @@ import java.util.List;
  *
  * Maneja la lógica interna del tab de muro
  */
-public class WallTabScreen implements TabScreen{
+public class WallTabScreen implements CallbackScreen {
 
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
+    private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
     public static final int RESULT_LOAD_IMAGE = 2;
+    private static final int UPLOAD_IMAGE_SERVICE_ID = 3;
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
     private Button addFriendButton, confirmFriendRequestButton;
     private TextView wallTitle;
     private ImageView profileImageView;
+    private String picturePathUploading;
 
     public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitle, ImageView profileImageView){
         this.tabOwnerActivity = tabOwnerActivity;
@@ -115,6 +122,17 @@ public class WallTabScreen implements TabScreen{
             Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ahora son amigos", Toast.LENGTH_SHORT);
             toast.show();
         }
+        else if(serviceId == this.UPLOAD_IMAGE_SERVICE_ID){
+            // Pudimos cambiar la imagen de perfil correctamente
+            this.onProfileImageChanged();
+            Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ha cambiado su foto de perfil", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private void onProfileImageChanged() {
+        // Colocamos la nueva foto de perfil en nuestro muro
+        this.profileImageView.setImageBitmap(BitmapFactory.decodeFile(this.picturePathUploading));
     }
 
     private void sendFriendRequest(){
@@ -133,19 +151,18 @@ public class WallTabScreen implements TabScreen{
     }
 
     public void processProfileImageChange(Intent data) {
-        // Obtenemos la data de la imagen conseguida en la galería
+        // Obtenemos el path de la imagen conseguida en la galería
         Uri selectedImage = data.getData();
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
         Cursor cursor = this.tabOwnerActivity.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String picturePath = cursor.getString(columnIndex);
+        this.picturePathUploading = cursor.getString(columnIndex);
         cursor.close();
 
-        // TODO: Acá deberíamos llamar al servicio para subir la imagen de perfil al servidor
-
-        // Seteamos la imagen al recuadro del perfil
-        this.profileImageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        // Enviamos la imagen al servidor
+        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, this.UPLOAD_IMAGE_SERVICE_ID, this.picturePathUploading);
+        service.execute(this.UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
     }
 }
 

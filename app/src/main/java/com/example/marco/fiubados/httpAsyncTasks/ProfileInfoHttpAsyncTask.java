@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Job;
 import com.example.marco.fiubados.model.User;
@@ -24,14 +24,10 @@ import java.util.List;
 public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     private static final String SHOW_PROFILE_RESULT_OK = "ok";
     private User user;
-    private TabScreen screen;
-    private int serviceId;
 
-    public ProfileInfoHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, User user) {
-        super(callingActivity);
+    public ProfileInfoHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, User user) {
+        super(callingActivity, screen, serviceId);
         this.user = user;
-        this.screen = screen;
-        this.serviceId = serviceId;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
                 }
             }
             // Guardamos la info en el user que nos pasaron por parámetro, no por callback, pero igual avisamos que terminamos
-            screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+            this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

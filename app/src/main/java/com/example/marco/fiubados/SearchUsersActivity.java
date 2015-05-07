@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.httpAsyncTasks.SearchUsersHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class SearchUsersActivity extends AppCompatActivity implements TabScreen {
+public class SearchUsersActivity extends AppCompatActivity implements CallbackScreen {
 
     private static final int SEARCH_USERS_SERVICE_ID = 0;
     private static final String SEARCH_USERS_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/search";

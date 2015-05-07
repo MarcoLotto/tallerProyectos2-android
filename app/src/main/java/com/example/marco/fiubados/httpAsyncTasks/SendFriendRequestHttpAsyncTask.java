@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -15,13 +15,9 @@ import java.util.List;
  */
 public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
     String requestedUserId, myUserId;
-    private TabScreen screen;
-    private int serviceId;
 
-    public SendFriendRequestHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, String requestedUserId) {
-        super(callingActivity);
-        this.screen = screen;
-        this.serviceId = serviceId;
+    public SendFriendRequestHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, String requestedUserId) {
+        super(callingActivity, screen, serviceId);
         this.requestedUserId = requestedUserId;
     }
 
@@ -48,7 +44,7 @@ public class SendFriendRequestHttpAsyncTask extends HttpAsyncTask {
             // Le indicamos a la pantalla que nos llamo que terminamos y el resultado de esto
             List<String> results = new ArrayList<>();
             results.add(resultValue);
-            screen.onServiceCallback(results, this.serviceId);
+            this.callbackScreen.onServiceCallback(results, this.serviceId);
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
             this.dialog.setMessage("Usted no esta autorizado para realizar esto");

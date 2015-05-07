@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.ProfileField;
 
 import org.json.JSONException;
@@ -19,14 +19,10 @@ import java.util.List;
  */
 public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
     private List<ProfileField> editedFields;
-    private TabScreen screen;
-    private int serviceId;
 
-    public ProfileEditHttpAsyncTask(Activity callingActivity, TabScreen screen, int serviceId, List<ProfileField> editedFields) {
-        super(callingActivity);
+    public ProfileEditHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId, List<ProfileField> editedFields) {
+        super(callingActivity, screen, serviceId);
         this.editedFields = editedFields;
-        this.screen = screen;
-        this.serviceId = serviceId;
     }
 
     @Override
@@ -68,7 +64,7 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
             }
             else {
                 // Le indicamos al servicio que nos llamo que terminó la edición
-                screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+                this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){

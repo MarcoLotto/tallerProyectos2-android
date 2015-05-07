@@ -3,7 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.TabScreens.TabScreen;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Job;
 
 import org.json.JSONException;
@@ -17,14 +17,10 @@ import java.util.ArrayList;
  */
 public class JobsEditAndCreateHttpAsyncTask extends HttpAsyncTask{
 
-    private TabScreen screen;
-    private int serviceId;
     private Job job;
 
-    public JobsEditAndCreateHttpAsyncTask(Activity callingActivity, TabScreen tabScreen, int serviceId, Job job) {
-        super(callingActivity);
-        this.screen = tabScreen;
-        this.serviceId = serviceId;
+    public JobsEditAndCreateHttpAsyncTask(Activity callingActivity, CallbackScreen callbackScreen, int serviceId, Job job) {
+        super(callingActivity, callbackScreen, serviceId);
         this.job = job;
     }
 
@@ -69,7 +65,7 @@ public class JobsEditAndCreateHttpAsyncTask extends HttpAsyncTask{
                 this.job.setDirty(false);
 
                 // Le indicamos al servicio que nos llamo que terminó la edición
-                screen.onServiceCallback(new ArrayList<String>(), this.serviceId);
+                this.callbackScreen.onServiceCallback(new ArrayList<String>(), this.serviceId);
             }
         }
         else if(this.responseCode == HttpURLConnection.HTTP_UNAUTHORIZED){
