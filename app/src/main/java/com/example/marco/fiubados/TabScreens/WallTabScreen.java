@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
@@ -16,13 +18,17 @@ import android.widget.Toast;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.NotificationsActivity;
 import com.example.marco.fiubados.TabbedActivity;
+import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Marco on 08/04/2015.
@@ -102,6 +108,24 @@ public class WallTabScreen implements CallbackScreen {
                     this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
                 }
             }
+        }
+        // Si hay, mostramos la imagen de perfil
+        this.presentProfilePicture();
+    }
+
+    private void presentProfilePicture(){
+        // Traemos del servidor la imagen de perfil y la mostramos (si hay)
+        String profilePictureUrl = ContextManager.WS_SERVER_URL + this.getUserOwnerOfTheWall().getProfilePicture();
+        DownloadPictureHttpAsyncTask pictureService = new DownloadPictureHttpAsyncTask(profilePictureUrl);
+        try {
+            Drawable d = pictureService.execute().get();
+            if(d != null) {
+                this.profileImageView.setImageDrawable(d);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 

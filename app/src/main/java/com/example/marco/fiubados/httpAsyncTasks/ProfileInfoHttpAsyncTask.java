@@ -116,6 +116,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
         user.setBiography(jsonProfileField.getString("biography"));
         user.setNationality(jsonProfileField.getString("nationality"));
         user.setCity(jsonProfileField.getString("city"));
+        user.setProfilePicture(jsonProfileField.getString("picture"));
         user.getAcademicInfo().setCareer(jsonProfileField.getString("career"));
     }
 

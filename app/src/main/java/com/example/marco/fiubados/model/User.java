@@ -27,6 +27,7 @@ public class User extends DatabaseObject{
     private List<Job> jobs = new ArrayList<>();
     private Academic academicInfo = new Academic("");
     private List<Education> educationInfo = new ArrayList<>();
+    private String profilePicture;
 
     public User(String id, String name){
         super(id);
@@ -142,5 +143,13 @@ public class User extends DatabaseObject{
 
     public void setEducationInfo(List<Education> educationInfo) {
         this.educationInfo = educationInfo;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
     }
 }
