@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1">
 
     <ImageView
         android:layout_width="match_parent"
@@ -57,18 +59,33 @@
         android:text="Fecha inicio"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:id="@+id/fieldNameStartDate" />
+        android:id="@+id/fieldNameStartDate"/>
 
-    <EditText
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+    <ImageButton
+        android:id="@+id/startDateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_my_calendar"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right" />
+
+    <TextView
         android:id="@+id/fieldValueStartDate"
-        android:inputType="textEmailAddress"
-        android:layout_width="match_parent"
+        android:inputType="date"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginRight="100dp"
         android:layout_marginBottom="4dp"
         android:hint="dd/mm/aaaa" />
+
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,7 +98,7 @@
 
     <EditText
         android:id="@+id/fieldValueEndDate"
-        android:inputType="textEmailAddress"
+        android:inputType="date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

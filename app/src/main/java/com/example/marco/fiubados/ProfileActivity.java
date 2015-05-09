@@ -2,6 +2,7 @@ package com.example.marco.fiubados;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -317,6 +320,16 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
 
+        ImageButton showDatePicker = (ImageButton) dialogView.findViewById(R.id.startDateButton);
+        showDatePicker.setOnClickListener(
+                new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        createDatePickerDialog(dialogView);
+                    }
+                });
+
         builder.setView(dialogView)
                 // Add action buttons
                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
@@ -325,7 +338,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
                         // Conseguimos todos los valores de los campos       
                         String company = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
                         String position = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
-                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
+                        String startDate = ((TextView) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
                         String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
 
                         // Validamos los campos
@@ -343,6 +356,36 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
                                 toast.show();
                             }
                         }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        builder.create().show();
+    }
+
+    public void createDatePickerDialog(View callingView){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        // Get the layout inflater
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_datepicker, null);
+
+        final TextView startDate = (TextView) callingView.findViewById(R.id.fieldValueStartDate);
+        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
+
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos todos los valores de los campos
+                        int day = datePicker.getDayOfMonth();
+                        int month = datePicker.getMonth();
+                        int year = datePicker.getYear();
+                        startDate.setText(new StringBuilder().append(day).append("/").append(month + 1).append("/").append(year));
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
