@@ -17,9 +17,11 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.NotificationsActivity;
+import com.example.marco.fiubados.ProfileActivity;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
+import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
@@ -39,16 +41,17 @@ public class WallTabScreen implements CallbackScreen {
 
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
+    private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
     public static final int RESULT_LOAD_IMAGE = 2;
     private static final int UPLOAD_IMAGE_SERVICE_ID = 3;
+    private static final int RELOAD_PROFILE_SERVICE_ID = 4;
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
     private Button addFriendButton, confirmFriendRequestButton;
     private TextView wallTitle;
     private ImageView profileImageView;
-    private String picturePathUploading;
 
     public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitle, ImageView profileImageView){
         this.tabOwnerActivity = tabOwnerActivity;
@@ -122,6 +125,11 @@ public class WallTabScreen implements CallbackScreen {
             if(d != null) {
                 this.profileImageView.setImageDrawable(d);
             }
+            else{
+                // No se encontro la imagen de perfil, cargamos una por defecto de los assets
+                int resId = this.tabOwnerActivity.getResources().getIdentifier(this.DEFAULT_PROFILE_PICTURE, "drawable", this.tabOwnerActivity.getPackageName());
+                this.profileImageView.setImageResource(resId);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -152,11 +160,17 @@ public class WallTabScreen implements CallbackScreen {
             Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ha cambiado su foto de perfil", Toast.LENGTH_SHORT);
             toast.show();
         }
+        else if(serviceId == this.RELOAD_PROFILE_SERVICE_ID){
+            // Colocamos la nueva foto de perfil en nuestro muro
+            this.presentProfilePicture();
+        }
     }
 
     private void onProfileImageChanged() {
-        // Colocamos la nueva foto de perfil en nuestro muro
-        this.profileImageView.setImageBitmap(BitmapFactory.decodeFile(this.picturePathUploading));
+        // Recargamos el perfil para recargar la nueva imagen del usuario
+        // REVIEW: Para esto podria evitarse traerse todo el perfil
+        ProfileInfoHttpAsyncTask service = new ProfileInfoHttpAsyncTask(this.tabOwnerActivity, this, this.RELOAD_PROFILE_SERVICE_ID, this.getUserOwnerOfTheWall());
+        service.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
     }
 
     private void sendFriendRequest(){
@@ -181,11 +195,11 @@ public class WallTabScreen implements CallbackScreen {
         Cursor cursor = this.tabOwnerActivity.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        this.picturePathUploading = cursor.getString(columnIndex);
+        String picturePathUploading = cursor.getString(columnIndex);
         cursor.close();
 
         // Enviamos la imagen al servidor
-        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, this.UPLOAD_IMAGE_SERVICE_ID, this.picturePathUploading);
+        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, this.UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
         service.execute(this.UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
     }
 }
