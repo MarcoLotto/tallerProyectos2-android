@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.commons.DialogCallback;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.commons.FormDialogBuilder;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileDeleteHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -29,13 +31,17 @@ import com.example.marco.fiubados.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobsProfileEditActivity extends AppCompatActivity implements CallbackScreen {
+public class JobsProfileEditActivity extends AppCompatActivity implements CallbackScreen, DialogCallback {
 
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/jobs/";
     private static final String DELETE_JOB_SERVICE_ENDPOINT_URL = EDIT_PROFILE_ENDPOINT_URL;
+
+    private static final int EDIT_JOB_DIALOG_ID = 0;
+
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private static final int DELETE_JOB_SERVICE_ID = 2;
+
     private ListView profileEditListView;
     private Job lastFieldClicked;
     private User user;
@@ -129,8 +135,12 @@ public class JobsProfileEditActivity extends AppCompatActivity implements Callba
             this.lastFieldClicked = this.user.getJobs().get(position);
 
            // Abrimos el popup de modificación del parámetro
-            Dialog editDialog = this.createDialog();
-            editDialog.show();
+            List<String> inputs = new ArrayList<>();
+            inputs.add(this.lastFieldClicked.getCompany());
+            inputs.add(this.lastFieldClicked.getPosition());
+            inputs.add(this.lastFieldClicked.getStartDate());
+            inputs.add(this.lastFieldClicked.getEndDate());
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.EDIT_JOB_DIALOG_ID, inputs, R.layout.layout_add_job_dialog, R.string.modify, R.string.delete);
         }
     }
 
@@ -152,54 +162,25 @@ public class JobsProfileEditActivity extends AppCompatActivity implements Callba
         this.profileEditListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
-    public Dialog createDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
-
-        // Cargamos los valores originales en los campos
-        if(this.lastFieldClicked != null) {
-            ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).setText(this.lastFieldClicked.getCompany());
-            ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).setText(this.lastFieldClicked.getPosition());
-            ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).setText(this.lastFieldClicked.getStartDate());
-            ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).setText(this.lastFieldClicked.getEndDate());
+    private void onJobModify(List<String> outputs){
+        if(outputs.size() < 4){
+            return;
         }
+        // Conseguimos todos los valores de los campos
+        String company = outputs.get(0);
+        String position = outputs.get(1);
+        String startDate = outputs.get(2);
+        String endDate = outputs.get(3);
 
-        builder.setView(dialogView)
-                // Add action buttons
-                .setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Conseguimos todos los valores de los campos
-                        String company = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
-                        String position = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
-                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
-                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
-
-                        // Validamos los campos
-                        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
-                                && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
-                            Job job = new Job("", company, position, startDate, endDate);
-                            saveJob(job);
-                        } else {
-                            if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
-                                toast.show();
-                            } else {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin (o bien tener formato fecha válido)", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Decimos que el campo se eliminará
-                        deleteJob();
-                    }
-                });
-        return builder.create();
+        // Validamos los campos
+        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
+                && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
+            Job job = new Job("", company, position, startDate, endDate);
+            saveJob(job);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     private void deleteJob() {
@@ -242,5 +223,17 @@ public class JobsProfileEditActivity extends AppCompatActivity implements Callba
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogClose(int dialogId, List<String> outputs, boolean userAccepts) {
+        if(dialogId == this.EDIT_JOB_DIALOG_ID){
+            if(userAccepts){
+                this.onJobModify(outputs);
+            }
+            else{
+                this.deleteJob();
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marco.fiubados.JobsProfileEditActivity;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
@@ -25,11 +26,22 @@ import java.util.List;
 public class FormDialogBuilder {
 
     public static void showProfileInstitutionDialog(final Activity ownerActivity, final DialogCallback dialogCallback, final int dialogId, final List<String> inputs, int layoutId) {
+        showProfileInstitutionDialog(ownerActivity, dialogCallback, dialogId, inputs, layoutId, R.string.accept, R.string.cancel);
+    }
+    public static void showProfileInstitutionDialog(final Activity ownerActivity, final DialogCallback dialogCallback, final int dialogId, final List<String> inputs, int layoutId, int acceptLabelId, int cancelLabelId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(ownerActivity);
         // Get the layout inflater
         LayoutInflater inflater = ownerActivity.getLayoutInflater();
         final View dialogView = inflater.inflate(layoutId, null);
 
+        // Cargamos los valores iniciales en los campos
+        if(inputs.size() >= 4) {
+            ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).setText(inputs.get(0));
+            ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).setText(inputs.get(1));
+            ((TextView) dialogView.findViewById(R.id.fieldValueStartDate)).setText(inputs.get(2));
+            ((TextView) dialogView.findViewById(R.id.fieldValueEndDate)).setText(inputs.get(3));
+        }
+        // Manejamos los botones de date picker
         ImageButton showStartDatePicker = (ImageButton) dialogView.findViewById(R.id.startDateButton);
         showStartDatePicker.setOnClickListener(
                 new View.OnClickListener() {
@@ -50,7 +62,7 @@ public class FormDialogBuilder {
                 });
         builder.setView(dialogView)
                 // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                .setPositiveButton(acceptLabelId, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         // Conseguimos todos los valores de los campos y los enviamos al que nos llamó
@@ -62,7 +74,7 @@ public class FormDialogBuilder {
                         dialogCallback.onDialogClose(dialogId, outputs, true);
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(cancelLabelId, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // No hace falta hacer ninguna acción
                     }
