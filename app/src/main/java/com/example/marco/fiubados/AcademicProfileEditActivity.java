@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.commons.DialogCallback;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.commons.FormDialogBuilder;
 import com.example.marco.fiubados.httpAsyncTasks.AcademicEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetCareersHttpAsyncTask;
@@ -36,11 +38,14 @@ import com.example.marco.fiubados.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcademicProfileEditActivity extends AppCompatActivity implements CallbackScreen {
+public class AcademicProfileEditActivity extends AppCompatActivity implements CallbackScreen, DialogCallback {
 
     private static final String EDIT_EDUCATIONS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/educations/";
     private static final int CAREER_POSITION_IN_ACADEMICS_LIST = 0;
     private static final String EDIT_ACADEMICS_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/academic_info/edit_career";
+
+    private final int EDUCATION_EDIT_DIALOG_ID = 0;
+
     private final int SEARCH_PROFILE_INFO_SERVICE_ID = 0;
     private final int EDIT_PROFILE_INFO_SERVICE_ID = 1;
     private static final int GET_CAREERS_SERVICE_ID = 2;
@@ -156,8 +161,12 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ca
             this.lastEducationFieldClicked = this.user.getEducationInfo().get(position);
 
             // Abrimos el popup de modificación del parámetro
-            Dialog editDialog = this.createEducationDialog();
-            editDialog.show();
+            List<String> inputs = new ArrayList<String>();
+            inputs.add(this.lastEducationFieldClicked.getDiploma());
+            inputs.add(this.lastEducationFieldClicked.getInstitute());
+            inputs.add(this.lastEducationFieldClicked.getStartDate());
+            inputs.add(this.lastEducationFieldClicked.getEndDate());
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.EDUCATION_EDIT_DIALOG_ID, inputs, R.layout.layout_add_education_dialog, R.string.modify, R.string.delete);
         }
     }
 
@@ -291,59 +300,25 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ca
         this.academicEditListView.setAdapter(adapter);
     }
 
-    public Dialog createEducationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
-
-        // Como estamos reutilziando un layout de jobs, le cambiamos los nombres a los labels desde acá
-        ((TextView) dialogView.findViewById(R.id.fieldNameCompany)).setText("Diploma");
-        ((TextView) dialogView.findViewById(R.id.fieldNamePosition)).setText("Instituto");
-        ((TextView) dialogView.findViewById(R.id.fieldNameStartDate)).setText("Fecha inicio");
-        ((TextView) dialogView.findViewById(R.id.fieldNameEndDate)).setText("Fecha fin");
-
-        // Cargamos los valores originales en los campos
-        if(this.lastEducationFieldClicked != null) {
-            ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).setText(this.lastEducationFieldClicked.getDiploma());
-            ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).setText(this.lastEducationFieldClicked.getInstitute());
-            ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).setText(this.lastEducationFieldClicked.getStartDate());
-            ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).setText(this.lastEducationFieldClicked.getEndDate());
+    public void modifyEducation(List<String> outputs) {
+        if(outputs.size() < 4){
+            return;
         }
+        // Conseguimos todos los valores de los campos
+        String diploma = outputs.get(0);
+        String institute = outputs.get(1);
+        String startDate = outputs.get(2);
+        String endDate = outputs.get(3);
 
-        builder.setView(dialogView)
-                // Add action buttons
-                .setPositiveButton(R.string.modify, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Conseguimos todos los valores de los campos
-                        String diploma = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
-                        String institute = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
-                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
-                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
-
-                        // Validamos los campos
-                        if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(diploma, 1)
-                                && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
-                            Education education = new Education("", diploma, institute, startDate, endDate);
-                            save(education);
-                        } else {
-                            if (!FieldsValidator.isDateValid(startDate) || FieldsValidator.isDateValid(endDate)) {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
-                                toast.show();
-                            } else {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que no puede haber campos vacíos y el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        deleteEducation();
-                    }
-                });
-        return builder.create();
+        // Validamos los campos
+        if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(diploma, 1)
+                && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
+            Education education = new Education("", diploma, institute, startDate, endDate);
+            save(education);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que todos los campos deben estar completos", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     private void deleteEducation() {
@@ -383,5 +358,17 @@ public class AcademicProfileEditActivity extends AppCompatActivity implements Ca
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogClose(int dialogId, List<String> outputs, boolean userAccepts) {
+        if(dialogId == this.EDUCATION_EDIT_DIALOG_ID){
+            if(userAccepts){
+                this.modifyEducation(outputs);
+            }
+            else{
+                this.deleteEducation();
+            }
+        }
     }
 }

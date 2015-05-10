@@ -76,7 +76,7 @@ public class FormDialogBuilder {
                 })
                 .setNegativeButton(cancelLabelId, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // No hace falta hacer ninguna acción
+                        dialogCallback.onDialogClose(dialogId, new ArrayList<String>(), false);
                     }
                 });
         builder.create().show();
