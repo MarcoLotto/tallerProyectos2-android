@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Compañia"
+        android:text="Diploma"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:id="@+id/fieldNameCompany" />
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Cargo"
+        android:text="Instituto"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:id="@+id/fieldNamePosition" />
@@ -91,7 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Fecha fin(opcional)"
+        android:text="Fecha fin"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:id="@+id/fieldNameEndDate"/>
@@ -121,6 +121,5 @@
             android:hint="dd/mm/aaaa" />
 
     </RelativeLayout>
-
 
 </LinearLayout>

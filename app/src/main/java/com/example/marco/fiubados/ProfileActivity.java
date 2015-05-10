@@ -24,7 +24,9 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.commons.DialogCallback;
 import com.example.marco.fiubados.commons.FieldsValidator;
+import com.example.marco.fiubados.commons.FormDialogBuilder;
 import com.example.marco.fiubados.httpAsyncTasks.EducationsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.JobsEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -40,10 +42,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProfileActivity extends AppCompatActivity implements CallbackScreen {
+public class ProfileActivity extends AppCompatActivity implements CallbackScreen, DialogCallback {
 
     // La posición en la lista de academico del item de materias aprobadas
     private static final int APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST = 2;
+    private static final int CREATE_JOB_DIALOG_ID = 0;
+    private static final int CREATE_EDUCATION_DIALOG_ID = 1;
 
     private final int PERSONAL_TAB_INDEX = 0;
     private final int JOBS_TAB_INDEX = 1;
@@ -196,10 +200,10 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
 
     private boolean openProfileAddDialog() {
         if(this.tabHost.getCurrentTab() == JOBS_TAB_INDEX){
-            this.createAddJobDialog(this, this);
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.CREATE_JOB_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_job_dialog);
         }
         else if(this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
-            this.createAddEducationDialog(this, this);
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.CREATE_EDUCATION_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_education_dialog);
         }
         return true;
     }
@@ -314,133 +318,57 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     }
 
 
-    public void createAddJobDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
+    public void createJob(List<String> outputs) {
+        if(outputs.size() < 4)
+            return;
+        String company = outputs.get(0);
+        String position = outputs.get(1);
+        String startDate = outputs.get(2);
+        String endDate = outputs.get(3);
 
-        ImageButton showDatePicker = (ImageButton) dialogView.findViewById(R.id.startDateButton);
-        showDatePicker.setOnClickListener(
-                new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        createDatePickerDialog(dialogView);
-                    }
-                });
-
-        builder.setView(dialogView)
-                // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Conseguimos todos los valores de los campos       
-                        String company = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
-                        String position = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
-                        String startDate = ((TextView) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
-                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
-
-                        // Validamos los campos
-                        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
-                                && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
-                            Job job = new Job("", company, position, startDate, endDate);
-                            JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_JOB_SERVICE_ID, job);
-                            service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
-                        } else {
-                            if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
-                                toast.show();
-                            } else {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin (o bien tener formato fecha válido)", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // No hace falta hacer ninguna acción
-                    }
-                });
-        builder.create().show();
+        // Validamos los campos
+        if (FieldsValidator.isTextFieldValid(company, 1) && FieldsValidator.isTextFieldValid(position, 1)
+                && FieldsValidator.isDateValid(startDate) && (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
+            Job job = new Job("", company, position, startDate, endDate);
+            JobsEditAndCreateHttpAsyncTask service = new JobsEditAndCreateHttpAsyncTask(this, this, CREATE_JOB_SERVICE_ID, job);
+            service.execute(CREATE_JOB_SERVICE_ENDPOINT_URL);
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
-    public void createDatePickerDialog(View callingView){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_datepicker, null);
+    public void createEducation(List<String> outputs) {
+        if(outputs.size() < 4){
+            return;
+        }
+        // Conseguimos todos los valores de los campos
+        String diploma = outputs.get(0);
+        String institute = outputs.get(1);
+        String startDate = outputs.get(2);
+        String endDate = outputs.get(3);
 
-        final TextView startDate = (TextView) callingView.findViewById(R.id.fieldValueStartDate);
-        final DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.datePicker);
-
-
-        builder.setView(dialogView)
-                // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Conseguimos todos los valores de los campos
-                        int day = datePicker.getDayOfMonth();
-                        int month = datePicker.getMonth();
-                        int year = datePicker.getYear();
-                        startDate.setText(new StringBuilder().append(day).append("/").append(month + 1).append("/").append(year));
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // No hace falta hacer ninguna acción
-                    }
-                });
-        builder.create().show();
+        // Validamos los campos
+        if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(institute, 1) && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
+            Education education = new Education("", diploma, institute, startDate, endDate);
+            EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(this, this, CREATE_EDUCATION_SERVICE_ID, education);
+            service.execute(CREATE_EDUCATION_SERVICE_ENDPOINT_URL);
+        } else {
+           Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, no puede haber campos sin completar", Toast.LENGTH_LONG);
+           toast.show();
+        }
     }
 
-    public void createAddEducationDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        // Get the layout inflater
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.layout_add_job_dialog, null);
-
-        // Como estamos reutilizando el layout de jobs, le cambiamos los nombres a los campos
-        ((TextView) dialogView.findViewById(R.id.fieldNameCompany)).setText("Diploma");
-        ((TextView) dialogView.findViewById(R.id.fieldNamePosition)).setText("Instituto");
-        ((TextView) dialogView.findViewById(R.id.fieldNameStartDate)).setText("Fecha inicio");
-        ((TextView) dialogView.findViewById(R.id.fieldNameEndDate)).setText("Fecha fin");
-
-        builder.setView(dialogView)
-                // Add action buttons
-                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Conseguimos todos los valores de los campos
-                        String diploma = ((EditText) dialogView.findViewById(R.id.fieldValueCompany)).getText().toString();
-                        String institute = ((EditText) dialogView.findViewById(R.id.fieldValuePosition)).getText().toString();
-                        String startDate = ((EditText) dialogView.findViewById(R.id.fieldValueStartDate)).getText().toString();
-                        String endDate = ((EditText) dialogView.findViewById(R.id.fieldValueEndDate)).getText().toString();
-
-                        // Validamos los campos
-                        if (FieldsValidator.isTextFieldValid(diploma, 1) && FieldsValidator.isTextFieldValid(institute, 1)
-                                && FieldsValidator.isDateValid(startDate) && FieldsValidator.isDateValid(endDate)) {
-                            Education education = new Education("", diploma, institute, startDate, endDate);
-                            EducationsEditAndCreateHttpAsyncTask service = new EducationsEditAndCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_EDUCATION_SERVICE_ID, education);
-                            service.execute(CREATE_EDUCATION_SERVICE_ENDPOINT_URL);
-                        } else {
-                            if (!FieldsValidator.isDateValid(startDate) || (endDate.isEmpty() || FieldsValidator.isDateValid(endDate))) {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, recuerde que el formato de fecha es 'dd/mm/aaaa'", Toast.LENGTH_LONG);
-                                toast.show();
-                            } else {
-                                Toast toast = Toast.makeText(getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la fecha de fin (o bien tener formato fecha válido)", Toast.LENGTH_LONG);
-                                toast.show();
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // No hace falta hacer ninguna acción
-                    }
-                });
-        builder.create().show();
+    @Override
+    public void onDialogClose(int dialogId, List<String> outputs, boolean userAccepts) {
+        if(!userAccepts){
+            return;
+        }
+        if(dialogId == this.CREATE_JOB_DIALOG_ID){
+            this.createJob(outputs);
+        }
+        else if(dialogId == this.CREATE_EDUCATION_DIALOG_ID){
+            this.createEducation(outputs);
+        }
     }
 }
