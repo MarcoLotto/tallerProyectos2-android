@@ -28,4 +28,5 @@
     <string name="modify">Modificar</string>
     <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
     <string name="quit">Salir</string>
+    <string name="friendRequestSent">Solicitud de amistad enviada</string>
 </resources>

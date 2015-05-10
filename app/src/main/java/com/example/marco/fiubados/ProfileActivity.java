@@ -1,25 +1,16 @@
 package com.example.marco.fiubados;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -35,7 +26,6 @@ import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Education;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Job;
-import com.example.marco.fiubados.model.ProfileField;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
@@ -64,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     private static final int CREATE_EDUCATION_SERVICE_ID = 2;
     private static final int SUBJECTS_INFO_SERVICE_ID = 3;
 
-    private List<ProfileField> fields = new ArrayList<>();
     private ListView personalFieldsListView;
     private ListView jobsFieldsListView;
     private ListView educationsFieldsListView;
@@ -73,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     private TabHost tabHost;
     private ListView academicsFieldsListView;
     private List<String> fiubaAcademicsViewLines = new ArrayList<>();
-    private List<String> approvedSubjects = new ArrayList<String>();
+    private List<String> approvedSubjects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     private void onAcademicParameterClickedOnList(int position) {
         // Abrimos el popup de modificación del parámetro
         Academic academic = this.user.getAcademicInfo();
-        if (position == this.APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST){
+        if (position == APPROVED_SUBJECTS_POSITION_IN_ACADEMICS_LIST){
             Dialog subjectsDialog = SubjectsFinder.createApprovedSubjectsDialog(this, this.approvedSubjects);
             subjectsDialog.show();
         }
@@ -200,10 +189,10 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
 
     private boolean openProfileAddDialog() {
         if(this.tabHost.getCurrentTab() == JOBS_TAB_INDEX){
-            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.CREATE_JOB_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_job_dialog);
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, CREATE_JOB_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_job_dialog);
         }
         else if(this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
-            FormDialogBuilder.showProfileInstitutionDialog(this, this, this.CREATE_EDUCATION_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_education_dialog);
+            FormDialogBuilder.showProfileInstitutionDialog(this, this, CREATE_EDUCATION_DIALOG_ID, new ArrayList<String>(), R.layout.layout_add_education_dialog);
         }
         return true;
     }
@@ -245,12 +234,12 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
             this.addEducationsProfileFieldsToUIList();
             this.prepareAcademicsProfileFieldsToShowUIList();
         }
-        else if(serviceId == this.CREATE_JOB_SERVICE_ID || serviceId == this.CREATE_EDUCATION_SERVICE_ID){
+        else if(serviceId == CREATE_JOB_SERVICE_ID || serviceId == CREATE_EDUCATION_SERVICE_ID){
             this.onFocus();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Creación exitosa", Toast.LENGTH_SHORT);
             toast.show();
         }
-        else if(serviceId == this.SUBJECTS_INFO_SERVICE_ID){
+        else if(serviceId == SUBJECTS_INFO_SERVICE_ID){
             this.addAcademicsProfileFieldsToUIList();
 
             // Me guardo la info de materias aprobadas por si la quieren ver
@@ -277,7 +266,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         this.fiubaAcademicsViewLines.add("Padrón" + ": " + this.user.getPadron());
 
         // Llamamos al helper para conseguir todos los datos de las materias
-        SubjectsFinder subjectsFinder = new SubjectsFinder(this, this, this.SUBJECTS_INFO_SERVICE_ID, this.fiubaAcademicsViewLines);
+        SubjectsFinder subjectsFinder = new SubjectsFinder(this, this, SUBJECTS_INFO_SERVICE_ID, this.fiubaAcademicsViewLines);
     }
 
     private void addAcademicsProfileFieldsToUIList() {
@@ -364,10 +353,10 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         if(!userAccepts){
             return;
         }
-        if(dialogId == this.CREATE_JOB_DIALOG_ID){
+        if(dialogId == CREATE_JOB_DIALOG_ID){
             this.createJob(outputs);
         }
-        else if(dialogId == this.CREATE_EDUCATION_DIALOG_ID){
+        else if(dialogId == CREATE_EDUCATION_DIALOG_ID){
             this.createEducation(outputs);
         }
     }

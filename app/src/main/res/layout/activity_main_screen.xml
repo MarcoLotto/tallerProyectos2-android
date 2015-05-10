@@ -52,6 +52,15 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/friendRequestSent"
+                        android:id="@+id/friendRequestSent"
+                        android:layout_gravity="top|center"
+                        android:layout_marginTop="5dp" />
+
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -66,14 +75,14 @@
                         android:id="@+id/sendFriendRequestButton"
                         android:layout_gravity="center_horizontal" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceLarge"
-                            android:text="Proximamente Mi Muro"
-                            android:id="@+id/wallTitleTextView"
-                            android:layout_gravity="top|left"
-                            android:layout_marginTop="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="Proximamente Mi Muro"
+                        android:id="@+id/wallTitleTextView"
+                        android:layout_gravity="top|left"
+                        android:layout_marginTop="10dp" />
 
                         <ImageView
                             android:layout_width="100dp"

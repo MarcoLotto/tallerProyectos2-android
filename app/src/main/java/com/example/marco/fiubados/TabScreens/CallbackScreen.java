@@ -13,7 +13,7 @@ public interface CallbackScreen {
 
     /**
      * Sera llamado cuando algun servicio termine con su tarea y retorne la respuesta del servidor
-     * Devuelve una lista con los elementos conseguidos y uun identificador de servicio
+     * Devuelve una lista con los elementos conseguidos y un identificador de servicio
      */
     void onServiceCallback(List responseElements, int serviceId);
 }
