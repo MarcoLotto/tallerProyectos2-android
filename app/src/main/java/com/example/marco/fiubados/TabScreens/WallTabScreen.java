@@ -42,11 +42,14 @@ public class WallTabScreen implements CallbackScreen {
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
+
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
     public static final int RESULT_LOAD_IMAGE = 2;
     private static final int UPLOAD_IMAGE_SERVICE_ID = 3;
     private static final int RELOAD_PROFILE_SERVICE_ID = 4;
+    private static final int GET_PROFILE_PICTURE_SERVICE_ID = 5;
+
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
     private Button addFriendButton, confirmFriendRequestButton;
@@ -112,28 +115,29 @@ public class WallTabScreen implements CallbackScreen {
                 }
             }
         }
-        // Si hay, mostramos la imagen de perfil
-        this.presentProfilePicture();
+        // Si hay, vamos a buscar la imagen de perfil
+        this.findProfilePicture();
     }
 
-    private void presentProfilePicture(){
+    private void findProfilePicture(){
+        // Temporalmente, cargamos una imagen de perfil por defecto de los assets
+        int resId = this.tabOwnerActivity.getResources().getIdentifier(this.DEFAULT_PROFILE_PICTURE, "drawable", this.tabOwnerActivity.getPackageName());
+        this.profileImageView.setImageResource(resId);
+
         // Traemos del servidor la imagen de perfil y la mostramos (si hay)
         String profilePictureUrl = ContextManager.WS_SERVER_URL + this.getUserOwnerOfTheWall().getProfilePicture();
-        DownloadPictureHttpAsyncTask pictureService = new DownloadPictureHttpAsyncTask(profilePictureUrl);
-        try {
-            Drawable d = pictureService.execute().get();
+        DownloadPictureHttpAsyncTask pictureService = new DownloadPictureHttpAsyncTask(profilePictureUrl, this.tabOwnerActivity, this, this.GET_PROFILE_PICTURE_SERVICE_ID);
+        pictureService.execute();
+
+    }
+
+    private void presentProfilePicture(List drawables){
+        // Seteamos la nueva imagen
+        if(!drawables.isEmpty()){
+            Drawable d = (Drawable) drawables.get(0);
             if(d != null) {
                 this.profileImageView.setImageDrawable(d);
             }
-            else{
-                // No se encontro la imagen de perfil, cargamos una por defecto de los assets
-                int resId = this.tabOwnerActivity.getResources().getIdentifier(this.DEFAULT_PROFILE_PICTURE, "drawable", this.tabOwnerActivity.getPackageName());
-                this.profileImageView.setImageResource(resId);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
     }
 
@@ -161,8 +165,12 @@ public class WallTabScreen implements CallbackScreen {
             toast.show();
         }
         else if(serviceId == this.RELOAD_PROFILE_SERVICE_ID){
-            // Colocamos la nueva foto de perfil en nuestro muro
-            this.presentProfilePicture();
+            // Vamos a buscar a intenet nuestra imagen de perfil
+            this.findProfilePicture();
+        }
+        else if(serviceId == this.GET_PROFILE_PICTURE_SERVICE_ID){
+            // Hemos conseguido una imagen, vamos a presentarla
+            this.presentProfilePicture(responseElements);
         }
     }
 
