@@ -260,14 +260,8 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     private void setTexts(){
         findViewById(R.id.basicEducationTitle).setVisibility(View.GONE);
         findViewById(R.id.fiubaEducationTitle).setVisibility(View.GONE);
-
-        //if (this.tabHost.getCurrentTab() == JOBS_TAB_INDEX || this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
-        //    findViewById(R.id.addFriendForViewThisJobs).setVisibility(View.VISIBLE);
-        //}
-
         findViewById(R.id.addFriendForViewThisJobs).setVisibility(View.VISIBLE);
         findViewById(R.id.addFriendForViewThisAcademic).setVisibility(View.VISIBLE);
-
     }
 
     private void addEducationsProfileFieldsToUIList() {
