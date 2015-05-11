@@ -29,4 +29,8 @@
     <string name="title_activity_academic_profile_edit">AcademicProfileEditActivity</string>
     <string name="quit">Salir</string>
     <string name="friendRequestSent">Solicitud de amistad enviada</string>
+    <string name="basicEducationTitleText">Educación básica</string>
+    <string name="fiubaEducationTitleText">FIUBA</string>
+    <string name="addFriendForViewThisJobsText">Debes ser amigo para ver los trabajos</string>
+    <string name="addFriendForViewThisAcademicText">Debes ser amigo para ver la información académica</string>
 </resources>

@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Mis Amigos"
-                        android:id="@+id/textView8"
+                        android:id="@+id/fiubaEducationTitle"
                         android:textStyle="bold" />
 
                     <ListView

@@ -69,6 +69,9 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        findViewById(R.id.addFriendForViewThisJobs).setVisibility(View.GONE);
+        findViewById(R.id.addFriendForViewThisAcademic).setVisibility(View.GONE);
+
         // Nos guardamos la list view para mostrar los campos personales
         this.personalFieldsListView = (ListView) findViewById(R.id.profileFieldsListView);
 
@@ -228,24 +231,43 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
+
             this.user = temporalUser;
-            this.addPersonalProfileFieldsToUIList();
-            this.addJobsProfileFieldsToUIList();
-            this.addEducationsProfileFieldsToUIList();
-            this.prepareAcademicsProfileFieldsToShowUIList();
-        }
-        else if(serviceId == CREATE_JOB_SERVICE_ID || serviceId == CREATE_EDUCATION_SERVICE_ID){
+
+            if (this.user.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_FRIEND)){
+                this.addPersonalProfileFieldsToUIList(true);
+                this.addJobsProfileFieldsToUIList();
+                this.addEducationsProfileFieldsToUIList();
+                this.prepareAcademicsProfileFieldsToShowUIList();
+            } else {
+                this.addPersonalProfileFieldsToUIList(false);
+                this.setTexts();
+            }
+
+        } else if(serviceId == CREATE_JOB_SERVICE_ID || serviceId == CREATE_EDUCATION_SERVICE_ID){
             this.onFocus();
             Toast toast = Toast.makeText(this.getApplicationContext(), "Creación exitosa", Toast.LENGTH_SHORT);
             toast.show();
-        }
-        else if(serviceId == SUBJECTS_INFO_SERVICE_ID){
+        } else if(serviceId == SUBJECTS_INFO_SERVICE_ID){
             this.addAcademicsProfileFieldsToUIList();
 
             // Me guardo la info de materias aprobadas por si la quieren ver
             this.approvedSubjects.clear();
             this.approvedSubjects.addAll(responseElements);
         }
+    }
+
+    private void setTexts(){
+        findViewById(R.id.basicEducationTitle).setVisibility(View.GONE);
+        findViewById(R.id.fiubaEducationTitle).setVisibility(View.GONE);
+
+        //if (this.tabHost.getCurrentTab() == JOBS_TAB_INDEX || this.tabHost.getCurrentTab() == ACADEMIC_TAB_INDEX){
+        //    findViewById(R.id.addFriendForViewThisJobs).setVisibility(View.VISIBLE);
+        //}
+
+        findViewById(R.id.addFriendForViewThisJobs).setVisibility(View.VISIBLE);
+        findViewById(R.id.addFriendForViewThisAcademic).setVisibility(View.VISIBLE);
+
     }
 
     private void addEducationsProfileFieldsToUIList() {
@@ -292,12 +314,18 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         this.jobsFieldsListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }
 
-    private void addPersonalProfileFieldsToUIList() {
+    private void addPersonalProfileFieldsToUIList(Boolean areFriends) {
         List<String> finalListViewLines = new ArrayList<>();
         // Agregamos a la lista de campos de personal de usuario todos los campos
         finalListViewLines.add("Nombre" + ": " + this.user.getName());
         finalListViewLines.add("Apellido" + ": " + this.user.getLastName());
-        finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
+
+        if (areFriends){
+            finalListViewLines.add("Padrón" + ": " + this.user.getPadron());
+        } else {
+            finalListViewLines.add("Carrera" + ": " + this.user.getAcademicInfo().getCareer());
+        }
+
         finalListViewLines.add("Biografía" + ": " + this.user.getBiography());
         finalListViewLines.add("Nacionalidad" + ": " + this.user.getNationality());
         finalListViewLines.add("Ciudad" + ": " + this.user.getCity());
@@ -305,7 +333,6 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         this.personalFieldsListView.setAdapter(adapter);
     }
-
 
     public void createJob(List<String> outputs) {
         if(outputs.size() < 4)

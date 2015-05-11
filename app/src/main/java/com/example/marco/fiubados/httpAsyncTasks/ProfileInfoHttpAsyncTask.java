@@ -47,7 +47,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
             String result = this.getResponseField("result");
-            if(result.equals(this.SHOW_PROFILE_RESULT_OK)) {
+            if(result.equals(SHOW_PROFILE_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
                     String profileField = (new JSONObject(dataField)).getString("profile");
@@ -118,6 +118,21 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
         user.setCity(jsonProfileField.getString("city"));
         user.setProfilePicture(jsonProfileField.getString("picture"));
         user.getAcademicInfo().setCareer(jsonProfileField.getString("career"));
+        user.setFriendshipStatus(this.resolveFriendshipStatus(jsonProfileField.getString("friendship")));
+    }
+
+    private String resolveFriendshipStatus(String jsonStatus){
+        switch (jsonStatus){
+            case "yourself":
+            case "friends":
+                return User.FRIENDSHIP_STATUS_FRIEND;
+            case "friendshipRequestSent":
+                return User.FRIENDSHIP_STATUS_REQUESTED;
+            case "pendingFriendshipRequest":
+                return User.FRIENDSHIP_STATUS_WAITING;
+            default:
+                return User.FRIENDSHIP_STATUS_UNKNOWN;
+        }
     }
 
     @Override
