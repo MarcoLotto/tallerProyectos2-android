@@ -2,13 +2,9 @@ package com.example.marco.fiubados.TabScreens;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,9 +22,6 @@ import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.User;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -53,12 +46,14 @@ public class WallTabScreen implements CallbackScreen {
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
     private Button addFriendButton, confirmFriendRequestButton;
-    private TextView wallTitle;
+    private TextView wallTitleTextView;
+    private TextView friendRequestSent;
     private ImageView profileImageView;
 
-    public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitle, ImageView profileImageView){
+    public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton, TextView wallTitleTextView, TextView friendRequestSent, ImageView profileImageView){
         this.tabOwnerActivity = tabOwnerActivity;
-        this.wallTitle = wallTitle;
+        this.wallTitleTextView = wallTitleTextView;
+        this.friendRequestSent = friendRequestSent;
         this.addFriendButton = addFriendButton;
         this.confirmFriendRequestButton = confirmFriendRequestButton;
         this.profileImageView = profileImageView;
@@ -87,7 +82,7 @@ public class WallTabScreen implements CallbackScreen {
         if(this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())){
             // Buscamos una nueva imagen y mandamos a cambiar la imagen de perfil
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            this.tabOwnerActivity.startActivityForResult(intent, this.RESULT_LOAD_IMAGE);
+            this.tabOwnerActivity.startActivityForResult(intent, RESULT_LOAD_IMAGE);
         }
     }
 
@@ -102,9 +97,10 @@ public class WallTabScreen implements CallbackScreen {
     public void onFocus() {
         this.addFriendButton.setVisibility(View.GONE);
         this.confirmFriendRequestButton.setVisibility(View.GONE);
+        this.friendRequestSent.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
             // Seteamos como titulo del muro el nombre de la persona
-            this.wallTitle.setText(this.userOwnerOfTheWall.getName() + " " + this.userOwnerOfTheWall.getLastName());
+            this.wallTitleTextView.setText(this.userOwnerOfTheWall.getName() + " " + this.userOwnerOfTheWall.getLastName());
 
             // Hago visibles o no los botones de amistad
             if(!this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())) {
@@ -112,6 +108,8 @@ public class WallTabScreen implements CallbackScreen {
                     this.addFriendButton.setVisibility(View.VISIBLE);
                 } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_WAITING)) {
                     this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
+                } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_REQUESTED)) {
+                    this.friendRequestSent.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -152,13 +150,13 @@ public class WallTabScreen implements CallbackScreen {
                 toast.show();
             }
         }
-        else if(serviceId == this.RESPOND_FRIEND_REQUEST_SERVICE_ID){
+        else if(serviceId == RESPOND_FRIEND_REQUEST_SERVICE_ID){
             // Pudimos confirmar el request de amistad y ya somos amigos, sacamos el botón de confirmación
             this.confirmFriendRequestButton.setVisibility(View.GONE);
             Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ahora son amigos", Toast.LENGTH_SHORT);
             toast.show();
         }
-        else if(serviceId == this.UPLOAD_IMAGE_SERVICE_ID){
+        else if(serviceId == UPLOAD_IMAGE_SERVICE_ID){
             // Pudimos cambiar la imagen de perfil correctamente
             this.onProfileImageChanged();
             Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ha cambiado su foto de perfil", Toast.LENGTH_SHORT);
@@ -177,14 +175,14 @@ public class WallTabScreen implements CallbackScreen {
     private void onProfileImageChanged() {
         // Recargamos el perfil para recargar la nueva imagen del usuario
         // REVIEW: Para esto podria evitarse traerse todo el perfil
-        ProfileInfoHttpAsyncTask service = new ProfileInfoHttpAsyncTask(this.tabOwnerActivity, this, this.RELOAD_PROFILE_SERVICE_ID, this.getUserOwnerOfTheWall());
+        ProfileInfoHttpAsyncTask service = new ProfileInfoHttpAsyncTask(this.tabOwnerActivity, this, RELOAD_PROFILE_SERVICE_ID, this.getUserOwnerOfTheWall());
         service.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
     }
 
     private void sendFriendRequest(){
         SendFriendRequestHttpAsyncTask sendFriendRequest = new SendFriendRequestHttpAsyncTask(this.tabOwnerActivity, this,
                 SEND_FRIEND_REQUEST_SERVICE_ID, this.userOwnerOfTheWall.getId());
-        sendFriendRequest.execute(this.SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL);
+        sendFriendRequest.execute(SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL);
     }
 
     public User getUserOwnerOfTheWall() {
@@ -207,8 +205,8 @@ public class WallTabScreen implements CallbackScreen {
         cursor.close();
 
         // Enviamos la imagen al servidor
-        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, this.UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
-        service.execute(this.UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
+        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
+        service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
     }
 }
 

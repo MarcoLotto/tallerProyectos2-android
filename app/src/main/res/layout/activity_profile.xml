@@ -40,9 +40,7 @@
                     <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/profileFieldsListView"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/profileFieldsListView"/>
 
                 </LinearLayout>
 
@@ -52,12 +50,20 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical" >
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textAlignment="center"
+                        android:text="@string/addFriendForViewThisJobsText"
+                        android:id="@+id/addFriendForViewThisJobs"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp" />
+
                     <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/jobsFieldsListView"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/jobsFieldsListView" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -70,35 +76,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Educación básica"
-                        android:id="@+id/textView7"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
-
-                    <ListView
-                        android:layout_width="wrap_content"
-                        android:layout_height="200dp"
-                        android:id="@+id/educationsFieldsListView"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:textAlignment="center"
+                        android:text="@string/addFriendForViewThisAcademicText"
+                        android:id="@+id/addFriendForViewThisAcademic"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="FIUBA"
-                        android:id="@+id/textView8"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:text="@string/basicEducationTitleText"
+                        android:id="@+id/basicEducationTitle" />
+
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="200dp"
+                        android:id="@+id/educationsFieldsListView" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/fiubaEducationTitleText"
+                        android:id="@+id/fiubaEducationTitle" />
 
                     <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/academicFieldsListView"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:id="@+id/academicFieldsListView" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

@@ -51,7 +51,7 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             List<User> users = new ArrayList<>();
 
             String result = this.getResponseField("result");
-            if(result.equals(this.GET_FRIEND_RESULT_OK)) {
+            if(result.equals(GET_FRIEND_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
                     String containerField = (new JSONObject(dataField)).getString("friends");

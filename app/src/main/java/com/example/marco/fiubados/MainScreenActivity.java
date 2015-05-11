@@ -73,10 +73,13 @@ public class MainScreenActivity extends TabbedActivity {
         Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
         Button sendFriendRequestButton = (Button) findViewById(R.id.sendFriendRequestButton);
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
+        TextView friendRequestSent = (TextView) findViewById(R.id.friendRequestSent);
         ImageView profileImageView = (ImageView) findViewById(R.id.profileImageView);
-        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, profileImageView);
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, friendRequestSent, profileImageView);
+
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+
         ListView groupsListView = (ListView) findViewById(R.id.groupsListView);
         this.groupsTabScreen = new GroupsTabScreen(this, groupsListView);
 
