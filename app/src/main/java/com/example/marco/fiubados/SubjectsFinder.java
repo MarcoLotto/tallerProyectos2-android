@@ -96,7 +96,8 @@ public class SubjectsFinder implements CallbackScreen {
     }
 
     public String getApprobedRatioString() {
-        return "Materias aprobadas " + this.approvedSubjects.size() +  "/" +  this.careerSubjects.size();
+        // TODO: No calcular solo con la cantidad de materias, sino tambien con los creditos desde web service
+        return "Materias aprobadas (en creditos): " + (this.approvedSubjects.size()*6) +  "/" +  (this.careerSubjects.size()*6);
     }
 
     /**
