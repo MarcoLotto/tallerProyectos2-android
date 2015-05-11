@@ -2,6 +2,8 @@ package com.example.marco.fiubados.TabScreens;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -35,6 +37,7 @@ public class WallTabScreen implements CallbackScreen {
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
+    private static final int PROFILE_PICTURE_MAX_SIZE = 524228;
 
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
@@ -204,9 +207,17 @@ public class WallTabScreen implements CallbackScreen {
         String picturePathUploading = cursor.getString(columnIndex);
         cursor.close();
 
-        // Enviamos la imagen al servidor
-        UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
-        service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
+        // Enviamos la imagen al servidor (si no supera un limite máximo)
+        Bitmap bm = BitmapFactory.decodeFile(picturePathUploading);
+        if(bm.getByteCount() <= this.PROFILE_PICTURE_MAX_SIZE) {
+            UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
+            service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
+        }
+        else{
+            String message = "La imagen supera los " + (this.PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "Kb. Suba una imagen mas pequeña.";
+            Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), message, Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 }
 
