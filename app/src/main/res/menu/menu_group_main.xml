@@ -10,4 +10,8 @@
         android:title="@string/action_group_members"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/action_group_files"
+        android:title="@string/action_group_files"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>

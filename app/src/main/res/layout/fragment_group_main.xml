@@ -12,6 +12,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/group_main_future_release_text"
-        android:textAlignment="center" />
+        android:gravity="center" />
 
 </RelativeLayout>

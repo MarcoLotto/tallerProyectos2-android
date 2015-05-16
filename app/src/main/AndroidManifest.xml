@@ -97,10 +97,18 @@
         <activity
             android:name=".activity.group.GroupMainActivity"
             android:label="@string/title_activity_group_main"
-            android:parentActivityName="com.example.marco.fiubados.MainScreenActivity" >
+            android:parentActivityName=".MainScreenActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.marco.fiubados.MainScreenActivity" />
+                android:value=".MainScreenActivity" />
+        </activity>
+        <activity
+            android:name=".activity.group.GroupInformationActivity"
+            android:label="@string/title_activity_group_information"
+            android:parentActivityName=".activity.group.GroupMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.group.GroupMainActivity" />
         </activity>
 
         <meta-data

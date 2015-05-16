@@ -54,27 +54,28 @@ public class GroupsTabScreen implements CallbackScreen {
     }
 
     private void addGroupsToGroupUIList() {
-        List<String> finalListViewLines = new ArrayList<>();
+        List<String> groupStrings = new ArrayList<>();
 
         for (Group group : this.groups){
-            finalListViewLines.add(group.getName() + " - " + group.getDescription());
+            groupStrings.add(group.getName());
         }
 
-        ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
+        ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, groupStrings);
         this.groupsListView.setAdapter(adapter);
         this.groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onGroupItemClick();
+                onGroupItemClick(position);
             }
         });
     }
 
-    private void onGroupItemClick() {
-        //String forecast = mForecastAdapter.getItem(position);
-        Intent intent = new Intent(this.tabOwnerActivity, GroupMainActivity.class);
-        //.putExtra(Intent.EXTRA_TEXT, forecast);
-        this.tabOwnerActivity.startActivity(intent);
+    private void onGroupItemClick(int position) {
+        if (position < this.groups.size()) {
+            ContextManager.getInstance().groupToView = this.groups.get(position);
+            Intent intent = new Intent(this.tabOwnerActivity, GroupMainActivity.class);
+            this.tabOwnerActivity.startActivity(intent);
+        }
     }
 
 }

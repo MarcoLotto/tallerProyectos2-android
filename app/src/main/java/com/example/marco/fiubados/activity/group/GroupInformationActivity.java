@@ -1,25 +1,25 @@
 package com.example.marco.fiubados.activity.group;
 
-import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.marco.fiubados.R;
 
-public class GroupMainActivity extends AppCompatActivity {
+public class GroupInformationActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_main);
+        setContentView(R.layout.activity_group_information);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_group_main, menu);
+        //getMenuInflater().inflate(R.menu.menu_group_information, menu);
         return true;
     }
 
@@ -31,8 +31,7 @@ public class GroupMainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_group_information) {
-            startActivity(new Intent(this, GroupInformationActivity.class));
+        if (id == R.id.action_settings) {
             return true;
         }
 

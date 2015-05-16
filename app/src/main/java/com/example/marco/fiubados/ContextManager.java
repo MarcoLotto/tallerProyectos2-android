@@ -1,5 +1,6 @@
 package com.example.marco.fiubados;
 
+import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
 
 /**
@@ -14,6 +15,7 @@ public class ContextManager {
     private String userToken;
     private User myUser;
     private MainScreenActivity mainScreenActivity;
+    public Group groupToView;
 
     private ContextManager(){
     }
