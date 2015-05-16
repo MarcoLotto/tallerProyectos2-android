@@ -33,4 +33,10 @@
     <string name="fiubaEducationTitleText">FIUBA</string>
     <string name="addFriendForViewThisJobsText">Debes ser amigo para ver los trabajos</string>
     <string name="addFriendForViewThisAcademicText">Debes ser amigo para ver la información académica</string>
+
+    <!-- Strings de activities de grupos -->
+    <string name="title_activity_group_main">Grupo</string>
+    <string name="action_group_information">Información</string>
+    <string name="action_group_members">Miembros</string>
+    <string name="group_main_future_release_text">Cuando B*ca vuelva a jugar un torneo internacional se van a mostrar los temas de discusión del grupo</string>
 </resources>

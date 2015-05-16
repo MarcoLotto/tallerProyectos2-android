@@ -1,10 +1,14 @@
 package com.example.marco.fiubados.TabScreens;
 
+import android.content.Intent;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabbedActivity;
+import com.example.marco.fiubados.activity.group.GroupMainActivity;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupsHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
 
@@ -45,19 +49,32 @@ public class GroupsTabScreen implements CallbackScreen {
     public void onServiceCallback(List responseElements, int serviceId) {
         if(serviceId == SEARCH_GROUPS_SERVICE_ID || serviceId == CREATE_GROUP_SERVICE_ID){
             this.groups = responseElements;
-            this.addGroupsToGroupUIList(this.groups, this.groupsListView);
+            this.addGroupsToGroupUIList();
         }
     }
 
-    private void addGroupsToGroupUIList(List<Group> groupsList, ListView groupsListView) {
+    private void addGroupsToGroupUIList() {
         List<String> finalListViewLines = new ArrayList<>();
 
-        for (Group group : groupsList){
+        for (Group group : this.groups){
             finalListViewLines.add(group.getName() + " - " + group.getDescription());
         }
 
         ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
-        groupsListView.setAdapter(adapter);
+        this.groupsListView.setAdapter(adapter);
+        this.groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onGroupItemClick();
+            }
+        });
+    }
+
+    private void onGroupItemClick() {
+        //String forecast = mForecastAdapter.getItem(position);
+        Intent intent = new Intent(this.tabOwnerActivity, GroupMainActivity.class);
+        //.putExtra(Intent.EXTRA_TEXT, forecast);
+        this.tabOwnerActivity.startActivity(intent);
     }
 
 }
