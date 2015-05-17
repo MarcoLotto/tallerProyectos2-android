@@ -1,5 +1,28 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
-    android:name="com.example.marco.fiubados.activity.group.GroupMainActivityFragment"
-    tools:layout="@layout/fragment_group_main" android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".GroupMainActivity"
+    android:id="@+id/relativeLayout"
+    android:focusableInTouchMode="true"
+    android:focusable="true">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Discusiones del grupo"
+        android:id="@+id/discussionsTextView"
+        android:textStyle="bold" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/discussionsListView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
+</RelativeLayout>
+
+
