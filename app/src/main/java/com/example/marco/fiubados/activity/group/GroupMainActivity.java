@@ -30,9 +30,13 @@ public class GroupMainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_group_information) {
             startActivity(new Intent(this, GroupInformationActivity.class));
+            return true;
+        }
+
+        if (id == R.id.action_group_members) {
+            startActivity(new Intent(this, GroupMembersActivity.class));
             return true;
         }
 

@@ -46,4 +46,8 @@
     <string name="group_information_future_release_text">Cuando Cristina deje de robar se va mostrar la información del grupo</string>
     <string name="group_information_name_title">Nombre</string>
     <string name="group_information_description_title">Descripción</string>
+
+    <!-- Strings de GroupMembersActivity y su GroupMembersActivityFragment -->
+    <string name="title_activity_group_members">Miembros</string>
+    <string name="hello_world">Hello world!</string>
 </resources>

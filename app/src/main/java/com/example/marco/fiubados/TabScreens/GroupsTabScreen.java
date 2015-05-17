@@ -22,7 +22,6 @@ public class GroupsTabScreen implements CallbackScreen {
 
     public static final String GROUPS_SEARCH_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     // public static final String GROUPS_SEARCH_ENDPOINT_URL = "http://www.mocky.io/v2/553e70fa2f711b4f27a5d287";
-    private static final String CREATE_GROUP_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     private static final int SEARCH_GROUPS_SERVICE_ID = 0;
     private static final int CREATE_GROUP_SERVICE_ID = 1;
 
@@ -41,13 +40,13 @@ public class GroupsTabScreen implements CallbackScreen {
         this.groups.clear();
 
         // Buscamos los grupos
-        GetGroupsHttpAsyncTask friendsHttpAsyncTask = new GetGroupsHttpAsyncTask(this.tabOwnerActivity, this, SEARCH_GROUPS_SERVICE_ID);
-        friendsHttpAsyncTask.execute(this.GROUPS_SEARCH_ENDPOINT_URL);
+        GetGroupsHttpAsyncTask groupsTask = new GetGroupsHttpAsyncTask(this.tabOwnerActivity, this, SEARCH_GROUPS_SERVICE_ID);
+        groupsTask.execute(this.GROUPS_SEARCH_ENDPOINT_URL);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == SEARCH_GROUPS_SERVICE_ID || serviceId == CREATE_GROUP_SERVICE_ID){
+        if (serviceId == SEARCH_GROUPS_SERVICE_ID || serviceId == CREATE_GROUP_SERVICE_ID) {
             this.groups = responseElements;
             this.addGroupsToGroupUIList();
         }

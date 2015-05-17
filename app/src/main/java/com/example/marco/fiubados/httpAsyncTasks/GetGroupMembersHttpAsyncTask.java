@@ -1,6 +1,7 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -18,6 +19,7 @@ import java.util.List;
  * Obtiene los miembros de un grupo
  */
 public class GetGroupMembersHttpAsyncTask extends HttpAsyncTask {
+    private static final String LOG_TAG = GetGroupMembersHttpAsyncTask.class.getSimpleName();
     protected static final String GET_GROUP_MEMBERS_RESULT_OK = "ok";
 
     public GetGroupMembersHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId) {
@@ -50,7 +52,8 @@ public class GetGroupMembersHttpAsyncTask extends HttpAsyncTask {
             if(result.equals(this.GET_GROUP_MEMBERS_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    String containerField = (new JSONObject(dataField)).getJSONObject("group").getString("members");
+                    JSONObject jGroup = (new JSONObject(dataField)).getJSONObject("group");
+                    String containerField = jGroup.getString("members");
                     this.fillGroupMembers(members, containerField);
 
                 } catch (JSONException e) {
@@ -70,7 +73,7 @@ public class GetGroupMembersHttpAsyncTask extends HttpAsyncTask {
         for (int i = 0; i < jArray.length(); i++) {
             JSONObject jObject = jArray.getJSONObject(i);
 
-            String userId = jObject.getString("id");
+            String userId = jObject.getString("userId");
             String userFirstName = jObject.getString("firstName");
             String userLastName = jObject.getString("lastName");
 
