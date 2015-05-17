@@ -33,6 +33,12 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
     }
 
     @Override
+    protected String getRequestMethod() {
+        // Cambiando este parámetro se determina por que método se enviará el request
+        return GET_REQUEST_TYPE;
+    }
+
+    @Override
     protected void configureRequestFields() {
         //this.addRequestField("searchName", this.searchName);
         this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
@@ -85,20 +91,14 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             String email = jsonObject.getString("email");
             String picture = jsonObject.getString("picture");
 
-            User user = new User(userId, firstName, email);
-            user.setLastName(lastName);
-            user.setFriendshipStatus(friendshipStatus);
+            User user = new User(userId, firstName, lastName);
+            user.setEmail(email);
             user.setProfilePicture(picture);
+            user.setFriendshipStatus(friendshipStatus);
             if(isFriendshipRequest){
                 user.setFriendshipRequestId(jsonObject.getString("friendshipRequestId"));
             }
             users.add(user);
         }
-    }
-
-    @Override
-    protected String getRequestMethod() {
-        // Cambiando este parámetro se determina por que método se enviará el request
-        return GET_REQUEST_TYPE;
     }
 }

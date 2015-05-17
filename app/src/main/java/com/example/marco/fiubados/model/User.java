@@ -15,38 +15,194 @@ public class User extends DatabaseObject{
     public static final String FRIENDSHIP_STATUS_REQUESTED = "R"; // Fue preguntado para amigo
     public static final String FRIENDSHIP_STATUS_UNKNOWN = "U";   // No es amigo
 
-    private String name, email;
-    private String friendshipStatus;
-    private String friendshipRequestId;  // REVIEW: Ya se que esto no va pero son las 5:30 de la mañana
-    private String matchParameter;
+    // User and Profile info
+    private String firstName;
     private String lastName;
-    private String padron;
+    private String email;
+    private String profilePicture;
     private String biography;
     private String nationality;
     private String city;
-    private List<Job> jobs = new ArrayList<>();
-    private Academic academicInfo = new Academic("");
     private List<Education> educationInfo = new ArrayList<>();
-    private String profilePicture;
+    private List<Job> jobs = new ArrayList<>();
+    private String padron;
+    private Academic academicInfo = new Academic("");
 
-    public User(String id, String name){
+    // Friendiship Info
+    private String friendshipStatus;
+    private String friendshipRequestId;  // REVIEW: Ya se que esto no va pero son las 5:30 de la mañana
+    private String matchParameter;
+
+    /*
+     * Constructors
+     */
+
+    public User(String id) {
         super(id);
-        this.name = name;
     }
 
-    public User(String id, String name, String email) {
+    public User(String id, String firstName, String lastName) {
         super(id);
-        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    /*
+     * Overrides
+     */
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null){
+            return false;
+        }
+        return ((User) o).getId().equals(this.getId());
+    }
+
+    /*
+     * First Name getter and setter
+     */
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /*
+     * Last Name getter and setter
+     */
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /*
+     * Full Name getter
+     */
+
+    public String getFullName() {
+        String fullName = this.getFirstName() + " " + this.getLastName();
+        return fullName;
+    }
+
+    /*
+     * Email getter and setter
+     */
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    /*
+     * Profile Picture getter and setter
+     */
+
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
+
+    /*
+     * Biography getter and setter
+     */
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+    /*
+     * Nationality getter and setter
+     */
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    /*
+     * City getter and setter
+     */
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /*
+     * Education Info getter and setter
+     */
+
+    public List<Education> getEducationInfo() {
+        return educationInfo;
+    }
+
+    public void setEducationInfo(List<Education> educationInfo) {
+        this.educationInfo = educationInfo;
+    }
+
+    /*
+     * Job Info getter and setter
+     */
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
+    }
+
+    /*
+     * Padron getter and setter
+     */
+
+    public String getPadron() {
+        return padron;
+    }
+
+    public void setPadron(String padron) {
+        this.padron = padron;
+    }
+
+    /*
+     * Academic Info getter and setter
+     */
+
+    public Academic getAcademicInfo() {
+        return academicInfo;
+    }
+
+    public void setAcademicInfo(Academic academicInfo) {
+        this.academicInfo = academicInfo;
+    }
+
+    /*
+     * Friendship Status getter and setter
+     */
 
     public String getFriendshipStatus() {
         return friendshipStatus;
@@ -55,6 +211,10 @@ public class User extends DatabaseObject{
     public void setFriendshipStatus(String friendshipStatus) {
         this.friendshipStatus = friendshipStatus;
     }
+
+    /*
+     * Friendship Request ID getter and setter
+     */
 
     // REVIEW: Sacar de acá, esto no va
     public String getFriendshipRequestId() {
@@ -65,91 +225,15 @@ public class User extends DatabaseObject{
         this.friendshipRequestId = friendshipRequestId;
     }
 
-    @Override
-    public boolean equals(Object o){
-        if(o == null){
-            return false;
-        }
-        return ((User) o).getId().equals(this.getId());
-    }
-
-    public void setMatchParameter(String matchParameter) {
-        this.matchParameter = matchParameter;
-    }
+    /*
+     * Match Parameter getter and setter
+     */
 
     public String getMatchParameter() {
         return matchParameter;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setPadron(String padron) {
-        this.padron = padron;
-    }
-
-    public String getPadron() {
-        return padron;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
-
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public List<Job> getJobs() {
-        return jobs;
-    }
-
-    public void setJobs(List<Job> jobs) {
-        this.jobs = jobs;
-    }
-
-    public Academic getAcademicInfo() {
-        return academicInfo;
-    }
-
-    public void setAcademicInfo(Academic academicInfo) {
-        this.academicInfo = academicInfo;
-    }
-
-    public List<Education> getEducationInfo() {
-        return educationInfo;
-    }
-
-    public void setEducationInfo(List<Education> educationInfo) {
-        this.educationInfo = educationInfo;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
+    public void setMatchParameter(String matchParameter) {
+        this.matchParameter = matchParameter;
     }
 }

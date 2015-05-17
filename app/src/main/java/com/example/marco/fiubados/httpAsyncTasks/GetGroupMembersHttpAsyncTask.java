@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.model.Group;
+import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,13 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Trae los grupos de los cuales el usuario forma parte
+ * Obtiene los miembros de un grupo
  */
-public class GetGroupsHttpAsyncTask extends HttpAsyncTask {
+public class GetGroupMembersHttpAsyncTask extends HttpAsyncTask {
+    protected static final String GET_GROUP_MEMBERS_RESULT_OK = "ok";
 
-    protected static final String GET_GROUPS_RESULT_OK = "ok";
-
-    public GetGroupsHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId) {
+    public GetGroupMembersHttpAsyncTask(Activity callingActivity, CallbackScreen screen, int serviceId) {
         super(callingActivity, screen, serviceId);
     }
 
@@ -45,37 +44,38 @@ public class GetGroupsHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
-            List<Group> groups = new ArrayList<>();
+            List<User> members = new ArrayList<>();
 
             String result = this.getResponseField("result");
-            if(result.equals(this.GET_GROUPS_RESULT_OK)) {
+            if(result.equals(this.GET_GROUP_MEMBERS_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
-                    String containerField = (new JSONObject(dataField)).getString("groups");
-                    this.fillGroups(groups, containerField);
+                    String containerField = (new JSONObject(dataField)).getJSONObject("group").getString("members");
+                    this.fillGroupMembers(members, containerField);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
             // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
-            this.callbackScreen.onServiceCallback(groups, this.serviceId);
+            this.callbackScreen.onServiceCallback(members, this.serviceId);
         } else {
             this.dialog.setMessage("Error en la conexión con el servidor");
             this.dialog.show();
         }
     }
 
-    protected void fillGroups(List<Group> groups, String containerField) throws JSONException {
-        JSONArray jObject = new JSONArray(containerField);
-        for (int i = 0; i < jObject.length(); i++) {
-            JSONObject jsonObject = jObject.getJSONObject(i);
+    protected void fillGroupMembers(List<User> groupMembers, String containerField) throws JSONException {
+        JSONArray jArray = new JSONArray(containerField);
+        for (int i = 0; i < jArray.length(); i++) {
+            JSONObject jObject = jArray.getJSONObject(i);
 
-            String groupName = jsonObject.getString("name");
-            String groupDescription = jsonObject.getString("description");
-            String groupId = jsonObject.getString("groupId");
-            Group group = new Group(groupId, groupName, groupDescription, true);
-            groups.add(group);
+            String userId = jObject.getString("id");
+            String userFirstName = jObject.getString("firstName");
+            String userLastName = jObject.getString("lastName");
+
+            User user = new User(userId, userFirstName, userLastName);
+            groupMembers.add(user);
         }
     }
 }

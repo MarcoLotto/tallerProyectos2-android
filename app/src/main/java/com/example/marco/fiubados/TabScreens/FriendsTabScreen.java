@@ -94,7 +94,7 @@ public class FriendsTabScreen implements CallbackScreen {
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            finalListViewLines.add(user.getName() + " " + user.getLastName());
+            finalListViewLines.add(user.getFullName());
         }
         ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, finalListViewLines);
         usersListView.setAdapter(adapter);

@@ -117,8 +117,7 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            String finalString = user.getName();
-            finalListViewLines.add(new DualField(new Field("Nombre", user.getName() + " " + user.getLastName()), new Field("SearchDesc", user.getMatchParameter())));
+            finalListViewLines.add(new DualField(new Field("Nombre", user.getFullName()), new Field("SearchDesc", user.getMatchParameter())));
         }
         usersListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
     }

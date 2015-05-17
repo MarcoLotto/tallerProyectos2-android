@@ -69,7 +69,7 @@ public class NotificationsActivity extends AppCompatActivity implements Callback
 
         // Asignamos los valores iniciales
         TextView fieldNameTextView = (TextView) dialogView.findViewById(R.id.messageTextView);
-        fieldNameTextView.setText("¿Desea agregar a " + possibleFriend.getName() + " como amigo?");
+        fieldNameTextView.setText("¿Desea agregar a " + possibleFriend.getFullName() + " como amigo?");
         builder.setView(dialogView)
                 // Add action buttons
                 .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
@@ -133,7 +133,7 @@ public class NotificationsActivity extends AppCompatActivity implements Callback
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
-            finalListViewLines.add(user.getName());
+            finalListViewLines.add(user.getFullName());
         }
         ArrayAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, finalListViewLines);
         usersListView.setAdapter(adapter);

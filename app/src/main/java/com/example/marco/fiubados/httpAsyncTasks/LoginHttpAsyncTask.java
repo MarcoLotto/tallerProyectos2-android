@@ -57,7 +57,7 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
             try {
                 JSONObject json = new JSONObject(data);
                 ContextManager.getInstance().setUserToken(json.getString("userToken"));
-                User myUser = new User(json.getString("userId"), this.username);
+                User myUser = new User(json.getString("userId"));
                 ContextManager.getInstance().setMyUser(myUser);
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -103,7 +103,7 @@ public class WallTabScreen implements CallbackScreen {
         this.friendRequestSent.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
             // Seteamos como titulo del muro el nombre de la persona
-            this.wallTitleTextView.setText(this.userOwnerOfTheWall.getName() + " " + this.userOwnerOfTheWall.getLastName());
+            this.wallTitleTextView.setText(this.userOwnerOfTheWall.getFullName());
 
             // Hago visibles o no los botones de amistad
             if(!this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser())) {
