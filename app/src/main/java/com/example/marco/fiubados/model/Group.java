@@ -26,6 +26,7 @@ public class Group extends DatabaseObject {
         this.name = name;
         this.description = description;
         this.isMember = isMember;
+        this.discussions = new ArrayList<GroupDiscussion>();
     }
 
     public String getName() {
