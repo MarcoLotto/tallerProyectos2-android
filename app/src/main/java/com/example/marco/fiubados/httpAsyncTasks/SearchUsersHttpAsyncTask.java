@@ -82,12 +82,12 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
 
             String id = jsonObject.getString("userId");
             String email = jsonObject.getString("email");
-            String name = jsonObject.getString("firstName");
+            String firstName = jsonObject.getString("firstName");
             String lastName = jsonObject.getString("lastName");
             String picture = jsonObject.getString("picture");
 
-            User user = new User(id, name, email);
-            user.setLastName(lastName);
+            User user = new User(id, firstName, lastName);
+            user.setEmail(email);
             user.setProfilePicture(picture);
             String friendship = jsonObject.getString("friendship");
             if(controlsMatch){

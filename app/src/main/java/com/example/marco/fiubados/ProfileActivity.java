@@ -85,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
         // Conseguimos el parametro que nos paso el activity que nos llamó
         Bundle params = getIntent().getExtras();
         String userOwnerId = params.getString(USER_ID_PARAMETER);
-        this.user = new User(userOwnerId, "");
+        this.user = new User(userOwnerId);
 
         // La magia
         this.onFocus();
@@ -221,7 +221,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     @Override
     public void onFocus() {
         // Creamos un usuario temporal en donde se guardará la data
-        this.temporalUser = new User(this.user.getId(), "");
+        this.temporalUser = new User(this.user.getId());
 
         // Vamos a buscar la informacion del perfil
         ProfileInfoHttpAsyncTask personalInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.temporalUser);
@@ -311,7 +311,7 @@ public class ProfileActivity extends AppCompatActivity implements CallbackScreen
     private void addPersonalProfileFieldsToUIList(Boolean areFriends) {
         List<String> finalListViewLines = new ArrayList<>();
         // Agregamos a la lista de campos de personal de usuario todos los campos
-        finalListViewLines.add("Nombre" + ": " + this.user.getName());
+        finalListViewLines.add("Nombre" + ": " + this.user.getFirstName());
         finalListViewLines.add("Apellido" + ": " + this.user.getLastName());
 
         if (areFriends){

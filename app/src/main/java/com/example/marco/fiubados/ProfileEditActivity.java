@@ -52,7 +52,7 @@ public class ProfileEditActivity extends AppCompatActivity implements CallbackSc
         // Primero conseguimos los datos del perfil
         Bundle params = getIntent().getExtras();
         String userOwnerId = params.getString(ProfileActivity.USER_ID_PARAMETER);
-        this.user = new User(userOwnerId, "");
+        this.user = new User(userOwnerId);
         ProfileInfoHttpAsyncTask profileInfoService = new ProfileInfoHttpAsyncTask(this, this, SEARCH_PROFILE_INFO_SERVICE_ID, this.user);
         profileInfoService.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
 
@@ -118,7 +118,7 @@ public class ProfileEditActivity extends AppCompatActivity implements CallbackSc
     }
 
     private void fillFieldsListWithPersonalProfileData() {
-        this.fields.add(new ProfileField("firstName", this.user.getName(), "Nombre"));
+        this.fields.add(new ProfileField("firstName", this.user.getFirstName(), "Nombre"));
         this.fields.add(new ProfileField("lastName", this.user.getLastName(), "Apellido"));
         this.fields.add(new ProfileField("biography", this.user.getBiography(), "Biografia"));
         this.fields.add(new ProfileField("nationality", this.user.getNationality(), "Nacionalidad"));

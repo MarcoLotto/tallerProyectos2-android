@@ -31,6 +31,12 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
     }
 
     @Override
+    protected String getRequestMethod() {
+        // Cambiando este parámetro se determina por que método se enviará el request
+        return GET_REQUEST_TYPE;
+    }
+
+    @Override
     protected void configureRequestFields() {
         this.addUrlRequestField(this.user.getId());
         this.addRequestField("userToken", ContextManager.getInstance().getUserToken());
@@ -110,7 +116,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
 
     private void processPersonalProfileData(String profileField, User user) throws JSONException {
         JSONObject jsonProfileField = new JSONObject(profileField);
-        user.setName(jsonProfileField.getString("firstName"));
+        user.setFirstName(jsonProfileField.getString("firstName"));
         user.setLastName(jsonProfileField.getString("lastName"));
         user.setPadron(jsonProfileField.getString("padron"));
         user.setBiography(jsonProfileField.getString("biography"));
@@ -133,11 +139,5 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
             default:
                 return User.FRIENDSHIP_STATUS_UNKNOWN;
         }
-    }
-
-    @Override
-    protected String getRequestMethod() {
-        // Cambiando este parámetro se determina por que método se enviará el request
-        return GET_REQUEST_TYPE;
     }
 }
