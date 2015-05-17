@@ -70,6 +70,9 @@ public class SearchUsersHttpAsyncTask extends GetFriendsHttpAsyncTask {
         try {
             this.fillUserData(users, jsonData.getString("usersByNationality"), true);
         }catch(Exception e){}
+        try {
+            this.fillUserData(users, jsonData.getString("usersByCareer"), true);
+        }catch(Exception e){}
     }
 
     private void fillUserData(List<User> users, String containerField, boolean controlsMatch) throws JSONException {
