@@ -105,7 +105,7 @@
         <activity
             android:name=".activity.group.GroupInformationActivity"
             android:label="@string/title_activity_group_information"
-            android:parentActivityName=".activity.group.GroupMainActivity">
+            android:parentActivityName=".activity.group.GroupMainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.group.GroupMainActivity" />

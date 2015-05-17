@@ -14,4 +14,8 @@
         android:title="@string/action_group_files"
         android:orderInCategory="100"
         app:showAsAction="never" />
+    <item android:id="@+id/addAction"
+        android:icon="@drawable/ic_action_new"
+        android:title="Nueva discusion"
+        app:showAsAction="always"/>
 </menu>

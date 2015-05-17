@@ -1,9 +1,13 @@
 package com.example.marco.fiubados.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Group extends DatabaseObject {
 
     private String name;
     private String description;
+    private List<GroupDiscussion> discussions;
 
     public Group(String id) {
         super(id);
@@ -13,6 +17,7 @@ public class Group extends DatabaseObject {
         super(id);
         this.name = name;
         this.description = description;
+        this.discussions = new ArrayList<GroupDiscussion>();
     }
 
     public String getDescription() {
@@ -29,5 +34,12 @@ public class Group extends DatabaseObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addDiscussion(GroupDiscussion discussion) {
+        this.discussions.add(discussion);
+    }
+    public List<GroupDiscussion> getDiscussions(){
+        return this.discussions;
     }
 }
