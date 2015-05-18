@@ -1,13 +1,11 @@
 package com.example.marco.fiubados.activity.group;
 
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,7 +13,6 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupMembersHttpAsyncTask;
-import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
