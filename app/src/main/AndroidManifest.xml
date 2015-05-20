@@ -48,6 +48,10 @@
                 android:value=".SearchUsersActivity" />
         </activity>
         <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
+        <activity
             android:name=".SignUpActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_sign_up"

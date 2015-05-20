@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
+import com.example.marco.fiubados.activity.MainActivity;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.LoginHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -99,7 +100,8 @@ public class LoginActivity extends AppCompatActivity implements CallbackScreen {
         }
         else if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
             // Abrimos la pantalla principal
-            Intent intent = new Intent(this, MainScreenActivity.class);
+            //Intent intent = new Intent(this, MainScreenActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             this.startActivity(intent);
             this.finish();
         }

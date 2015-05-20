@@ -1,4 +1,5 @@
 <resources>
+    <!-- String globales y otros -->
     <string name="app_short_name">Campus Móvil</string>
     <string name="app_name">FIUBA Campus Móvil</string>
     <string name="action_settings">Settings</string>
@@ -34,12 +35,17 @@
     <string name="addFriendForViewThisJobsText">Debes ser amigo para ver los trabajos</string>
     <string name="addFriendForViewThisAcademicText">Debes ser amigo para ver la información académica</string>
 
+    <!-- Strings de MainActivity -->
+    <string name="title_activity_main"></string>
+    <string name="title_section1">Muro</string>
+    <string name="title_section2">Grupos</string>
+    <string name="title_section3">Amigos</string>
+
     <!-- Strings de GroupMainActivity y su GroupMainActivityFragment -->
     <string name="title_activity_group_main">Grupo</string>
     <string name="action_group_information">Información</string>
     <string name="action_group_members">Miembros</string>
     <string name="action_group_files">Archivos</string>
-    <string name="group_main_future_release_text">Cuando B*ca vuelva a jugar un torneo internacional se van a mostrar los temas de discusión del grupo</string>
 
     <!-- Strings de GroupInformationActivity y su GroupInformationActivityFragment -->
     <string name="title_activity_group_information">Información del grupo</string>
@@ -49,5 +55,5 @@
 
     <!-- Strings de GroupMembersActivity y su GroupMembersActivityFragment -->
     <string name="title_activity_group_members">Miembros</string>
-    <string name="hello_world">Hello world!</string>
+
 </resources>
