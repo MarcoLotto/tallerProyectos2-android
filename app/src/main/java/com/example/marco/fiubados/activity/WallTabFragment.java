@@ -1,22 +1,18 @@
 package com.example.marco.fiubados.activity;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.marco.fiubados.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link WallTabFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link WallTabFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragmento de la vista de Muro de MainActivity.
  */
 public class WallTabFragment extends Fragment {
     /**
@@ -38,6 +34,34 @@ public class WallTabFragment extends Fragment {
     }
 
     public WallTabFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_wall_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        // Hace click en perfil de usuario
+        if (id == R.id.action_user_profile) {
+            // TODO
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -1,7 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.marco.fiubados.activity.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    tools:context="com.example.marco.fiubados.activity.MainActivity" >
+
+    <item android:id="@+id/action_map"
+        android:icon="@drawable/ic_action_map_holo_dark"
+        android:title="@string/menu_action_notifications"
+        android:orderInCategory="900"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/notificationAction"
+        android:icon="@drawable/ic_action_bell_holo_dark"
+        android:title="@string/menu_action_notifications"
+        android:orderInCategory="1000"
+        app:showAsAction="always" />
 </menu>
