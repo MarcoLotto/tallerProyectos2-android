@@ -9,7 +9,7 @@
         android:orderInCategory="900"
         app:showAsAction="always" />
 
-    <item android:id="@+id/notificationAction"
+    <item android:id="@+id/action_notifications"
         android:icon="@drawable/ic_action_bell_holo_dark"
         android:title="@string/menu_action_notifications"
         android:orderInCategory="1000"
