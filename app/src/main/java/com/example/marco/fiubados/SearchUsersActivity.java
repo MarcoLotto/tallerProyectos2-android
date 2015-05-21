@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +41,10 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
 
         // Recupero el query que debo mandar a buscar
         if(Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
-            this.queryText = this.getIntent().getStringExtra(SearchManager.QUERY);
+            this.queryText = getIntent().getStringExtra(SearchManager.QUERY);
+            Bundle searchData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+            String searchType = searchData.getString("type_search");
+            Log.v("search", searchType);
         }
         this.configureComponents();
         this.onFocus();
@@ -72,7 +76,7 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_users, menu);
+        //getMenuInflater().inflate(R.menu.menu_search_users, menu);
         return true;
     }
 

@@ -4,6 +4,7 @@
     <string name="app_name">FIUBA Campus Móvil</string>
     <string name="action_settings">Ajustes</string>
     <string name="action_search">Buscar</string>
+    <string name="search_hint">Buscar...</string>
     <string name="title_activity_login_ok">LoginOkActivity</string>
     <string name="title_activity_news"></string>
     <string name="title_activity_sign_up">Registrarse</string>
@@ -21,7 +22,7 @@
     <string name="titleSignUpLabel">Completá con tus datos</string>
     <string name="padronPassportSignUpHint">Padrón o Pasaporte</string>
     <string name="title_activity_search_users">SearchUsersActivity</string>
-    <string name="search_hint">Nombre, nacionalidad, etc.</string>
+
     <string name="ok">OK</string>
     <string name="title_activity_jobs_profile_edit">JobsProfileEditActivity</string>
     <string name="delete">Eliminar</string>
@@ -47,10 +48,10 @@
     <string name="action_user_profile">Perfil</string>
 
     <!-- Strings de GroupsTabFragment -->
-    <string name="search_groups_hint">Busque por nombre de grupo</string>
+    <string name="search_groups_hint">Buscar grupos...</string>
 
     <!-- Strings de FriendsTabFragment -->
-    <string name="search_users_hint">Busque por nombre, carrera, ciudad o nacionalidad</string>
+    <string name="search_users_hint">Buscar usuarios...</string>
 
     <!-- Strings de GroupMainActivity y su GroupMainActivityFragment -->
     <string name="title_activity_group_main">Grupo</string>
@@ -66,5 +67,10 @@
 
     <!-- Strings de GroupMembersActivity y su GroupMembersActivityFragment -->
     <string name="title_activity_group_members">Miembros</string>
+    <string name="title_activity_search_results">SearchResultsActivity</string>
+    <string name="hello_world">Hello world!</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

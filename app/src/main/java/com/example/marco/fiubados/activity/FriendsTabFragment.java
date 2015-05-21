@@ -72,6 +72,10 @@ public class FriendsTabFragment extends Fragment implements CallbackScreen {
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search_users));
+        searchView.setQueryHint(getString(R.string.search_users_hint));
+        Bundle searchData = new Bundle();
+        searchData.putString("type_search", "users");
+        searchView.setAppSearchData(searchData);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
     }
 
@@ -84,8 +88,7 @@ public class FriendsTabFragment extends Fragment implements CallbackScreen {
 
         // Hace click en busqueda de usuarios
         if (id == R.id.action_search_users) {
-            // TODO
-            return true;
+            return getActivity().onSearchRequested();
         }
 
         return super.onOptionsItemSelected(item);

@@ -50,6 +50,9 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/title_activity_main" >
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchUsersActivity" />
         </activity>
         <activity
             android:name=".SignUpActivity"
@@ -78,10 +81,16 @@
         <activity
             android:name=".SearchUsersActivity"
             android:label="Busqueda de usuario" >
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".activity.SearchResultsActivity"
+            android:label="@string/title_activity_search_results" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -129,6 +138,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDrw4RG-NCzjwiqi90o_-TmxrJ6y0j04vU" />
+
     </application>
 
 </manifest>
