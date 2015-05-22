@@ -3,23 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.marco.fiubados.activity.group.GroupMainActivity">
 
-    <!-- Acciones siempre visibles -->
     <item android:id="@+id/addAction"
         android:icon="@drawable/ic_action_new"
         android:title="Nueva discusion"
         app:showAsAction="always"/>
-
-    <!-- Acciones dentro del submenu -->
-    <item android:id="@+id/action_group_information"
-        android:title="@string/action_group_information"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
     <item android:id="@+id/action_group_members"
         android:title="@string/action_group_members"
+        android:icon="@drawable/ic_action_group_holo_dark"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item android:id="@+id/action_group_files"
         android:title="@string/action_group_files"
+        android:icon="@drawable/ic_action_attachment_holo_dark"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

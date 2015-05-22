@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
@@ -43,8 +44,14 @@ public class GroupMainActivityFragment extends Fragment implements CallbackScree
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_group_main, container, false);
 
-        this.discussionsListView = (ListView) rootView.findViewById(R.id.discussionsListView);
-        this.group = ContextManager.getInstance().groupToView;
+        discussionsListView = (ListView) rootView.findViewById(R.id.discussionsListView);
+        group = ContextManager.getInstance().groupToView;
+
+        getActivity().setTitle(group.getName());
+        TextView descriptionTextView = (TextView) rootView.findViewById(R.id.text_view_group_description);
+        descriptionTextView.setText(group.getDescription());
+        int descriptionVisibility = group.getDescription().isEmpty() ? View.GONE : View.VISIBLE;
+        descriptionTextView.setVisibility(descriptionVisibility);
 
         return rootView;
     }

@@ -10,14 +10,10 @@ import com.example.marco.fiubados.R;
 
 public class GroupMainActivity extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
-
-
     }
 
     @Override
@@ -37,11 +33,6 @@ public class GroupMainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        if (id == R.id.action_group_information) {
-            startActivity(new Intent(this, GroupInformationActivity.class));
-            return true;
-        }
 
         if (id == R.id.action_group_members) {
             startActivity(new Intent(this, GroupMembersActivity.class));
