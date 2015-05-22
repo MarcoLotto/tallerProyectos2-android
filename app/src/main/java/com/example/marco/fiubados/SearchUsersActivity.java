@@ -4,18 +4,19 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
+import com.example.marco.fiubados.activity.group.GroupMainActivity;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.httpAsyncTasks.SearchGroupsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SearchUsersHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
+import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
@@ -30,99 +31,149 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
     public static final int SEARCH_TYPE_GROUPS = 1;
 
     private static final int SEARCH_USERS_SERVICE_ID = 0;
+    private static final int SEARCH_GROUPS_SERVICE_ID = 1;
     private static final String SEARCH_USERS_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/search";
+    private static final String SEARCH_GROUPS_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups/search";
+
+
     private String queryText;
-    private List<User> users;
-    private ListView usersListView;
+    private int searchType;
+    private List<User> users = new ArrayList<>();;
+    private List<Group> groups = new ArrayList<>();
+
+    private ListView listView;
+
+    /* ************************* *
+     * ANDROID LIFECYCLE METHODS *
+     * ************************* */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_users);
-        this.users = new ArrayList<>();
-        this.usersListView = (ListView) this.findViewById(R.id.usersListView);
+
+        listView = (ListView) findViewById(R.id.usersListView);
 
         // Recupero el query que debo mandar a buscar
         if(Intent.ACTION_SEARCH.equals(getIntent().getAction())) {
-            this.queryText = this.getIntent().getStringExtra(SearchManager.QUERY);
+            queryText = getIntent().getStringExtra(SearchManager.QUERY);
+            Bundle searchData = getIntent().getBundleExtra(SearchManager.APP_DATA);
+            searchType = searchData.getInt(SEARCH_TYPE, SEARCH_TYPE_USERS);
         }
-        this.configureComponents();
-        this.onFocus();
+        configureComponents();
+        onFocus();
     }
 
-    private void configureComponents() {
-        // Configuramos el handler del onClick del friendsListView
-        this.usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                onUserClickedOnUserList(position);
-            }
-        });
-    }
-
-    private void onUserClickedOnUserList(int position) {
-        // Se hizo click en un usuario, preparo al muro y lo invoco
-        if(this.users.size() > position) {
-            User userClicked = this.users.get(position);
-            MainScreenActivity mainScreenActivity = ContextManager.getInstance().getMainScreenActivity();
-            mainScreenActivity.getWallTabScreen().setUserOwnerOfTheWall(userClicked);
-            mainScreenActivity.selectWallTabScreen();
-            this.finish();
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_search_users, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    /* *********************** *
+     * CALLBACK SCREEN METHODS *
+     * *********************** */
 
     @Override
     public void onFocus() {
         // Hacemos la llamada al servicio de busqueda
-        SearchUsersHttpAsyncTask service = new SearchUsersHttpAsyncTask(this, this, SEARCH_USERS_SERVICE_ID, this.queryText);
-        service.execute(SEARCH_USERS_SERVICE_ENDPOINT_URL);
-    }
-
-    @Override
-    public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == SEARCH_USERS_SERVICE_ID){
-            this.users = responseElements;
-            this.addUsersToUserUIList(this.users, this.usersListView);
-
-            if(this.users.isEmpty()){
-                Toast toast = Toast.makeText(this.getApplicationContext(), "No hay contactos para la búsqueda", Toast.LENGTH_LONG);
-                toast.show();
+        switch (searchType) {
+            case SEARCH_TYPE_USERS: {
+                SearchUsersHttpAsyncTask service = new SearchUsersHttpAsyncTask(this, this, SEARCH_USERS_SERVICE_ID, queryText);
+                service.execute(SEARCH_USERS_SERVICE_ENDPOINT_URL);
+                break;
+            }
+            case SEARCH_TYPE_GROUPS: {
+                SearchGroupsHttpAsyncTask service = new SearchGroupsHttpAsyncTask(this, this, SEARCH_GROUPS_SERVICE_ID, queryText);
+                service.execute(SEARCH_GROUPS_SERVICE_ENDPOINT_URL);
+                break;
             }
         }
     }
 
-    private void addUsersToUserUIList(List<User> usersList, ListView usersListView) {
+    @Override
+    public void onServiceCallback(List responseElements, int serviceId) {
+        switch (serviceId) {
+            case SEARCH_USERS_SERVICE_ID: {
+                users = responseElements;
+                addUsersToListView();
+
+                if (users.isEmpty()) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "No hay contactos para la búsqueda", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                break;
+            }
+            case SEARCH_GROUPS_SERVICE_ID: {
+                groups = responseElements;
+                addGroupsToListView();
+
+                if (groups.isEmpty()) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "No hay grupos para la búsqueda", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+                break;
+            }
+        }
+    }
+
+    /* *************** *
+     * PRIVATE METHODS *
+     * *************** */
+
+    private void configureComponents() {
+        // Configuramos el handler del onClick del friendsListView
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                switch (searchType) {
+                    case SEARCH_TYPE_USERS:
+                        onUserItemClick(position);
+                        break;
+                    case SEARCH_TYPE_GROUPS:
+                        onGroupItemClick(position);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void addUsersToListView() {
         List<DualField> finalListViewLines = new ArrayList<>();
-        Iterator<User> it = usersList.iterator();
+        Iterator<User> it = users.iterator();
         while(it.hasNext()){
             // Agregamos a la lista de amigos a todos los usuarios
             User user = it.next();
             finalListViewLines.add(new DualField(new Field("Nombre", user.getFullName()), new Field("SearchDesc", user.getMatchParameter())));
         }
-        usersListView.setAdapter(new TwoLinesListAdapter(this.getApplicationContext(), finalListViewLines));
+        listView.setAdapter(new TwoLinesListAdapter(getApplicationContext(), finalListViewLines));
+    }
+
+    private void addGroupsToListView() {
+        List<DualField> finalListViewLines = new ArrayList<>();
+        Iterator<Group> it = groups.iterator();
+        while (it.hasNext()) {
+            // Agregamos a la lista de amigos a todos los usuarios
+            Group group = it.next();
+            finalListViewLines.add(new DualField(new Field("Nombre", group.getName()), new Field("SearchDesc", "")));
+        }
+        listView.setAdapter(new TwoLinesListAdapter(getApplicationContext(), finalListViewLines));
+    }
+
+    private void onUserItemClick(int position) {
+        // Se hizo click en un usuario, preparo al muro y lo invoco
+        if (position < users.size()) {
+            User userClicked = users.get(position);
+            MainScreenActivity mainScreenActivity = ContextManager.getInstance().getMainScreenActivity();
+            mainScreenActivity.getWallTabScreen().setUserOwnerOfTheWall(userClicked);
+            mainScreenActivity.selectWallTabScreen();
+            finish();
+        }
+    }
+
+    private void onGroupItemClick(int position) {
+        // Se hizo click en un grupo
+        if (position < groups.size()) {
+            MainScreenActivity mainScreenActivity = ContextManager.getInstance().getMainScreenActivity();
+            ContextManager.getInstance().groupToView = groups.get(position);
+            Intent intent = new Intent(mainScreenActivity, GroupMainActivity.class);
+            mainScreenActivity.startActivity(intent);
+            finish();
+        }
     }
 }

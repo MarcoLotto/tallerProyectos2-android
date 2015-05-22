@@ -106,11 +106,11 @@ public class MainScreenActivity extends TabbedActivity {
         boolean isWallTagActive = tabHost.getCurrentTab() == WALL_TAB_INDEX;
         menu.findItem(R.id.profileAction).setVisible(isWallTagActive);
 
-        // Si la pestaña actual es la de grupos
-        if (tabHost.getCurrentTab() == GROUPS_TAB_INDEX) {
-            // Agrego los botones correspondientes
-            menu.findItem(R.id.addAction).setVisible(true);
+        boolean isGroupTagActive = tabHost.getCurrentTab() == GROUPS_TAB_INDEX;
+        menu.findItem(R.id.action_add_group).setVisible(isGroupTagActive);
 
+        // Si la pestaña actual es la de grupos
+        if (isGroupTagActive) {
             //Configuro el buscador para grupos
             searchData.putInt(SearchUsersActivity.SEARCH_TYPE, SearchUsersActivity.SEARCH_TYPE_GROUPS);
             searchView.setQueryHint(getString(R.string.search_groups_hint));
@@ -127,13 +127,13 @@ public class MainScreenActivity extends TabbedActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.notificationAction:
-                return this.openNotificationsActivity();
+                return openNotificationsActivity();
             case R.id.profileAction:
-                return this.openProfileActivity();
+                return openProfileActivity();
             case R.id.action_search:
-                return this.onSearchRequested();
-            case R.id.addAction:
-                return this.openAddGroupDialog();
+                return onSearchRequested();
+            case R.id.action_add_group:
+                return openAddGroupDialog();
             default:
                 return super.onOptionsItemSelected(item);
         }

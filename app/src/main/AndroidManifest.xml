@@ -96,11 +96,7 @@
         </activity>
         <activity
             android:name=".activity.group.GroupMainActivity"
-            android:label="@string/title_activity_group_main"
-            android:parentActivityName=".MainScreenActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainScreenActivity" />
+            android:label="@string/title_activity_group_main" >
         </activity>
         <activity
             android:name=".activity.group.GroupInformationActivity"
