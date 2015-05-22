@@ -25,6 +25,10 @@ import java.util.List;
 
 public class SearchUsersActivity extends AppCompatActivity implements CallbackScreen {
 
+    public static final String SEARCH_TYPE = "search_type";
+    public static final int SEARCH_TYPE_USERS = 0;
+    public static final int SEARCH_TYPE_GROUPS = 1;
+
     private static final int SEARCH_USERS_SERVICE_ID = 0;
     private static final String SEARCH_USERS_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/search";
     private String queryText;
@@ -94,13 +98,13 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
     @Override
     public void onFocus() {
         // Hacemos la llamada al servicio de busqueda
-        SearchUsersHttpAsyncTask service = new SearchUsersHttpAsyncTask(this, this, this.SEARCH_USERS_SERVICE_ID, this.queryText);
-        service.execute(this.SEARCH_USERS_SERVICE_ENDPOINT_URL);
+        SearchUsersHttpAsyncTask service = new SearchUsersHttpAsyncTask(this, this, SEARCH_USERS_SERVICE_ID, this.queryText);
+        service.execute(SEARCH_USERS_SERVICE_ENDPOINT_URL);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.SEARCH_USERS_SERVICE_ID){
+        if(serviceId == SEARCH_USERS_SERVICE_ID){
             this.users = responseElements;
             this.addUsersToUserUIList(this.users, this.usersListView);
 

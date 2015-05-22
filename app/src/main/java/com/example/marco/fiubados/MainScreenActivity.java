@@ -55,6 +55,10 @@ public class MainScreenActivity extends TabbedActivity {
     private static final String CREATE_GROUP_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     private static final int CREATE_GROUP_SERVICE_ID = 1;
 
+    /* ************************* *
+     * ANDROID LIFECYCLE METHODS *
+     * ************************* */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,82 +72,99 @@ public class MainScreenActivity extends TabbedActivity {
         map.setMyLocationEnabled(true);
     }
 
-    private void configureTabHost() {
-        this.tabHost = (TabHost) findViewById(R.id.tabHost);
-        this.tabHost.setup();
-        this.addTabSpectToTabHost(this.tabHost, "Inicio", getResources().getDrawable(R.drawable.ic_action_news_holo_light), R.id.TabInicio);  // INICIO
-        this.addTabSpectToTabHost(this.tabHost, "Muro", getResources().getDrawable(R.drawable.ic_action_chat_holo_light), R.id.TabMuro);      // MURO
-        this.addTabSpectToTabHost(this.tabHost, "Grupos", getResources().getDrawable(R.drawable.ic_action_group_holo_light), R.id.TabGrupos);  // GRUPOS
-        this.addTabSpectToTabHost(this.tabHost, "Amigos", getResources().getDrawable(R.drawable.ic_action_person_holo_light), R.id.TabAmigos);  // AMIGOS
-
-        // Inicializamos los controladores de los tabs
-        Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
-        Button sendFriendRequestButton = (Button) findViewById(R.id.sendFriendRequestButton);
-        TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
-        TextView friendRequestSent = (TextView) findViewById(R.id.friendRequestSent);
-        ImageView profileImageView = (ImageView) findViewById(R.id.profileImageView);
-        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, friendRequestSent, profileImageView);
-
-        ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
-        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
-
-        ListView groupsListView = (ListView) findViewById(R.id.groupsListView);
-        this.groupsTabScreen = new GroupsTabScreen(this, groupsListView);
-
-        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String tabId) {
-                handleTabChange();
-            }
-        });
-    }
-
-    /**
-     * Maneja el cambio de pestañas
-     */
-    private void handleTabChange() {
-        int currentTabIndex = this.tabHost.getCurrentTab();
-        switch(currentTabIndex){
-            case 0:
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
-                // Tab de inicio
-                break;
-            case 1:
-                // Tab de muro
-                this.wallTabScreen.onFocus();
-                break;
-            case 2:
-                // Tab de grupos
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
-                this.groupsTabScreen.onFocus();
-                break;
-            case 3:
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
-                // Tab de amigos
-                this.friendsTabScreen.onFocus();
-                break;
-        }
-        this.invalidateOptionsMenu();
-    }
-
-    private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, Drawable icon, int tabId) {
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tabLabel);
-        tabSpec.setContent(tabId);
-        tabSpec.setIndicator("", icon);
-        tabHost.addTab(tabSpec);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_screen, menu);
 
+        /*
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         this.searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         this.searchView.setQueryHint(getString(R.string.search_hint));
         this.searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        */
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        // Cargo los íconos que se cargan siempre
+        menu.findItem(R.id.notificationAction).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(true);
+
+        // Configuro el buscador
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setQueryHint(getString(R.string.search_users_hint));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        Bundle searchData = new Bundle();
+        searchData.putInt(SearchUsersActivity.SEARCH_TYPE, SearchUsersActivity.SEARCH_TYPE_USERS);
+
+        // Solo mostramos el boton de perfil si estamos en la pantalla de muro
+        boolean isWallTagActive = tabHost.getCurrentTab() == WALL_TAB_INDEX;
+        menu.findItem(R.id.profileAction).setVisible(isWallTagActive);
+
+        // Si la pestaña actual es la de grupos
+        if (tabHost.getCurrentTab() == GROUPS_TAB_INDEX) {
+            // Agrego los botones correspondientes
+            menu.findItem(R.id.addAction).setVisible(true);
+
+            //Configuro el buscador para grupos
+            searchData.putInt(SearchUsersActivity.SEARCH_TYPE, SearchUsersActivity.SEARCH_TYPE_GROUPS);
+            searchView.setQueryHint(getString(R.string.search_groups_hint));
+        }
+
+        //Termino de configurar la busqueda
+        searchView.setAppSearchData(searchData);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.notificationAction:
+                return this.openNotificationsActivity();
+            case R.id.profileAction:
+                return this.openProfileActivity();
+            case R.id.action_search:
+                return this.onSearchRequested();
+            case R.id.addAction:
+                return this.openAddGroupDialog();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.handleTabChange();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == WallTabScreen.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
+            if(this.tabHost.getCurrentTab() == WALL_TAB_INDEX) {
+                // Es un cambio en la imagen de perfil, le decimos al wall que lo procese
+                this.wallTabScreen.processProfileImageChange(data);
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.createExitDialog(this).show();
+    }
+
+    /* *********************** *
+     * TABBED ACTIVITY METHODS *
+     * *********************** */
 
     @Override
     public CallbackScreen getNewsTabScreen() {
@@ -185,49 +206,101 @@ public class MainScreenActivity extends TabbedActivity {
         this.tabHost.setCurrentTab(WALL_TAB_INDEX);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.notificationAction:
-                 return this.openNotificationsActivity();
-            case R.id.profileAction:
-                return this.openProfileActivity();
-            case R.id.action_search:
-                return this.onSearchRequested();
-            case R.id.addAction:
-                return this.openAddGroupDialog();
-            default:
-                return super.onOptionsItemSelected(item);
+    /* *************** *
+     * PRIVATE METHODS *
+     * *************** */
+
+    private void configureTabHost() {
+        this.tabHost = (TabHost) findViewById(R.id.tabHost);
+        this.tabHost.setup();
+        this.addTabSpectToTabHost(this.tabHost, "Inicio", getResources().getDrawable(R.drawable.ic_action_news_holo_light), R.id.TabInicio);  // INICIO
+        this.addTabSpectToTabHost(this.tabHost, "Muro", getResources().getDrawable(R.drawable.ic_action_chat_holo_light), R.id.TabMuro);      // MURO
+        this.addTabSpectToTabHost(this.tabHost, "Grupos", getResources().getDrawable(R.drawable.ic_action_group_holo_light), R.id.TabGrupos);  // GRUPOS
+        this.addTabSpectToTabHost(this.tabHost, "Amigos", getResources().getDrawable(R.drawable.ic_action_person_holo_light), R.id.TabAmigos);  // AMIGOS
+
+        // Inicializamos los controladores de los tabs
+        Button addFriendButton = (Button) findViewById(R.id.addFriendButton);
+        Button sendFriendRequestButton = (Button) findViewById(R.id.sendFriendRequestButton);
+        TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
+        TextView friendRequestSent = (TextView) findViewById(R.id.friendRequestSent);
+        ImageView profileImageView = (ImageView) findViewById(R.id.profileImageView);
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, friendRequestSent, profileImageView);
+
+        ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
+        this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
+
+        ListView groupsListView = (ListView) findViewById(R.id.groupsListView);
+        this.groupsTabScreen = new GroupsTabScreen(this, groupsListView);
+
+        this.tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                handleTabChange();
+            }
+        });
+    }
+
+    private void addTabSpectToTabHost(TabHost tabHost, String tabLabel, Drawable icon, int tabId) {
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tabLabel);
+        tabSpec.setContent(tabId);
+        tabSpec.setIndicator("", icon);
+        tabHost.addTab(tabSpec);
+    }
+
+    /**
+     * Maneja el cambio de pestañas
+     */
+    private void handleTabChange() {
+        int currentTabIndex = this.tabHost.getCurrentTab();
+        switch(currentTabIndex){
+            case 0:
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                // Tab de inicio
+                break;
+            case 1:
+                // Tab de muro
+                this.wallTabScreen.onFocus();
+                break;
+            case 2:
+                // Tab de grupos
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                this.groupsTabScreen.onFocus();
+                break;
+            case 3:
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                // Tab de amigos
+                this.friendsTabScreen.onFocus();
+                break;
         }
+        this.invalidateOptionsMenu();
     }
 
     private boolean openNotificationsActivity() {
         Intent intent = new Intent(this, NotificationsActivity.class);
-        this.startActivity(intent);
+        startActivity(intent);
         return true;
     }
 
     private boolean openProfileActivity() {
         Intent intent = new Intent(this, ProfileActivity.class);
         // Le pasamos al activity de profile el usuario que esta actualmente en el muro
-        User currentWallUser = this.wallTabScreen.getUserOwnerOfTheWall();
+        User currentWallUser = wallTabScreen.getUserOwnerOfTheWall();
         if(currentWallUser != null) {
             intent.putExtra(ProfileActivity.USER_ID_PARAMETER, currentWallUser.getId());
         }
         else{
             intent.putExtra(ProfileActivity.USER_ID_PARAMETER, ContextManager.getInstance().getMyUser().getId());
         }
-        this.startActivity(intent);
+        startActivity(intent);
         return true;
     }
 
     private boolean openAddGroupDialog() {
-        this.createAddGroupDialog(this, this.groupsTabScreen);
+        createAddGroupDialog(this, groupsTabScreen);
         return true;
     }
 
-    public void createAddGroupDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
+    private void createAddGroupDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -261,39 +334,7 @@ public class MainScreenActivity extends TabbedActivity {
         builder.create().show();
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-
-        // Solo mostramos el boton de perfil si estamos en la pantalla de muro
-        boolean isWallTagActive = this.tabHost.getCurrentTab() == WALL_TAB_INDEX;
-        menu.findItem(R.id.profileAction).setVisible(isWallTagActive);
-
-        // El icono de notificaciones lo mostramos siempre
-        menu.findItem(R.id.notificationAction).setVisible(true);
-
-        // El icono de busquedas
-        menu.findItem(R.id.action_search).setVisible(true);
-
-        // Mostramos el boton de agregar grupo si estamos en la pantalla de grupos
-        boolean isGroupTagActive = this.tabHost.getCurrentTab() == GROUPS_TAB_INDEX;
-        menu.findItem(R.id.addAction).setVisible(isGroupTagActive);
-
-        return true;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.handleTabChange();
-    }
-
-    @Override
-    public void onBackPressed() {
-        this.createExitDialog(this).show();
-    }
-
-    public Dialog createExitDialog(final Activity ownerActivity) {
+    private Dialog createExitDialog(final Activity ownerActivity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // Get the layout inflater
         LayoutInflater inflater = this.getLayoutInflater();
@@ -317,18 +358,6 @@ public class MainScreenActivity extends TabbedActivity {
                     }
                 });
         return builder.create();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == WallTabScreen.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && data != null){
-            if(this.tabHost.getCurrentTab() == WALL_TAB_INDEX) {
-                // Es un cambio en la imagen de perfil, le decimos al wall que lo procese
-                this.wallTabScreen.processProfileImageChange(data);
-            }
-        }
     }
 }
 
