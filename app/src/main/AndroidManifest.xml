@@ -113,6 +113,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDrw4RG-NCzjwiqi90o_-TmxrJ6y0j04vU" />
+
+        <activity
+            android:name=".activity.group.GroupDiscussionActivity"
+            android:label="Discusión" >
+        </activity>
     </application>
 
 </manifest>
