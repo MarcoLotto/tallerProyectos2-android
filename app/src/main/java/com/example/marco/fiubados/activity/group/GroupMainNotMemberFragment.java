@@ -3,6 +3,7 @@ package com.example.marco.fiubados.activity.group;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,30 @@ import android.widget.TextView;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
+import com.example.marco.fiubados.TabScreens.CallbackScreen;
+import com.example.marco.fiubados.httpAsyncTasks.GroupJoinHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
+
+import java.util.List;
 
 /**
  * Fragmento de la vista principal de un grupo para un usuario que no es miembro.
  */
-public class GroupMainNotMemberFragment extends Fragment {
+public class GroupMainNotMemberFragment extends Fragment implements CallbackScreen {
+    private static final String LOG_TAG = GroupMainNotMemberFragment.class.getSimpleName();
+    private static final int GROUP_JOIN_SERVICE_ID = 0;
+    private static final String GROUPS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups/";
+    private static final String GROUP_JOIN_PARTIAL_URL = "/join";
+
+    Group group;
 
     public GroupMainNotMemberFragment() {
         // Required empty public constructor
     }
+
+    /*
+     * Lifecycle Methods
+     */
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +48,7 @@ public class GroupMainNotMemberFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_group_main_not_member, container, false);
 
-        Group group = ContextManager.getInstance().groupToView;
+        group = ContextManager.getInstance().groupToView;
 
         TextView descriptionTextView = (TextView) rootView.findViewById(R.id.text_view_group_description);
         descriptionTextView.setText(group.getDescription());
@@ -52,7 +67,39 @@ public class GroupMainNotMemberFragment extends Fragment {
         return rootView;
     }
 
+    /*
+     * Callback Screen Methods
+     */
+
+    @Override
+    public void onFocus() {
+    }
+
+    @Override
+    public void onServiceCallback(List responseElements, int serviceId) {
+        if (serviceId == GROUP_JOIN_SERVICE_ID) {
+            onSuccessGroupJoinCallback();
+        }
+    }
+
+    /*
+     * Private Methods
+     */
+
     private void onGroupJoinAction() {
+        onGroupJoinService();
+        //onSuccessGroupJoinCallback();
+    }
+
+    private void onGroupJoinService() {
+        // Envío la peticion para unirme al grupo
+        GroupJoinHttpAsyncTask joinTask = new GroupJoinHttpAsyncTask(getActivity(), this, GROUP_JOIN_SERVICE_ID);
+        String endpointURL = GROUPS_ENDPOINT_URL + group.getId() + GROUP_JOIN_PARTIAL_URL;
+        Log.v(LOG_TAG, "Endpoint URL:" + endpointURL);
+        joinTask.execute(endpointURL);
+    }
+
+    private void onSuccessGroupJoinCallback() {
         // Create new fragment and transaction
         Fragment newFragment = new GroupMainMemberFragment();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

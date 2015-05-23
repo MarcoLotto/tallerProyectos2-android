@@ -24,7 +24,7 @@ import java.util.List;
 public class GroupMembersActivityFragment extends Fragment implements CallbackScreen {
     private static final String LOG_TAG = GroupMembersActivityFragment.class.getSimpleName();
     private static final int GROUP_MEMBERS_SERVICE_ID = 0;
-    public static final String GROUPS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
+    public static final String GROUPS_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups/";
     public static final String GROUP_MEMBERS_PARTIAL_URL = "/members";
 
     private List<User> members = new ArrayList<>();
@@ -70,7 +70,7 @@ public class GroupMembersActivityFragment extends Fragment implements CallbackSc
         this.members.clear();
         String groupID = ContextManager.getInstance().groupToView.getId();
         GetGroupMembersHttpAsyncTask membersTask = new GetGroupMembersHttpAsyncTask(this.getActivity(), this, GROUP_MEMBERS_SERVICE_ID);
-        String endpointURL = GROUPS_ENDPOINT_URL + "/" + groupID + GROUP_MEMBERS_PARTIAL_URL;
+        String endpointURL = GROUPS_ENDPOINT_URL + groupID + GROUP_MEMBERS_PARTIAL_URL;
         Log.v(LOG_TAG, "Endpoint URL:" + endpointURL);
         membersTask.execute(endpointURL);
     }
