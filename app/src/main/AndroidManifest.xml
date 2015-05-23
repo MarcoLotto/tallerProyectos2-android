@@ -73,7 +73,7 @@
         </activity>
         <activity
             android:name=".SearchUsersActivity"
-            android:label="Busqueda de usuario" >
+            android:label="@string/title_activity_search_users" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

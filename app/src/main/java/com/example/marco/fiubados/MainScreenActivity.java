@@ -77,12 +77,6 @@ public class MainScreenActivity extends TabbedActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main_screen, menu);
 
-        /*
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        this.searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        this.searchView.setQueryHint(getString(R.string.search_hint));
-        this.searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        */
         return true;
     }
 

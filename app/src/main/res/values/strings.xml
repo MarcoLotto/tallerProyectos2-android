@@ -6,6 +6,7 @@
     <string name="cancel">Cancelar</string>
 
     <!-- Strings de busquedas -->
+    <string name="search_hint">Buscar…</string>
     <string name="search_users_hint">Buscar usuarios…</string>
     <string name="search_groups_hint">Buscar grupos…</string>
 
@@ -15,7 +16,8 @@
     <string name="title_activity_sign_up">Registrarse</string>
     <string name="title_activity_profile">Perfil</string>
     <string name="title_activity_profile_edit">Edición de perfil</string>
-
+    <string name="title_activity_search_users">Búsqueda de usuarios</string>
+    <string name="title_activity_search_groups">Búsqueda de grupos</string>
     <string name="title_activity_notifications">Notificaciones</string>
     <string name="notAccept">Quedarse</string>
     <string name="LabelSignUpButton">Registrarse</string>
@@ -25,8 +27,6 @@
     <string name="lastNameSignUpHint">Apellido</string>
     <string name="titleSignUpLabel">Completá con tus datos</string>
     <string name="padronPassportSignUpHint">Padrón o Pasaporte</string>
-    <string name="title_activity_search_users">SearchUsersActivity</string>
-    <string name="search_hint">Nombre, nacionalidad, etc.</string>
     <string name="action_search">Search</string>
     <string name="ok">OK</string>
     <string name="title_activity_jobs_profile_edit">JobsProfileEditActivity</string>

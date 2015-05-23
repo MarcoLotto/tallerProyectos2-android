@@ -20,7 +20,6 @@ import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -38,7 +37,7 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
 
     private String queryText;
     private int searchType;
-    private List<User> users = new ArrayList<>();;
+    private List<User> users = new ArrayList<>();
     private List<Group> groups = new ArrayList<>();
 
     private ListView listView;
@@ -73,11 +72,13 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
         // Hacemos la llamada al servicio de busqueda
         switch (searchType) {
             case SEARCH_TYPE_USERS: {
+                setTitle(R.string.title_activity_search_users);
                 SearchUsersHttpAsyncTask service = new SearchUsersHttpAsyncTask(this, this, SEARCH_USERS_SERVICE_ID, queryText);
                 service.execute(SEARCH_USERS_SERVICE_ENDPOINT_URL);
                 break;
             }
             case SEARCH_TYPE_GROUPS: {
+                setTitle(R.string.title_activity_search_groups);
                 SearchGroupsHttpAsyncTask service = new SearchGroupsHttpAsyncTask(this, this, SEARCH_GROUPS_SERVICE_ID, queryText);
                 service.execute(SEARCH_GROUPS_SERVICE_ENDPOINT_URL);
                 break;
@@ -135,10 +136,8 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
 
     private void addUsersToListView() {
         List<DualField> finalListViewLines = new ArrayList<>();
-        Iterator<User> it = users.iterator();
-        while(it.hasNext()){
+        for (User user : users) {
             // Agregamos a la lista de amigos a todos los usuarios
-            User user = it.next();
             finalListViewLines.add(new DualField(new Field("Nombre", user.getFullName()), new Field("SearchDesc", user.getMatchParameter())));
         }
         listView.setAdapter(new TwoLinesListAdapter(getApplicationContext(), finalListViewLines));
@@ -146,10 +145,8 @@ public class SearchUsersActivity extends AppCompatActivity implements CallbackSc
 
     private void addGroupsToListView() {
         List<DualField> finalListViewLines = new ArrayList<>();
-        Iterator<Group> it = groups.iterator();
-        while (it.hasNext()) {
+        for (Group group : groups) {
             // Agregamos a la lista de amigos a todos los usuarios
-            Group group = it.next();
             finalListViewLines.add(new DualField(new Field("Nombre", group.getName()), new Field("SearchDesc", "")));
         }
         listView.setAdapter(new TwoLinesListAdapter(getApplicationContext(), finalListViewLines));
