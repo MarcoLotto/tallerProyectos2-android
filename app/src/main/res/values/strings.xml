@@ -41,7 +41,7 @@
     <string name="addFriendForViewThisJobsText">Debes ser amigo para ver los trabajos</string>
     <string name="addFriendForViewThisAcademicText">Debes ser amigo para ver la información académica</string>
 
-    <!-- Strings de GroupMainActivity y su GroupMainActivityFragment -->
+    <!-- Strings de GroupMainActivity y su GroupMainMemberFragment -->
     <string name="title_activity_group_main">Grupo</string>
     <string name="action_group_information">Información</string>
     <string name="action_group_members">Miembros</string>

@@ -1,9 +1,22 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment"
-    android:name="com.example.marco.fiubados.activity.group.GroupMainActivityFragment"
-    tools:layout="@layout/fragment_group_main"
+    android:id="@+id/group_main_container"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+    <!--fragment
+        android:id="@+id/fragment_member"
+        android:name="com.example.marco.fiubados.activity.group.GroupMainMemberFragment        tools:layout="@layout/fragment_group_main_member"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" /-->
+    <!--fragment
+        android:id="@+id/fragment_not_member"
+        android:name="com.example.marco.fiubados.activity.group.GroupMainNotMemberFragment  tools:layout="@layout/fragment_group_main_not_member"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" /-->
+</FrameLayout>
 
 

@@ -2,10 +2,13 @@ package com.example.marco.fiubados.activity.group;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
 
 public class GroupMainActivity extends AppCompatActivity {
@@ -14,6 +17,24 @@ public class GroupMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
+
+        boolean isMember = ContextManager.getInstance().groupToView.isMember();
+
+        // Create new transaction
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Fragment newFragment;
+        if (isMember) {
+            // Create new fragment
+            newFragment = new GroupMainMemberFragment();
+        } else {
+            newFragment = new GroupMainNotMemberFragment();
+        }
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack if needed
+        transaction.add(R.id.group_main_container, newFragment);
+
+        // Commit the transaction
+        transaction.commit();
     }
 
     @Override

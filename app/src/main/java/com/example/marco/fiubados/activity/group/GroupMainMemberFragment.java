@@ -1,8 +1,8 @@
 package com.example.marco.fiubados.activity.group;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.marco.fiubados.ComentaryFragment;
 import com.example.marco.fiubados.ContextManager;
-import com.example.marco.fiubados.ProfileActivity;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
@@ -29,7 +28,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class GroupMainActivityFragment extends Fragment implements CallbackScreen {
+public class GroupMainMemberFragment extends Fragment implements CallbackScreen {
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
     private static final String GET_DISCUSSIONS_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
     private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5560945358b174ad047eedd3";
@@ -37,7 +36,7 @@ public class GroupMainActivityFragment extends Fragment implements CallbackScree
     private ListView discussionsListView;
     private Group group;
 
-    public GroupMainActivityFragment() {
+    public GroupMainMemberFragment() {
     }
 
     /*
@@ -47,7 +46,7 @@ public class GroupMainActivityFragment extends Fragment implements CallbackScree
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_group_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_group_main_member, container, false);
 
         this.discussionsListView = (ListView) rootView.findViewById(R.id.discussionsListView);
         this.group = ContextManager.getInstance().groupToView;
