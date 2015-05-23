@@ -41,18 +41,17 @@
     <string name="addFriendForViewThisJobsText">Debes ser amigo para ver los trabajos</string>
     <string name="addFriendForViewThisAcademicText">Debes ser amigo para ver la información académica</string>
 
-    <!-- Strings de GroupMainActivity y su GroupMainMemberFragment -->
+    <!-- Strings de GroupMainActivity y GroupMainMemberFragment -->
     <string name="title_activity_group_main">Grupo</string>
     <string name="action_group_information">Información</string>
     <string name="action_group_members">Miembros</string>
     <string name="action_group_files">Archivos</string>
-    <string name="group_main_future_release_text">Cuando B*ca vuelva a jugar un torneo internacional se van a mostrar los temas de discusión del grupo</string>
+
+    <!-- Strings de GroupMainNotMemberFragment -->
+    <string name="text_group_main_not_member_has_join">¿Querés ser miembro del grupo?</string>
+    <string name="button_group_main_not_member_join">Unirse</string>
 
     <!-- Strings de GroupMembersActivity y su GroupMembersActivityFragment -->
     <string name="title_activity_group_members">Miembros</string>
-    <string name="hello_world">Hello world!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_group_discussion">GroupDiscussionActivity</string>
 </resources>

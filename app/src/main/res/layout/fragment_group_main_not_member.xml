@@ -15,8 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView2"
+        android:text=""
+        android:id="@+id/text_view_group_description"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="25dp" />
 
@@ -24,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="¿Querés ser miembro del grupo?"
+        android:text="@string/text_group_main_not_member_has_join"
         android:id="@+id/textView4"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp" />
@@ -32,7 +32,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Unirse"
+        android:text="@string/button_group_main_not_member_join"
         android:id="@+id/button_group_join"
         android:layout_gravity="center_horizontal" />
 </LinearLayout>

@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
+import com.example.marco.fiubados.model.Group;
 
 public class GroupMainActivity extends AppCompatActivity {
 
@@ -18,12 +19,14 @@ public class GroupMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
 
-        boolean isMember = ContextManager.getInstance().groupToView.isMember();
+        Group group = ContextManager.getInstance().groupToView;
+
+        setTitle(group.getName());
 
         // Create new transaction
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Fragment newFragment;
-        if (isMember) {
+        if (group.isMember()) {
             // Create new fragment
             newFragment = new GroupMainMemberFragment();
         } else {
@@ -41,9 +44,6 @@ public class GroupMainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_group_main, menu);
-
-        // Mostramos el boton de agregar discución
-        menu.findItem(R.id.addAction).setVisible(true);  // TODO: Solo hacer visible si estoy suscripto al grupo
 
         return true;
     }

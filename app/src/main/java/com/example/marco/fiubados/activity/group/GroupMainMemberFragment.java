@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,11 +25,10 @@ import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.GroupDiscussion;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragmento de la vista principal de un grupo para un usuario que es miembro.
  */
 public class GroupMainMemberFragment extends Fragment implements CallbackScreen {
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
@@ -44,20 +46,51 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
      */
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_group_main_member, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_new_discussion) {
+            // Realizar las acciones correspondientes a nueva discusión
+            return true;
+        }
+
+        if (id == R.id.action_group_files) {
+            // Realizar las acciones correspondientes a ver los archivos del grupo
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_group_main_member, container, false);
 
-        this.discussionsListView = (ListView) rootView.findViewById(R.id.discussionsListView);
-        this.group = ContextManager.getInstance().groupToView;
+        discussionsListView = (ListView) rootView.findViewById(R.id.discussionsListView);
+        group = ContextManager.getInstance().groupToView;
 
-        getActivity().setTitle(group.getName());
         TextView descriptionTextView = (TextView) rootView.findViewById(R.id.text_view_group_description);
         descriptionTextView.setText(group.getDescription());
         int descriptionVisibility = group.getDescription().isEmpty() ? View.GONE : View.VISIBLE;
         descriptionTextView.setVisibility(descriptionVisibility);
 
-        this.configureComponents();
+        configureComponents();
 
         return rootView;
     }
@@ -74,9 +107,9 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     }
 
     private void onParameterClickedOnList(int position) {
-        Intent intent = new Intent(this.getActivity(), GroupDiscussionActivity.class);
-        intent.putExtra(ComentaryFragment.EXTRA_PARAM_CONTAINER_ID, this.group.getDiscussions().get(position).getId());
-        intent.putExtra(ComentaryFragment.EXTRA_PARAM_GET_COMENTARIES_URL, this.GET_COMENTARIES_SERVICE_ENDPOINT);
+        Intent intent = new Intent(getActivity(), GroupDiscussionActivity.class);
+        intent.putExtra(ComentaryFragment.EXTRA_PARAM_CONTAINER_ID, group.getDiscussions().get(position).getId());
+        intent.putExtra(ComentaryFragment.EXTRA_PARAM_GET_COMENTARIES_URL, GET_COMENTARIES_SERVICE_ENDPOINT);
         startActivity(intent);
     }
 
@@ -93,13 +126,13 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     @Override
     public void onFocus() {
         // Buscamos las discusiones del grupo
-        GetGroupDiscussionsHttpAsyncTask service = new GetGroupDiscussionsHttpAsyncTask(getActivity(), this, this.GET_DISCUSSIONS_SERVICE_ID, this.group);
-        service.execute(this.GET_DISCUSSIONS_ENDPOINT_URL);
+        GetGroupDiscussionsHttpAsyncTask service = new GetGroupDiscussionsHttpAsyncTask(getActivity(), this, GET_DISCUSSIONS_SERVICE_ID, group);
+        service.execute(GET_DISCUSSIONS_ENDPOINT_URL);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.GET_DISCUSSIONS_SERVICE_ID){
+        if(serviceId == GET_DISCUSSIONS_SERVICE_ID){
             // Actalizamos las discusiones de la lista
             this.addDiscussionsToUIList();
         }
@@ -111,9 +144,7 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
 
     private void addDiscussionsToUIList() {
         List<DualField> finalListViewLines = new ArrayList<>();
-        Iterator<GroupDiscussion> it = this.group.getDiscussions().iterator();
-        while(it.hasNext()){
-            GroupDiscussion discussion = it.next();
+        for (GroupDiscussion discussion : group.getDiscussions()) {
             finalListViewLines.add(new DualField(new Field("Nombre", discussion.getName()), new Field("Autor", "Creado por " + discussion.getAuthor())));
         }
         this.discussionsListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
