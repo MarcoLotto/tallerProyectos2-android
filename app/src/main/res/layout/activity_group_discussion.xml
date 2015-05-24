@@ -1,8 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent" android:layout_height="match_parent">
+android:layout_width="match_parent" android:layout_height="match_parent"
+android:orientation="vertical">
+    <fragment class="com.example.marco.fiubados.ComentaryFragment"
+        android:id="@+id/comentaryFragment" android:layout_weight="4"
+        android:layout_width="match_parent" android:layout_height="0px" />
 
-<fragment class="com.example.marco.fiubados.ComentaryFragment"
-    android:id="@+id/comentaryFragment" android:layout_weight="1"
-    android:layout_width="0px" android:layout_height="match_parent" />
+    <fragment class="com.example.marco.fiubados.KeyboardFragment"
+        android:id="@+id/keyboardFragment" android:layout_weight="1"
+        android:layout_width="match_parent" android:layout_height="0px"
+        android:layout_gravity="bottom" />
 
 </LinearLayout>
