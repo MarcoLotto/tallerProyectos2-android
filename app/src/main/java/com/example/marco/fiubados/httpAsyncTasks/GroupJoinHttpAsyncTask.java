@@ -45,12 +45,15 @@ public class GroupJoinHttpAsyncTask extends HttpAsyncTask{
             callbackScreen.onServiceCallback(new ArrayList<String>(), serviceId);
         } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
             dialog.setMessage("El grupo al que se quiere suscribir no existe");
+            dialog.show();
         } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
             dialog.setMessage("Ya es miembro del grupo");
+            dialog.show();
         } else {
             dialog.setMessage("Error en la conexión con el servidor");
+            dialog.show();
         }
-        dialog.show();
+
     }
 
     @Override
