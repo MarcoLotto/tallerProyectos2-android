@@ -18,13 +18,6 @@ public class GroupDiscussionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_discussion);
-
-        // Elegimos los framents a usar y los cargamos
-        if(savedInstanceState == null){
-            ComentaryFragment fragment = new ComentaryFragment();
-            fragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction().add(R.id.comentaryFragment, (Fragment) fragment).commit();
-        }
     }
 
 

@@ -33,7 +33,7 @@ import java.util.List;
 public class GroupMainMemberFragment extends Fragment implements CallbackScreen {
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
     private static final String GET_DISCUSSIONS_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
-    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5560945358b174ad047eedd3";
+    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
 
     private ListView discussionsListView;
     private Group group;

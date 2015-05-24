@@ -3,6 +3,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.widget.ImageView;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -24,12 +25,21 @@ public class DownloadPictureHttpAsyncTask {
     private int serviceId;
     private Activity callingActivity;
     private List<Drawable> drawables;
+    private ImageView imageView;
 
     public DownloadPictureHttpAsyncTask(String pictureUrl, Activity callingActivity, CallbackScreen callbackScreen, int serviceId){
         this.pictureUrl = pictureUrl;
         this.callbackScreen = callbackScreen;
         this.serviceId = serviceId;
         this.callingActivity = callingActivity;
+    }
+
+    public DownloadPictureHttpAsyncTask(String pictureUrl, ImageView imageView, Activity callingActivity, CallbackScreen callbackScreen, int serviceId){
+        this.pictureUrl = pictureUrl;
+        this.callbackScreen = callbackScreen;
+        this.serviceId = serviceId;
+        this.callingActivity = callingActivity;
+        this.imageView = imageView;
     }
 
     public void execute() {
@@ -47,6 +57,9 @@ public class DownloadPictureHttpAsyncTask {
                 Drawable d = Drawable.createFromStream(is, this.pictureUrl);
                 this.drawables = new ArrayList<Drawable>();
                 this.drawables.add(d);
+                if(this.imageView != null && d != null){
+                    this.imageView.setImageDrawable(d);
+                }
                 // Forzamos a que la parte de vista del codigo se muestre en el thread principal
                 this.callingActivity.runOnUiThread(new Runnable() {
                     @Override

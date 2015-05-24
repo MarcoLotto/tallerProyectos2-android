@@ -1,20 +1,22 @@
 package com.example.marco.fiubados;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.adapters.*;
 import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
-import com.example.marco.fiubados.model.GroupDiscussion;
+import com.example.marco.fiubados.model.TripleField;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,13 +74,14 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     }
 
     private void fillUIListWithComentaries(List<Comentary> responseElements) {
-        List<DualField> finalListViewLines = new ArrayList<>();
+        List<TripleField> finalListViewLines = new ArrayList<>();
         Iterator<Comentary> it = responseElements.iterator();
         while(it.hasNext()){
             Comentary comentary = it.next();
-            finalListViewLines.add(new DualField(new Field("Autor", comentary.getAuthor()), new Field("Mensaje", comentary.getMessage())));
+            finalListViewLines.add(new TripleField(new Field("Autor", comentary.getAuthor()),
+                    new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
         }
-        this.comentaryListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
+        this.comentaryListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.getActivity(), this.comentaryListView));
 
         if(responseElements.isEmpty()){
             this.noCommentsTextView.setVisibility(View.VISIBLE);
