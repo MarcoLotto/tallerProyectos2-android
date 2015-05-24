@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.marco.fiubados.ComentaryFragment;
 import com.example.marco.fiubados.ContextManager;
+import com.example.marco.fiubados.KeyboardFragment;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
@@ -34,6 +35,7 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
     private static final String GET_DISCUSSIONS_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
     private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
+    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
 
     private ListView discussionsListView;
     private Group group;
@@ -110,6 +112,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         Intent intent = new Intent(getActivity(), GroupDiscussionActivity.class);
         intent.putExtra(ComentaryFragment.EXTRA_PARAM_CONTAINER_ID, group.getDiscussions().get(position).getId());
         intent.putExtra(ComentaryFragment.EXTRA_PARAM_GET_COMENTARIES_URL, GET_COMENTARIES_SERVICE_ENDPOINT);
+        intent.putExtra(KeyboardFragment.EXTRA_PARAM_SEND_COMENTARY_URL, SEND_COMENTARY_SERVICE_ENDPOINT);
+        intent.putExtra(KeyboardFragment.EXTRA_PARAM_PARENT_COMENTARY_ID, "-1"); // ESte parámetro se utilizará en el muro para comentarios anidados
         startActivity(intent);
     }
 
