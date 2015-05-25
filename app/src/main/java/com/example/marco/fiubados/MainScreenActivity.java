@@ -31,8 +31,6 @@ import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 
 /**
  * Activity contenedora de todos los tabs
@@ -50,8 +48,6 @@ public class MainScreenActivity extends TabbedActivity {
     private GroupsTabScreen groupsTabScreen;
     private SearchView searchView;
 
-    private GoogleMap map;
-
     private static final String CREATE_GROUP_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups";
     private static final int CREATE_GROUP_SERVICE_ID = 1;
 
@@ -66,10 +62,6 @@ public class MainScreenActivity extends TabbedActivity {
         ContextManager.getInstance().setMainScreenActivity(this);
         // Configuramos los tabs
         this.configureTabHost();
-
-        //magia relacionada con el mapa
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setMyLocationEnabled(true);
     }
 
     @Override
@@ -87,6 +79,8 @@ public class MainScreenActivity extends TabbedActivity {
         // Cargo los íconos que se cargan siempre
         menu.findItem(R.id.notificationAction).setVisible(true);
         menu.findItem(R.id.action_search).setVisible(true);
+
+        menu.findItem(R.id.action_map).setVisible(true);
 
         // Configuro el buscador
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -128,6 +122,8 @@ public class MainScreenActivity extends TabbedActivity {
                 return onSearchRequested();
             case R.id.action_add_group:
                 return openAddGroupDialog();
+            case R.id.action_map:
+                return openMapActivity();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -267,6 +263,12 @@ public class MainScreenActivity extends TabbedActivity {
                 break;
         }
         this.invalidateOptionsMenu();
+    }
+
+    private boolean openMapActivity() {
+        Intent intent = new Intent(this, MapActivity.class);
+        startActivity(intent);
+        return true;
     }
 
     private boolean openNotificationsActivity() {

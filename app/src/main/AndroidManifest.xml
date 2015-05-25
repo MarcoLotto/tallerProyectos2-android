@@ -71,6 +71,14 @@
             android:label="Notificaciones"
             android:screenOrientation="portrait" >
         </activity>
+
+        <activity
+            android:name=".MapActivity"
+            android:configChanges="orientation"
+            android:label="Mapa"
+            android:screenOrientation="portrait" >
+        </activity>
+
         <activity
             android:name=".SearchUsersActivity"
             android:label="@string/title_activity_search_users" >
