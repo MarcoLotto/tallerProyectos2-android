@@ -267,6 +267,7 @@ public class MainScreenActivity extends TabbedActivity {
 
     private boolean openMapActivity() {
         Intent intent = new Intent(this, MapActivity.class);
+        intent.putExtra(ProfileActivity.USER_ID_PARAMETER, ContextManager.getInstance().getMyUser().getId());
         startActivity(intent);
         return true;
     }

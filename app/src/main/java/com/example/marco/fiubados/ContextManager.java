@@ -9,7 +9,7 @@ import com.example.marco.fiubados.model.User;
 public class ContextManager {
 
     public static final String WS_SERVER_URL = "https://fiuba-campus-movil-sprint2.herokuapp.com";
-    //public static final String WS_SERVER_URL = "http://192.168.1.100:3000";
+    //public static final String WS_SERVER_URL = "http://192.168.0.20:3000";
 
     private static ContextManager instance = null;
     private String userToken;

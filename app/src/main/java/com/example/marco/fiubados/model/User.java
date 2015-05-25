@@ -1,6 +1,11 @@
 package com.example.marco.fiubados.model;
 
+import android.location.Location;
+
+import com.example.marco.fiubados.commons.FormatTranslator;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +32,9 @@ public class User extends DatabaseObject{
     private List<Job> jobs = new ArrayList<>();
     private String padron;
     private Academic academicInfo = new Academic("");
+
+    private Location location;
+    private String lastTimeUpdate;
 
     // Friendiship Info
     private String friendshipStatus;
@@ -57,6 +65,22 @@ public class User extends DatabaseObject{
             return false;
         }
         return ((User) o).getId().equals(this.getId());
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getLastTimeUpdate() {
+        return this.lastTimeUpdate;
+    }
+
+    public void setLastTimeUpdate(String strDate) {
+        this.lastTimeUpdate = FormatTranslator.adaptDate(strDate);
     }
 
     /*

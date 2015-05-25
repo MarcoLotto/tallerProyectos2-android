@@ -5,6 +5,7 @@ package com.example.marco.fiubados.httpAsyncTasks;
  */
 
 import android.app.Activity;
+import android.location.Location;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -16,6 +17,8 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -91,6 +94,14 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             String email = jsonObject.getString("email");
             String picture = jsonObject.getString("picture");
 
+            Double longitude = jsonObject.getDouble("longitude");
+            Double latitute = jsonObject.getDouble("latitude");
+            Location location = new Location("");
+            location.setLongitude(longitude);
+            location.setLatitude(latitute);
+
+            String lastTimeUpdate = jsonObject.getString("lastTimeUpdate");
+
             User user = new User(userId, firstName, lastName);
             user.setEmail(email);
             user.setProfilePicture(picture);
@@ -98,6 +109,9 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             if(isFriendshipRequest){
                 user.setFriendshipRequestId(jsonObject.getString("friendshipRequestId"));
             }
+            user.setLocation( location );
+            user.setLastTimeUpdate( lastTimeUpdate );
+
             users.add(user);
         }
     }
