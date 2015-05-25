@@ -37,10 +37,9 @@ import com.example.marco.fiubados.model.User;
  */
 public class MainScreenActivity extends TabbedActivity {
 
-    private final int NEWS_TAB_INDEX = 0;
-    private final int WALL_TAB_INDEX = 1;
-    private final int GROUPS_TAB_INDEX = 2;
-    private final int FRIENDS_TAB_INDEX = 3;
+    private final int WALL_TAB_INDEX = 0;
+    private final int GROUPS_TAB_INDEX = 1;
+    private final int FRIENDS_TAB_INDEX = 2;
 
     private TabHost tabHost;
     private FriendsTabScreen friendsTabScreen;
@@ -157,11 +156,6 @@ public class MainScreenActivity extends TabbedActivity {
      * *********************** */
 
     @Override
-    public CallbackScreen getNewsTabScreen() {
-        return null;  // TODO
-    }
-
-    @Override
     public CallbackScreen getGroupsTabScreen() {
         return this.groupsTabScreen;
     }
@@ -174,11 +168,6 @@ public class MainScreenActivity extends TabbedActivity {
     @Override
     public WallTabScreen getWallTabScreen() {
         return this.wallTabScreen;
-    }
-
-    @Override
-    public void selectNewsTabScreen() {
-        this.tabHost.setCurrentTab(NEWS_TAB_INDEX);
     }
 
     @Override
@@ -203,7 +192,6 @@ public class MainScreenActivity extends TabbedActivity {
     private void configureTabHost() {
         this.tabHost = (TabHost) findViewById(R.id.tabHost);
         this.tabHost.setup();
-        this.addTabSpectToTabHost(this.tabHost, "Inicio", getResources().getDrawable(R.drawable.ic_action_news_holo_light), R.id.TabInicio);  // INICIO
         this.addTabSpectToTabHost(this.tabHost, "Muro", getResources().getDrawable(R.drawable.ic_action_chat_holo_light), R.id.TabMuro);      // MURO
         this.addTabSpectToTabHost(this.tabHost, "Grupos", getResources().getDrawable(R.drawable.ic_action_group_holo_light), R.id.TabGrupos);  // GRUPOS
         this.addTabSpectToTabHost(this.tabHost, "Amigos", getResources().getDrawable(R.drawable.ic_action_person_holo_light), R.id.TabAmigos);  // AMIGOS
@@ -243,20 +231,19 @@ public class MainScreenActivity extends TabbedActivity {
     private void handleTabChange() {
         int currentTabIndex = this.tabHost.getCurrentTab();
         switch(currentTabIndex){
-            case 0:
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
-                // Tab de inicio
-                break;
-            case 1:
+            case WALL_TAB_INDEX:
                 // Tab de muro
+                if(this.wallTabScreen.getUserOwnerOfTheWall() == null){
+                    this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
+                }
                 this.wallTabScreen.onFocus();
                 break;
-            case 2:
+            case GROUPS_TAB_INDEX:
                 // Tab de grupos
                 this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 this.groupsTabScreen.onFocus();
                 break;
-            case 3:
+            case FRIENDS_TAB_INDEX:
                 this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de amigos
                 this.friendsTabScreen.onFocus();

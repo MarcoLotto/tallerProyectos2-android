@@ -15,7 +15,6 @@ public abstract class TabbedActivity extends AppCompatActivity {
     /**
      * Accessors para los tabs
      */
-    public abstract CallbackScreen getNewsTabScreen();
     public abstract CallbackScreen getGroupsTabScreen();
     public abstract FriendsTabScreen getFriendsTabScreen();
     public abstract WallTabScreen getWallTabScreen();
@@ -23,7 +22,6 @@ public abstract class TabbedActivity extends AppCompatActivity {
     /**
      * Muestra el tab correspondiente
      */
-    public abstract void selectNewsTabScreen();
     public abstract void selectGroupsTabScreen();
     public abstract void selectFriendsTabScreen();
     public abstract void selectWallTabScreen();

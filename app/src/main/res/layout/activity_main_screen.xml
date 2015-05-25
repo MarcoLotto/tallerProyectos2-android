@@ -30,23 +30,6 @@
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <LinearLayout
-                    android:id="@+id/TabInicio"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Proximamente Pantalla de Inicio"
-                        android:id="@+id/textView"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="100dp" />
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/TabMuro"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
