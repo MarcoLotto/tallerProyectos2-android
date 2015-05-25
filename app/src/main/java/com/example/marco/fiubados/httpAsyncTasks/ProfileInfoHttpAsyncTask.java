@@ -1,6 +1,7 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
+import android.location.Location;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -125,6 +126,23 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
         user.setProfilePicture(jsonProfileField.getString("picture"));
         user.getAcademicInfo().setCareer(jsonProfileField.getString("career"));
         user.setFriendshipStatus(this.resolveFriendshipStatus(jsonProfileField.getString("friendship")));
+
+        JSONObject locJn = jsonProfileField.getJSONObject("location");
+        String strLat = locJn.getString("latitude");
+        String strLon = locJn.getString("longitude");
+        if ( !strLat.equals("") && !strLon.equals("") ){
+        Double latitude = Double.parseDouble( strLat );
+        Double longitude = Double.parseDouble( strLon );
+        Location loc = new Location("");
+        loc.setLatitude( latitude );
+        loc.setLongitude( longitude );
+        user.setLocation( loc );
+        user.setLastTimeUpdate( jsonProfileField.getString("lastUpdateTime") );
+        } else {
+            Location loc = new Location("");
+            user.setLocation( loc );
+            user.setLastTimeUpdate( "" );
+        }
     }
 
     private String resolveFriendshipStatus(String jsonStatus){

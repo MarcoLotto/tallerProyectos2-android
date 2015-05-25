@@ -105,9 +105,15 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         this.users.clear();
 
         // Vamos a hacer el pedido de amigos al web service
+
+        //http://www.mocky.io/v2/55638a00ab3d5f9d0fda7799
+        //GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
+        //        this.SEARCH_FRIENDS_SERVICE_ID, "TODO");
+        //friendsHttpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
+
         GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
                 this.SEARCH_FRIENDS_SERVICE_ID, "TODO");
-        friendsHttpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
+        friendsHttpService.execute("http://www.mocky.io/v2/55638a00ab3d5f9d0fda7799");
     }
 
     @Override
