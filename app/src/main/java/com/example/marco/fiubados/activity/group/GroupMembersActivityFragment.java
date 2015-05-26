@@ -1,15 +1,18 @@
 package com.example.marco.fiubados.activity.group;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.marco.fiubados.ContextManager;
+import com.example.marco.fiubados.MainScreenActivity;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupMembersHttpAsyncTask;
@@ -51,6 +54,13 @@ public class GroupMembersActivityFragment extends Fragment implements CallbackSc
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.list_view_group_members);
         listView.setAdapter(mGroupMembersAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                onClickUser(position);
+            }
+        });
 
         return rootView;
     }
@@ -91,6 +101,16 @@ public class GroupMembersActivityFragment extends Fragment implements CallbackSc
         mGroupMembersAdapter.clear();
         for (User user : this.members) {
             mGroupMembersAdapter.add(user.getFullName());
+        }
+    }
+
+    private void onClickUser(int position) {
+        if (position < members.size()) {
+            User user = members.get(position);
+            MainScreenActivity mainActivity = ContextManager.getInstance().getMainScreenActivity();
+            mainActivity.getWallTabScreen().setUserOwnerOfTheWall(user);
+            mainActivity.selectWallTabScreen();
+            startActivity(new Intent(getActivity(), MainScreenActivity.class));
         }
     }
 }

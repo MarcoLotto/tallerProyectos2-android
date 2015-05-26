@@ -5,8 +5,6 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.model.Group;
-import com.example.marco.fiubados.model.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
