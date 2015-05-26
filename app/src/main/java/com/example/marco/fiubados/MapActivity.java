@@ -109,9 +109,9 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
         GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
                 this.SEARCH_FRIENDS_SERVICE_ID, "TODO");
-        friendsHttpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
 
-        //friendsHttpService.execute("http://www.mocky.io/v2/55639c0fab3d5ffa10da779c");
+        friendsHttpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
+        //friendsHttpService.execute("http://www.mocky.io/v2/5563b7b0ab3d5f7512da77a3");
 
     }
 

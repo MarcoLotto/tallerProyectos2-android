@@ -93,14 +93,16 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
             String userId = jsonObject.getString("userId");
             String email = jsonObject.getString("email");
             String picture = jsonObject.getString("picture");
-
-            Double longitude = jsonObject.getDouble("longitude");
-            Double latitude = jsonObject.getDouble("latitude");
             Location location = new Location("");
-            location.setLongitude(longitude);
-            location.setLatitude(latitude);
+            String lastTimeUpdate = "";
+            if ( !jsonObject.get("longitude").equals("") && !jsonObject.get("latitude").equals("") ) {
 
-            String lastTimeUpdate = jsonObject.getString("lastTimeUpdate");
+                Double longitude = jsonObject.getDouble("longitude");
+                Double latitude = jsonObject.getDouble("latitude");
+                location.setLongitude(longitude);
+                location.setLatitude(latitude);
+                lastTimeUpdate = jsonObject.getString("lastTimeUpdate");
+            }
 
             User user = new User(userId, firstName, lastName);
             user.setEmail(email);
