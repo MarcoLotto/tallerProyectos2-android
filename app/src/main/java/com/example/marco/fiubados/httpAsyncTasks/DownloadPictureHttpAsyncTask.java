@@ -54,16 +54,17 @@ public class DownloadPictureHttpAsyncTask {
         try {
             if(!this.pictureUrl.isEmpty()) {
                 InputStream is = (InputStream) new URL(this.pictureUrl).getContent();
-                Drawable d = Drawable.createFromStream(is, this.pictureUrl);
+                final Drawable d = Drawable.createFromStream(is, this.pictureUrl);
                 this.drawables = new ArrayList<Drawable>();
                 this.drawables.add(d);
-                if(this.imageView != null && d != null){
-                    this.imageView.setImageDrawable(d);
-                }
+
                 // Forzamos a que la parte de vista del codigo se muestre en el thread principal
                 this.callingActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if(imageView != null && d != null){
+                            imageView.setImageDrawable(d);
+                        }
                         callbackScreen.onServiceCallback(drawables, serviceId);
                     }
                 });
