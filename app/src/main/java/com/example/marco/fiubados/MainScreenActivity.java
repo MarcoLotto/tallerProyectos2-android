@@ -202,7 +202,9 @@ public class MainScreenActivity extends TabbedActivity {
         TextView wallTitleTextView = (TextView) findViewById(R.id.wallTitleTextView);
         TextView friendRequestSent = (TextView) findViewById(R.id.friendRequestSent);
         ImageView profileImageView = (ImageView) findViewById(R.id.profileImageView);
-        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, friendRequestSent, profileImageView);
+        ListView wallCommentsListView = (ListView) findViewById(R.id.wallCommentsListView);
+
+        this.wallTabScreen = new WallTabScreen(this, addFriendButton, sendFriendRequestButton, wallTitleTextView, friendRequestSent, profileImageView, wallCommentsListView);
 
         ListView friendsListView = (ListView) findViewById(R.id.friendsListView);
         this.friendsTabScreen = new FriendsTabScreen(this, friendsListView);
@@ -244,8 +246,8 @@ public class MainScreenActivity extends TabbedActivity {
                 this.groupsTabScreen.onFocus();
                 break;
             case FRIENDS_TAB_INDEX:
-                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 // Tab de amigos
+                this.wallTabScreen.setUserOwnerOfTheWall(ContextManager.getInstance().getMyUser());
                 this.friendsTabScreen.onFocus();
                 break;
         }

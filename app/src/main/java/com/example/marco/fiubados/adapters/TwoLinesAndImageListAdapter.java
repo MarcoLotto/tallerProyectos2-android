@@ -1,7 +1,7 @@
 package com.example.marco.fiubados.adapters;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
+import android.content.Context;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,8 +17,6 @@ import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.TripleField;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -64,7 +62,7 @@ public class TwoLinesAndImageListAdapter extends BaseAdapter implements Callback
         titleTextView.setText(this.fields.get(position).getField1().getValue());
         messageTextView.setText(this.fields.get(position).getField2().getValue());
         String imageUrl = this.fields.get(position).getField3().getValue();
-        DownloadPictureHttpAsyncTask service = new DownloadPictureHttpAsyncTask(imageUrl, imageView, this.activity, this, this.DOWNLOAD_IMAGE_SERVICE_ID);
+        DownloadPictureHttpAsyncTask service = new DownloadPictureHttpAsyncTask(imageUrl, imageView, this.activity, this, DOWNLOAD_IMAGE_SERVICE_ID);
         service.execute();
         return (row);
     }
@@ -76,7 +74,7 @@ public class TwoLinesAndImageListAdapter extends BaseAdapter implements Callback
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.DOWNLOAD_IMAGE_SERVICE_ID){
+        if(serviceId == DOWNLOAD_IMAGE_SERVICE_ID){
             // Le enviamos un evento de touch al list view para que actualice la vista y se muestre la imagen conseguida
             this.listView.onTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0));
         }

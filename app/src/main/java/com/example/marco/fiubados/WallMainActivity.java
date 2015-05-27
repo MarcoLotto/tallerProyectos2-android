@@ -1,28 +1,24 @@
-package com.example.marco.fiubados.activity.group;
+package com.example.marco.fiubados;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.marco.fiubados.R;
 
-
-public class GroupDiscussionActivity extends ActionBarActivity {
-
-    public static final String EXTRA_PARAM_DISSCUSION_ID = "extra_param_disscusion_id";
+public class WallMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_discussion);
+        setContentView(R.layout.activity_wall_main);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_group_discussion, menu);
+        getMenuInflater().inflate(R.menu.menu_wall_main, menu);
         return true;
     }
 

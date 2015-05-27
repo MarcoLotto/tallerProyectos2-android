@@ -58,23 +58,45 @@
                         android:id="@+id/sendFriendRequestButton"
                         android:layout_gravity="center_horizontal" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Proximamente Mi Muro"
-                        android:id="@+id/wallTitleTextView"
-                        android:layout_gravity="top|left"
-                        android:layout_marginTop="10dp" />
+                        android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
+                            android:layout_width="125dp"
+                            android:layout_height="125dp"
                             android:adjustViewBounds="true"
                             android:id="@+id/profileImageView"
                             android:scaleType="fitXY"
                             android:background="@drawable/ic_action_picture_holo_light"
                             android:layout_gravity="top|left" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="25dp"
+                            android:id="@+id/wallTitleTextView"
+                            android:layout_marginLeft="0dp"
+                            android:layout_marginTop="12dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/wallComments">
+
+                        <ListView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/wallCommentsListView"
+                            android:layout_gravity="center_horizontal|top" />
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
                 <LinearLayout

@@ -71,14 +71,12 @@
             android:label="Notificaciones"
             android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name=".MapActivity"
             android:configChanges="orientation"
             android:label="Mapa"
             android:screenOrientation="portrait" >
         </activity>
-
         <activity
             android:name=".SearchUsersActivity"
             android:label="@string/title_activity_search_users" >
@@ -125,6 +123,10 @@
         <activity
             android:name=".activity.group.GroupDiscussionActivity"
             android:label="Discusión" >
+        </activity>
+        <activity
+            android:name=".WallMainActivity"
+            android:label="@string/title_activity_wall_main" >
         </activity>
     </application>
 

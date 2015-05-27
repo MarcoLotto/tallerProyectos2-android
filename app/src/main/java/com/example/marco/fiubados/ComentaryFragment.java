@@ -1,10 +1,8 @@
 package com.example.marco.fiubados;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -14,9 +12,9 @@ import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.*;
 import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
-import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.TripleField;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,8 +42,10 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
 
         // Conseguimos el parametro que nos paso el activity que nos llamó
         Bundle params = this.getActivity().getIntent().getExtras();
-        this.getComentariesUrl = params.getString(this.EXTRA_PARAM_GET_COMENTARIES_URL);
-        this.containerId = params.getString(this.EXTRA_PARAM_CONTAINER_ID);
+        if (params != null){
+            this.getComentariesUrl = params.getString(EXTRA_PARAM_GET_COMENTARIES_URL);
+            this.containerId = params.getString(EXTRA_PARAM_CONTAINER_ID);
+        }
 
         this.onFocus();
 
@@ -61,13 +61,13 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     @Override
     public void onFocus() {
         // Llamamos al servicio de obtención de comentarios
-        GetComentariesHttpAsyncTask service = new GetComentariesHttpAsyncTask(this.getActivity(), this, this.GET_COMENTARIES_SERVICE_ID, this.containerId);
+        GetComentariesHttpAsyncTask service = new GetComentariesHttpAsyncTask(this.getActivity(), this, GET_COMENTARIES_SERVICE_ID, this.containerId);
         service.execute(this.getComentariesUrl);
     }
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.GET_COMENTARIES_SERVICE_ID){
+        if(serviceId == GET_COMENTARIES_SERVICE_ID){
             // Llenamos la lista con los comentarios
             this.fillUIListWithComentaries(responseElements);
         }
@@ -81,6 +81,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
             finalListViewLines.add(new TripleField(new Field("Autor", comentary.getAuthor()),
                     new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
         }
+
         this.comentaryListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.getActivity(), this.comentaryListView));
 
         if(responseElements.isEmpty()){
