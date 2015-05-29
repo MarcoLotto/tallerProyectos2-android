@@ -75,7 +75,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="25dp"
+                            android:textSize="28dp"
                             android:id="@+id/wallTitleTextView"
                             android:layout_marginLeft="0dp"
                             android:layout_marginTop="12dp" />
@@ -86,7 +86,9 @@
                         xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/wallComments">
+                        android:id="@+id/wallComments"
+                        android:paddingLeft="50dp"
+                        android:paddingRight="30dp">
 
                         <ListView
                             android:layout_width="wrap_content"
