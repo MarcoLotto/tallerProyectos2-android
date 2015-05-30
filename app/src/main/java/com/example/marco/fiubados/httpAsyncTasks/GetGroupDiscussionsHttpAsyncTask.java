@@ -70,7 +70,7 @@ public class GetGroupDiscussionsHttpAsyncTask extends HttpAsyncTask {
             String discussionName = jsonObject.getString("name");
             String discussionDescription = jsonObject.getString("description");
             String discussionId = jsonObject.getString("id");
-            String discussionAuthor = jsonObject.getString("author");
+            String discussionAuthor = jsonObject.getString("authorFirstName") + " " + jsonObject.getString("authorLastName");
             String discussionCreationDate = jsonObject.getString("creationDate");
             GroupDiscussion discussion = new GroupDiscussion(discussionId, discussionName, discussionDescription);
             discussion.setAuthor(discussionAuthor);

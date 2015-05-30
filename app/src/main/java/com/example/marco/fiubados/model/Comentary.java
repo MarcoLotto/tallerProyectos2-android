@@ -5,20 +5,21 @@ package com.example.marco.fiubados.model;
  */
 public class Comentary extends DatabaseObject {
 
-    private String author, message, imageUrl;
+    private User author;
+    private String message, imageUrl;
 
-    public Comentary(String id, String author, String message, String imageUrl) {
+    public Comentary(String id, User author, String message, String imageUrl) {
         super(id);
         this.author = author;
         this.message = message;
         this.imageUrl = imageUrl;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 

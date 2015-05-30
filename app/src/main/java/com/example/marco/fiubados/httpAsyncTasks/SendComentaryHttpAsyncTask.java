@@ -51,7 +51,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected void onResponseArrival() {
-        if (responseCode == HttpURLConnection.HTTP_OK) {
+        if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
             if(this.getResponseField("result").equals(this.SEND_COMENTARY_RESULT_OK)) {
                 // Le indicamos al servicio que ya se agrego el comentario
                 callbackScreen.onServiceCallback(new ArrayList<String>(), serviceId);

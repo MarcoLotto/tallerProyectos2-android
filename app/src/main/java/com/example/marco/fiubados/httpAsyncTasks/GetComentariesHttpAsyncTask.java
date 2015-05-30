@@ -6,6 +6,7 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Group;
+import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,7 +70,7 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
             JSONObject jsonObject = jObject.getJSONObject(i);
 
             String id = jsonObject.getString("id");
-            String author = jsonObject.getString("author");
+            User author = new User(jsonObject.getString("authorId"), jsonObject.getString("authorFirstName"), jsonObject.getString("authorLastName"));
             String message = jsonObject.getString("message");
             String imageUrl = jsonObject.getString("image");
             Comentary comentary = new Comentary(id, author, message, imageUrl);
@@ -79,6 +80,6 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
 
     @Override
     protected String getRequestMethod() {
-        return POST_REQUEST_TYPE;
+        return GET_REQUEST_TYPE;
     }
 }

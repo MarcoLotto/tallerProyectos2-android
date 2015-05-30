@@ -78,7 +78,8 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
         Iterator<Comentary> it = responseElements.iterator();
         while(it.hasNext()){
             Comentary comentary = it.next();
-            finalListViewLines.add(new TripleField(new Field("Autor", comentary.getAuthor()),
+            String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
+            finalListViewLines.add(new TripleField(new Field("Autor", authorName),
                     new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
         }
 

@@ -41,10 +41,11 @@ import java.util.List;
  */
 public class GroupMainMemberFragment extends Fragment implements CallbackScreen {
 
-    private static final String CREATE_DISCUSSION_SERVICE_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
-    private static final String GET_DISCUSSIONS_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
-    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
-    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
+    private static final String GROUPS_SERVICE_URL = ContextManager.WS_SERVER_URL + "/api/groups/";
+    private static final String CREATE_DISCUSSION_SERVICE_ENDPOINT_URL = "/discussions/";
+    private static final String GET_DISCUSSIONS_ENDPOINT_URL = "/discussions/";
+    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "";
+    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "/comments";
 
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
     private static final int CREATE_DISCUSSION_SERVICE_ID = 1;
@@ -121,11 +122,14 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     }
 
     private void onParameterClickedOnList(int position) {
+        GroupDiscussion discussion = group.getDiscussions().get(position);
         Intent intent = new Intent(getActivity(), GroupDiscussionActivity.class);
-        intent.putExtra(ComentaryFragment.EXTRA_PARAM_CONTAINER_ID, group.getDiscussions().get(position).getId());
-        intent.putExtra(ComentaryFragment.EXTRA_PARAM_GET_COMENTARIES_URL, GET_COMENTARIES_SERVICE_ENDPOINT);
-        intent.putExtra(KeyboardFragment.EXTRA_PARAM_SEND_COMENTARY_URL, SEND_COMENTARY_SERVICE_ENDPOINT);
-        intent.putExtra(KeyboardFragment.EXTRA_PARAM_PARENT_COMENTARY_ID, "-1"); // ESte parámetro se utilizará en el muro para comentarios anidados
+        intent.putExtra(ComentaryFragment.EXTRA_PARAM_CONTAINER_ID, discussion.getId());
+        String finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_DISCUSSION_SERVICE_ENDPOINT_URL + discussion.getId() + GET_COMENTARIES_SERVICE_ENDPOINT;
+        intent.putExtra(ComentaryFragment.EXTRA_PARAM_GET_COMENTARIES_URL, finalUrl);
+        finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_DISCUSSION_SERVICE_ENDPOINT_URL + discussion.getId() + SEND_COMENTARY_SERVICE_ENDPOINT;
+        intent.putExtra(KeyboardFragment.EXTRA_PARAM_SEND_COMENTARY_URL, finalUrl);
+        intent.putExtra(KeyboardFragment.EXTRA_PARAM_PARENT_COMENTARY_ID, "-1"); // Este parámetro se utilizará en el muro para comentarios anidados
         startActivity(intent);
     }
 
@@ -143,7 +147,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     public void onFocus() {
         // Buscamos las discusiones del grupo
         GetGroupDiscussionsHttpAsyncTask service = new GetGroupDiscussionsHttpAsyncTask(getActivity(), this, GET_DISCUSSIONS_SERVICE_ID, group);
-        service.execute(GET_DISCUSSIONS_ENDPOINT_URL);
+        String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_DISCUSSIONS_ENDPOINT_URL;
+        service.execute(finalUrl);
     }
 
     @Override
@@ -153,8 +158,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
             this.addDiscussionsToUIList();
         }
         else if(serviceId == CREATE_DISCUSSION_SERVICE_ID){
-            // Actualizamos la pantalla para motrar la nueva discusión
-            this.onFocus();
+            // REVIEW: Si se deja de reiniciar el activity en la creación, habilitar el onFocus
+            //this.onFocus();
         }
     }
 
@@ -188,7 +193,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
                         if (FieldsValidator.isTextFieldValid(name, 1)) {
                             GroupDiscussion discussion = new GroupDiscussion("", name, "");
                             GroupDiscussionCreateHttpAsyncTask service = new GroupDiscussionCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_DISCUSSION_SERVICE_ID, discussion);
-                            service.execute(CREATE_DISCUSSION_SERVICE_ENDPOINT_URL);
+                            String finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_DISCUSSION_SERVICE_ENDPOINT_URL;
+                            service.execute(finalUrl);
                         } else {
                             Toast toast = Toast.makeText(ownerActivity.getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la descripción", Toast.LENGTH_LONG);
                             toast.show();

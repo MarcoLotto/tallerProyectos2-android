@@ -48,8 +48,8 @@ public class WallTabScreen implements CallbackScreen {
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
 
-    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
-    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
+    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/556a3abee66746240a151b49";
+    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/556a3abee66746240a151b49";
 
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
     private static final int PROFILE_PICTURE_MAX_SIZE = 524228;
@@ -237,7 +237,8 @@ public class WallTabScreen implements CallbackScreen {
         List<TripleField> finalListViewLines = new ArrayList<>();
 
         for (Comentary comentary : responseElements){
-            finalListViewLines.add(new TripleField(new Field("Autor", comentary.getAuthor()),
+            String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
+            finalListViewLines.add(new TripleField(new Field("Autor", authorName),
                     new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
         }
 
