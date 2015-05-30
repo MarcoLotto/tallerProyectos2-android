@@ -41,7 +41,7 @@ public class GroupsTabScreen implements CallbackScreen {
 
         // Buscamos los grupos
         GetGroupsHttpAsyncTask groupsTask = new GetGroupsHttpAsyncTask(this.tabOwnerActivity, this, SEARCH_GROUPS_SERVICE_ID);
-        groupsTask.execute(this.GROUPS_SEARCH_ENDPOINT_URL);
+        groupsTask.execute(GROUPS_SEARCH_ENDPOINT_URL);
     }
 
     @Override

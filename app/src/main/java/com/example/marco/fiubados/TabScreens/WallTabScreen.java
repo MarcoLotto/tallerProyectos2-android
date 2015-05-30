@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,10 +69,13 @@ public class WallTabScreen implements CallbackScreen {
     private TextView friendRequestSent;
     private ImageView profileImageView;
     private ListView wallCommentsListView;
+    private EditText wallCommentEditText;
+    private Button wallCommentSendButton;
 
     public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton,
                          TextView wallTitleTextView, TextView friendRequestSent, ImageView profileImageView,
-                         ListView wallCommentsListView){
+                         ListView wallCommentsListView, EditText wallCommentEditText,
+                         Button wallCommentSendButton){
         this.tabOwnerActivity = tabOwnerActivity;
         this.wallTitleTextView = wallTitleTextView;
         this.friendRequestSent = friendRequestSent;
@@ -79,6 +83,8 @@ public class WallTabScreen implements CallbackScreen {
         this.confirmFriendRequestButton = confirmFriendRequestButton;
         this.profileImageView = profileImageView;
         this.wallCommentsListView = wallCommentsListView;
+        this.wallCommentEditText = wallCommentEditText;
+        this.wallCommentSendButton = wallCommentSendButton;
 
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +97,13 @@ public class WallTabScreen implements CallbackScreen {
             @Override
             public void onClick(View view) {
                 onConfirmFriendRequestButtonClick();
+            }
+        });
+
+        wallCommentSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Hacer algo, je
             }
         });
 
@@ -123,6 +136,8 @@ public class WallTabScreen implements CallbackScreen {
         this.addFriendButton.setVisibility(View.GONE);
         this.confirmFriendRequestButton.setVisibility(View.GONE);
         this.friendRequestSent.setVisibility(View.GONE);
+        this.wallCommentEditText.setVisibility(View.GONE);
+        this.wallCommentSendButton.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
             // Seteamos como titulo del muro el nombre de la persona
             this.wallTitleTextView.setText(this.userOwnerOfTheWall.getFullName());
@@ -136,6 +151,13 @@ public class WallTabScreen implements CallbackScreen {
                 } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_REQUESTED)) {
                     this.friendRequestSent.setVisibility(View.VISIBLE);
                 }
+            }
+
+            // Si es el propio muro o el de un amigo, se deja escribir en el muro
+            if (this.userOwnerOfTheWall.equals(ContextManager.getInstance().getMyUser()) ||
+                    this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_FRIEND)){
+                this.wallCommentEditText.setVisibility(View.VISIBLE);
+                this.wallCommentSendButton.setVisibility(View.VISIBLE);
             }
         }
 

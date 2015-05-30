@@ -50,9 +50,9 @@ public class KeyboardFragment extends Fragment implements CallbackScreen {
 
         // Conseguimos el parametro que nos paso el activity que nos llamó
         Bundle params = this.getActivity().getIntent().getExtras();
-        this.parentComentaryId = params.getString(this.EXTRA_PARAM_PARENT_COMENTARY_ID);
-        this.sendComentaryUrl = params.getString(this.EXTRA_PARAM_SEND_COMENTARY_URL);
-        this.containerId = params.getString(this.EXTRA_PARAM_CONTAINER_ID);
+        this.parentComentaryId = params.getString(EXTRA_PARAM_PARENT_COMENTARY_ID);
+        this.sendComentaryUrl = params.getString(EXTRA_PARAM_SEND_COMENTARY_URL);
+        this.containerId = params.getString(EXTRA_PARAM_CONTAINER_ID);
 
         this.configureComponents();
         this.onFocus();
@@ -72,7 +72,7 @@ public class KeyboardFragment extends Fragment implements CallbackScreen {
     private void sendComentary() {
         String message = this.comentaryEditText.getText().toString();
         if(!message.isEmpty()){
-            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.getActivity(), this, this.SEND_COMENTARY_SERVICE_ID, this.containerId, this.parentComentaryId, message);
+            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.getActivity(), this, SEND_COMENTARY_SERVICE_ID, this.containerId, this.parentComentaryId, message);
             service.execute(this.sendComentaryUrl);
         }
     }
@@ -90,7 +90,7 @@ public class KeyboardFragment extends Fragment implements CallbackScreen {
 
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
-        if(serviceId == this.SEND_COMENTARY_SERVICE_ID){
+        if(serviceId == SEND_COMENTARY_SERVICE_ID){
             // Indicamos al activity que se vuelva a crear para recargar la lista
             this.getActivity().finish();
             this.getActivity().startActivity(this.getActivity().getIntent());

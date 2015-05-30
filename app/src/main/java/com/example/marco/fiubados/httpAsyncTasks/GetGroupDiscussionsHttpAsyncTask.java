@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Marco on 17/05/2015.
@@ -44,7 +43,7 @@ public class GetGroupDiscussionsHttpAsyncTask extends HttpAsyncTask {
     protected void onResponseArrival() {
         if(this.responseCode == HttpURLConnection.HTTP_OK){
             String result = this.getResponseField("result");
-            if(result.equals(this.RESULT_OK)) {
+            if(result.equals(RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
                     String containerField = (new JSONObject(dataField)).getString("groupDiscussions");
