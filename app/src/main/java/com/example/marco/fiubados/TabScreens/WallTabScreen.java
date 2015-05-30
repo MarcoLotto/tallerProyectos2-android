@@ -136,6 +136,7 @@ public class WallTabScreen implements CallbackScreen {
         this.addFriendButton.setVisibility(View.GONE);
         this.confirmFriendRequestButton.setVisibility(View.GONE);
         this.friendRequestSent.setVisibility(View.GONE);
+        this.wallCommentsListView.setVisibility(View.GONE);
         this.wallCommentEditText.setVisibility(View.GONE);
         this.wallCommentSendButton.setVisibility(View.GONE);
         if(this.userOwnerOfTheWall != null) {
@@ -158,14 +159,13 @@ public class WallTabScreen implements CallbackScreen {
                     this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_FRIEND)){
                 this.wallCommentEditText.setVisibility(View.VISIBLE);
                 this.wallCommentSendButton.setVisibility(View.VISIBLE);
+                this.wallCommentsListView.setVisibility(View.VISIBLE);
+                this.findComments();
             }
         }
 
         // Si hay, vamos a buscar la imagen de perfil
         this.findProfilePicture();
-
-        this.findComments();
-
     }
 
     private void findComments(){
