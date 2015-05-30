@@ -1,5 +1,8 @@
 package com.example.marco.fiubados.activity.group;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,8 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.marco.fiubados.ComentaryFragment;
 import com.example.marco.fiubados.ContextManager;
@@ -19,7 +24,10 @@ import com.example.marco.fiubados.KeyboardFragment;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
+import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupDiscussionsHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GroupDiscussionCreateHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Group;
@@ -32,10 +40,14 @@ import java.util.List;
  * Fragmento de la vista principal de un grupo para un usuario que es miembro.
  */
 public class GroupMainMemberFragment extends Fragment implements CallbackScreen {
-    private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
+
+    private static final String CREATE_DISCUSSION_SERVICE_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
     private static final String GET_DISCUSSIONS_ENDPOINT_URL = "http://www.mocky.io/v2/555902e73c2e8f020b9e764f";
     private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
     private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/5561d3efdb586ba803827176";
+
+    private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
+    private static final int CREATE_DISCUSSION_SERVICE_ID = 1;
 
     private ListView discussionsListView;
     private Group group;
@@ -67,7 +79,7 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         int id = item.getItemId();
 
         if (id == R.id.action_new_discussion) {
-            // Realizar las acciones correspondientes a nueva discusión
+            this.createAddDiscussionDialog(this.getActivity(), this);
             return true;
         }
 
@@ -140,6 +152,10 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
             // Actalizamos las discusiones de la lista
             this.addDiscussionsToUIList();
         }
+        else if(serviceId == CREATE_DISCUSSION_SERVICE_ID){
+            // Actualizamos la pantalla para motrar la nueva discusión
+            this.onFocus();
+        }
     }
 
     /*
@@ -152,5 +168,38 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
             finalListViewLines.add(new DualField(new Field("Nombre", discussion.getName()), new Field("Autor", "Creado por " + discussion.getAuthor())));
         }
         this.discussionsListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
+    }
+
+    private void createAddDiscussionDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ownerActivity);
+        // Get the layout inflater
+        LayoutInflater inflater = ownerActivity.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.layout_add_discussion_dialog, null);
+
+        builder.setView(dialogView)
+                // Add action buttons
+                .setPositiveButton(R.string.accept, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Conseguimos todos los valores de los campos
+                        String name = ((EditText) dialogView.findViewById(R.id.fieldValueName)).getText().toString();
+
+                        // Validamos los campos
+                        if (FieldsValidator.isTextFieldValid(name, 1)) {
+                            GroupDiscussion discussion = new GroupDiscussion("", name, "");
+                            GroupDiscussionCreateHttpAsyncTask service = new GroupDiscussionCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_DISCUSSION_SERVICE_ID, discussion);
+                            service.execute(CREATE_DISCUSSION_SERVICE_ENDPOINT_URL);
+                        } else {
+                            Toast toast = Toast.makeText(ownerActivity.getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la descripción", Toast.LENGTH_LONG);
+                            toast.show();
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // No hace falta hacer ninguna acción
+                    }
+                });
+        builder.create().show();
     }
 }
