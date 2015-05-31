@@ -1,14 +1,10 @@
 package com.example.marco.fiubados.TabScreens;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +16,6 @@ import android.widget.Toast;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.NotificationsActivity;
 import com.example.marco.fiubados.ProfileActivity;
-import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.adapters.TwoLinesAndImageListAdapter;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
@@ -34,9 +29,9 @@ import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.TripleField;
 import com.example.marco.fiubados.model.User;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Marco on 08/04/2015.
@@ -279,23 +274,25 @@ public class WallTabScreen implements CallbackScreen {
         // Obtenemos el path de la imagen conseguida en la galería
         Uri selectedImage = data.getData();
         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-        Cursor cursor = this.tabOwnerActivity.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+        Cursor cursor = tabOwnerActivity.getContentResolver().query(selectedImage, filePathColumn,
+                null, null, null);
         cursor.moveToFirst();
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         String picturePathUploading = cursor.getString(columnIndex);
         cursor.close();
 
         // Enviamos la imagen al servidor (si no supera un limite máximo)
-        Bitmap bm = BitmapFactory.decodeFile(picturePathUploading);
-        if(bm.getByteCount() <= PROFILE_PICTURE_MAX_SIZE) {
-            UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.tabOwnerActivity, this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
+        File file = new File(picturePathUploading);
+        long length = file.length();
+        //Bitmap bm = BitmapFactory.decodeFile(picturePathUploading);
+        if(length <= PROFILE_PICTURE_MAX_SIZE) {
+            UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(tabOwnerActivity,
+                    this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
             service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
-        }
-        else{
-            String message = "La imagen supera los " + (PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "Kb. Suba una imagen mas pequeña.";
-            Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), message, Toast.LENGTH_LONG);
+        } else {
+            String message = "La imagen supera los " + (PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "KB. Suba una imagen mas pequeña.";
+            Toast toast = Toast.makeText(tabOwnerActivity.getApplicationContext(), message, Toast.LENGTH_LONG);
             toast.show();
         }
     }
 }
-
