@@ -58,7 +58,7 @@ public class GroupMembersActivityFragment extends Fragment implements CallbackSc
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                onClickUser(position);
+                //onClickUser(position);
             }
         });
 
@@ -110,7 +110,9 @@ public class GroupMembersActivityFragment extends Fragment implements CallbackSc
             MainScreenActivity mainActivity = ContextManager.getInstance().getMainScreenActivity();
             mainActivity.getWallTabScreen().setUserOwnerOfTheWall(user);
             mainActivity.selectWallTabScreen();
-            startActivity(new Intent(getActivity(), MainScreenActivity.class));
+            //startActivity(new Intent(getActivity(), MainScreenActivity.class));
+            getActivity().finish();
+            getActivity().getParent().finish();
         }
     }
 }
