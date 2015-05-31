@@ -34,6 +34,7 @@ import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.GroupDiscussion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -168,7 +169,10 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
 
     private void addDiscussionsToUIList() {
         List<DualField> finalListViewLines = new ArrayList<>();
-        for (GroupDiscussion discussion : group.getDiscussions()) {
+        // Hacemos un reverse a la lista para que muestre las discusiones de la mas recienta a mas antigua
+        List<GroupDiscussion> discussions = group.getDiscussions();
+        Collections.reverse(discussions);
+        for (GroupDiscussion discussion : discussions) {
             finalListViewLines.add(new DualField(new Field("Nombre", discussion.getName()), new Field("Autor", "Creado por " + discussion.getAuthor())));
         }
         this.discussionsListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
