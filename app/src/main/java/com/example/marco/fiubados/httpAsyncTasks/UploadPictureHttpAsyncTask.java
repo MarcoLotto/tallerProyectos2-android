@@ -1,9 +1,8 @@
 package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.webkit.MimeTypeMap;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
@@ -11,12 +10,16 @@ import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 /**
  * Created by Marco on 06/05/2015.
+ *
+ * HTTP AsyncTask para subir imágenes.
  */
 public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
 
@@ -32,13 +35,13 @@ public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
         // Armamos la data personalizada para el envio por POST
         try {
             JSONObject imageJsonObject = new JSONObject();
-            imageJsonObject.put("filename", this.filepath);
-            imageJsonObject.put("content", this.getPictureContentParsedForRequest());
-            imageJsonObject.put("content_type", "image/jpeg");  // REVIEW
+            imageJsonObject.put("filename", filepath);
+            imageJsonObject.put("content", getPictureContentParsedForRequest());
+            imageJsonObject.put("content_type", getFileMimeType());
             JSONObject mainJsonObject = new JSONObject();
             mainJsonObject.put("userToken", ContextManager.getInstance().getUserToken());
             mainJsonObject.put("image", imageJsonObject);
-            this.setResquestPostData(mainJsonObject);
+            setResquestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -46,11 +49,17 @@ public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
 
     private String getPictureContentParsedForRequest() {
         // Codificamos la data de la imagen en base64 para enviarla al servidor
-        Bitmap bm = BitmapFactory.decodeFile(this.filepath);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] byteArrayImage = baos.toByteArray();
-        return Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        File file = new File(filepath);
+        String encodedfile = null;
+        try {
+            FileInputStream fileInputStreamReader = new FileInputStream(filepath);
+            byte[] bytes = new byte[(int)file.length()];
+            fileInputStreamReader.read(bytes);
+            encodedfile = Base64.encodeToString(bytes, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return encodedfile;
     }
 
     @Override
@@ -83,5 +92,15 @@ public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected String getRequestMethod() {
         return POST_REQUEST_TYPE;
+    }
+
+    // url = file path or whatever suitable URL you want.
+    public String getFileMimeType() {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(filepath);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 }
