@@ -81,12 +81,12 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         int id = item.getItemId();
 
         if (id == R.id.action_new_discussion) {
-            this.createAddDiscussionDialog(this.getActivity(), this);
+            createAddDiscussionDialog(getActivity(), this);
             return true;
         }
 
         if (id == R.id.action_group_files) {
-            // Realizar las acciones correspondientes a ver los archivos del grupo
+            startActivity(new Intent(getActivity(), GroupFilesActivity.class));
             return true;
         }
 

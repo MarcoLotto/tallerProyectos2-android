@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.marco.fiubados.activity.group.GroupFilesActivity">
+
+    <item android:id="@+id/action_group_new_file"
+        android:title="@string/action_group_new_file"
+        android:icon="@drawable/ic_action_new_attachment_holo_dark"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+</menu>
