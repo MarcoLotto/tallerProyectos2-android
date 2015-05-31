@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.marco.fiubados.R;
+import com.example.marco.fiubados.commons.ActivityStackManager;
 
 public class GroupDiscussionActivity extends AppCompatActivity {
 
@@ -15,8 +16,14 @@ public class GroupDiscussionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_discussion);
+        ActivityStackManager.getInstance().addActivityToStack(this);
     }
 
+    @Override
+    public void onDestroy(){
+        ActivityStackManager.getInstance().removeActivityFromStack(this);
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

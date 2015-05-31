@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.R;
+import com.example.marco.fiubados.commons.ActivityStackManager;
 import com.example.marco.fiubados.model.Group;
 
 public class GroupMainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class GroupMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_main);
+        ActivityStackManager.getInstance().addActivityToStack(this);
 
         Group group = ContextManager.getInstance().groupToView;
 
@@ -38,6 +40,12 @@ public class GroupMainActivity extends AppCompatActivity {
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    @Override
+    public void onDestroy(){
+        ActivityStackManager.getInstance().removeActivityFromStack(this);
+        super.onDestroy();
     }
 
     @Override

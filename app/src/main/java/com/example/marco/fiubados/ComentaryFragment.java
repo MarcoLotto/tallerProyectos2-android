@@ -5,15 +5,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.*;
+import com.example.marco.fiubados.commons.ActivityStackManager;
 import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.TripleField;
+import com.example.marco.fiubados.model.User;
 
 
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     private ListView comentaryListView;
     private String getComentariesUrl;
     private String containerId;
+    private List<Comentary> comments;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +51,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
             this.containerId = params.getString(EXTRA_PARAM_CONTAINER_ID);
         }
 
+        this.configureComponents();
         this.onFocus();
 
         return rootView;
@@ -56,6 +61,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     public void onResume(){
         super.onResume();
     }
+
 
     @Override
     public void onFocus() {
@@ -74,6 +80,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
 
     private void fillUIListWithComentaries(List<Comentary> responseElements) {
         List<TripleField> finalListViewLines = new ArrayList<>();
+        this.comments = responseElements;
         Iterator<Comentary> it = responseElements.iterator();
         while(it.hasNext()){
             Comentary comentary = it.next();
@@ -91,6 +98,27 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
         else{
             this.noCommentsTextView.setVisibility(View.GONE);
             this.comentaryListView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void configureComponents() {
+        // Configuramos el handler del onClick del friendsListView
+        this.comentaryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                onCommentClickedOnList(position);
+            }
+        });
+    }
+
+    private void onCommentClickedOnList(int position) {
+        if(position < this.comments.size()) {
+            User author = this.comments.get(position).getAuthor();
+            MainScreenActivity mainScreenActivity = ContextManager.getInstance().getMainScreenActivity();
+            mainScreenActivity.getWallTabScreen().setUserOwnerOfTheWall(author);
+            mainScreenActivity.selectWallTabScreen();
+            ActivityStackManager.getInstance().goToMainScreenActivity();
         }
     }
 }

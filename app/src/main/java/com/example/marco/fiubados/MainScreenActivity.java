@@ -27,6 +27,7 @@ import com.example.marco.fiubados.TabScreens.FriendsTabScreen;
 import com.example.marco.fiubados.TabScreens.GroupsTabScreen;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.TabScreens.WallTabScreen;
+import com.example.marco.fiubados.commons.ActivityStackManager;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.Group;
@@ -131,6 +132,7 @@ public class MainScreenActivity extends TabbedActivity {
     @Override
     public void onResume() {
         super.onResume();
+        ActivityStackManager.getInstance().resetStack();
         this.handleTabChange();
     }
 
