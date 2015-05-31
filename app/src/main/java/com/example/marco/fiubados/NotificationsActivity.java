@@ -78,7 +78,7 @@ public class NotificationsActivity extends AppCompatActivity implements Callback
                         respondFriendshipRequest(finalPossibleFriend, true);
                     }
                 })
-                .setNegativeButton(R.string.notAccept, new DialogInterface.OnClickListener() {
+                .setNegativeButton("Rechazar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         respondFriendshipRequest(finalPossibleFriend, false);
                     }
