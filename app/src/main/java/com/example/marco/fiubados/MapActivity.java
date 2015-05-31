@@ -1,15 +1,12 @@
 package com.example.marco.fiubados;
 
 import android.location.Location;
-
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-
 import com.example.marco.fiubados.httpAsyncTasks.GetFriendsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileEditHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
@@ -21,7 +18,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -42,8 +39,8 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     public static final String USER_ID_PARAMETER = "userIdParameter";
 
     //private static final int UPDATE_PROFILE_INFO_SERVICE_ID = 3;
-    private final int SEARCH_PROFILE_INFO_SERVICE_ID = 1;
-    private final int EDIT_PROFILE_INFO_SERVICE_ID = 2;
+    private static final int SEARCH_PROFILE_INFO_SERVICE_ID = 1;
+    private static final int EDIT_PROFILE_INFO_SERVICE_ID = 2;
 
     private List<ProfileField> fields = new ArrayList<>();
 
@@ -66,7 +63,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
         //magia relacionada con el mapa
 
-        map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         map.setMyLocationEnabled(true);
 
         this.buildGoogleApiClient();
@@ -108,9 +105,9 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
 
         GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
-                this.SEARCH_FRIENDS_SERVICE_ID, "TODO");
+                SEARCH_FRIENDS_SERVICE_ID, "TODO");
 
-        friendsHttpService.execute(this.FRIENDS_SEARCH_ENDPOINT_URL);
+        friendsHttpService.execute(FRIENDS_SEARCH_ENDPOINT_URL);
         //friendsHttpService.execute("http://www.mocky.io/v2/5563b7b0ab3d5f7512da77a3");
 
     }
@@ -118,16 +115,16 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     @Override
     public void onServiceCallback(List responseElements, int serviceId) {
 
-        if(serviceId == this.SEARCH_PROFILE_INFO_SERVICE_ID){
+        if(serviceId == SEARCH_PROFILE_INFO_SERVICE_ID){
 
             this.fields.clear();
             // TODO: Dependiendo de que se este editando, completar fields con diferente info
             this.fillFieldsListWithPersonalProfileData();
         }
-        else if(serviceId == this.EDIT_PROFILE_INFO_SERVICE_ID){
+        else if(serviceId == EDIT_PROFILE_INFO_SERVICE_ID){
 
         }
-        else if(serviceId == this.SEARCH_FRIENDS_SERVICE_ID){
+        else if(serviceId == SEARCH_FRIENDS_SERVICE_ID){
 
             this.guardarAmigosRecibidosPorWebService(responseElements);
             this.actualizarMapa();
@@ -174,7 +171,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         this.fillFieldsListWithPersonalProfileData();
         // Llamamos al servicio de edición de perfil
         ProfileEditHttpAsyncTask profileEditService = new ProfileEditHttpAsyncTask(this, this, EDIT_PROFILE_INFO_SERVICE_ID, this.fields);
-        profileEditService.execute(this.EDIT_PROFILE_ENDPOINT_URL);
+        profileEditService.execute(EDIT_PROFILE_ENDPOINT_URL);
     }
 
     @Override

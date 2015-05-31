@@ -110,7 +110,7 @@
 
                     </LinearLayout>
 
-                    <Space
+                    <android.support.v4.widget.Space
                         android:layout_width="1dp"
                         android:layout_height="30dp"/>
 

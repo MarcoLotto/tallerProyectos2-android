@@ -2,13 +2,9 @@ package com.example.marco.fiubados.httpAsyncTasks;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.widget.ImageView;
 
-import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-
-import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -55,7 +51,7 @@ public class DownloadPictureHttpAsyncTask {
             if(!this.pictureUrl.isEmpty()) {
                 InputStream is = (InputStream) new URL(this.pictureUrl).getContent();
                 final Drawable d = Drawable.createFromStream(is, this.pictureUrl);
-                this.drawables = new ArrayList<Drawable>();
+                this.drawables = new ArrayList<>();
                 this.drawables.add(d);
 
                 // Forzamos a que la parte de vista del codigo se muestre en el thread principal
