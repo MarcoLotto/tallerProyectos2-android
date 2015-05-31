@@ -158,8 +158,7 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
             this.addDiscussionsToUIList();
         }
         else if(serviceId == CREATE_DISCUSSION_SERVICE_ID){
-            // REVIEW: Si se deja de reiniciar el activity en la creación, habilitar el onFocus
-            //this.onFocus();
+            this.onFocus();
         }
     }
 

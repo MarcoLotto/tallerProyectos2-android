@@ -179,7 +179,7 @@ public class WallTabScreen implements CallbackScreen {
         this.profileImageView.setImageResource(resId);
 
         // Traemos del servidor la imagen de perfil y la mostramos (si hay)
-        String profilePictureUrl = ContextManager.WS_SERVER_URL + this.getUserOwnerOfTheWall().getProfilePicture();
+        String profilePictureUrl = this.getUserOwnerOfTheWall().getProfilePicture();
         DownloadPictureHttpAsyncTask pictureService = new DownloadPictureHttpAsyncTask(profilePictureUrl, this.tabOwnerActivity, this, GET_PROFILE_PICTURE_SERVICE_ID);
         pictureService.execute();
 
