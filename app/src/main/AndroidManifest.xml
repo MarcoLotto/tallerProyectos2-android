@@ -105,10 +105,6 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activity.group.GroupDiscussionActivity"
-            android:label="Discusión" >
-        </activity>
-        <activity
             android:name=".activity.group.GroupMembersActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
