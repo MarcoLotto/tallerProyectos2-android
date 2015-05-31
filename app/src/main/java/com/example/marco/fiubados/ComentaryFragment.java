@@ -55,7 +55,6 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     @Override
     public void onResume(){
         super.onResume();
-        this.onFocus();
     }
 
     @Override
