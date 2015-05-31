@@ -143,7 +143,9 @@ public class WallTabScreen implements CallbackScreen {
                 if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_UNKNOWN)) {
                     this.addFriendButton.setVisibility(View.VISIBLE);
                 } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_WAITING)) {
-                    this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
+                    if(this.userOwnerOfTheWall.getFriendshipRequestId() != null && !this.userOwnerOfTheWall.getFriendshipRequestId().isEmpty()) {
+                        this.confirmFriendRequestButton.setVisibility(View.VISIBLE);
+                    }
                 } else if (this.userOwnerOfTheWall.getFriendshipStatus().equals(User.FRIENDSHIP_STATUS_REQUESTED)) {
                     this.friendRequestSent.setVisibility(View.VISIBLE);
                 }

@@ -74,7 +74,9 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
             User author = new User(jsonObject.getString("authorId"), jsonObject.getString("authorFirstName"), jsonObject.getString("authorLastName"));
             String imageUrl = jsonObject.getString("image");
             author.setProfilePicture(imageUrl);
-            author.setFriendshipStatus(User.FRIENDSHIP_STATUS_UNKNOWN);  // REVIEW: Solo para probar
+            if(jsonObject.has("friendship")){
+                author.setFriendshipStatus(jsonObject.getString("friendship"));
+            }
             String message = jsonObject.getString("message");
             Comentary comentary = new Comentary(id, author, message, imageUrl);
             comentaries.add(comentary);

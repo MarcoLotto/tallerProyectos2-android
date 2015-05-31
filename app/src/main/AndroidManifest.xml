@@ -100,10 +100,14 @@
         </activity>
         <activity
             android:name=".activity.group.GroupMainActivity"
-            android:label="@string/title_activity_group_main" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_group_main"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".activity.group.GroupMembersActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_group_members"
             android:parentActivityName=".activity.group.GroupMainActivity" >
             <meta-data
@@ -120,7 +124,9 @@
 
         <activity
             android:name=".activity.group.GroupDiscussionActivity"
-            android:label="Discusión" >
+            android:configChanges="orientation"
+            android:label="Discusión"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 
