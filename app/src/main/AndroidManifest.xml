@@ -103,8 +103,20 @@
             android:label="@string/title_activity_group_main" >
         </activity>
         <activity
+            android:name=".activity.group.GroupDiscussionActivity"
+            android:label="Discusión" >
+        </activity>
+        <activity
             android:name=".activity.group.GroupMembersActivity"
             android:label="@string/title_activity_group_members"
+            android:parentActivityName=".activity.group.GroupMainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.group.GroupMainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.group.GroupFilesActivity"
+            android:label="@string/title_activity_group_files"
             android:parentActivityName=".activity.group.GroupMainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -117,11 +129,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDrw4RG-NCzjwiqi90o_-TmxrJ6y0j04vU" />
-
-        <activity
-            android:name=".activity.group.GroupDiscussionActivity"
-            android:label="Discusión" >
-        </activity>
     </application>
 
 </manifest>
