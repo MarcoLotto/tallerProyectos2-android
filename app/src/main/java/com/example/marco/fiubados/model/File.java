@@ -3,7 +3,7 @@ package com.example.marco.fiubados.model;
 /**
  * Modelo del archivo (basado en un link, no almacena el archivo completo)
  */
-public class File {
+public class File extends DatabaseObject{
     private static final String FILE_TYPE_YOUTUBE   = "file_type_youtube";
     private static final String FILE_TYPE_PDF       = "file_type_pdf";
     private static final String FILE_TYPE_OTHER     = "file_type_other";
@@ -12,11 +12,25 @@ public class File {
     private String url;
     private String type;
     private User uploader;
+    private String uploaderFullName;
 
-    public File(String name, String link, User uploader) {
+    public File(String id) {
+        super(id);
+    }
+
+    public File(String id,String name, String link, User uploader) {
+        super(id);
         this.name = name;
         this.url = link;
         this.uploader = uploader;
+        this.type = FILE_TYPE_OTHER;
+    }
+
+    public File(String id,String name, String link, String uploaderFullName) {
+        super(id);
+        this.name = name;
+        this.url = link;
+        this.uploaderFullName = uploaderFullName;
         this.type = FILE_TYPE_OTHER;
     }
 
@@ -50,5 +64,9 @@ public class File {
 
     public void setUploader(User uploader) {
         this.uploader = uploader;
+    }
+
+    public String getUploaderFullName() {
+        return this.uploaderFullName;
     }
 }

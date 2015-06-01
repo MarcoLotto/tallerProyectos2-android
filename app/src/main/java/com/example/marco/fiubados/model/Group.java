@@ -9,6 +9,7 @@ public class Group extends DatabaseObject {
     private String description;
     private List<GroupDiscussion> discussions;
     private boolean isMember;
+    private List<File> files;
 	
     public Group(String id) {
         super(id);
@@ -58,5 +59,12 @@ public class Group extends DatabaseObject {
     }
     public List<GroupDiscussion> getDiscussions(){
         return this.discussions;
+    }
+
+    public void addFile(File file) {
+        this.files.add(file);
+    }
+    public List<File> getFiles(){
+        return this.files;
     }
 }
