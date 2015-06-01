@@ -51,12 +51,12 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
 
     public GroupFilesFragment() {}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    //    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+    //       super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
-        setHasOptionsMenu(true);
-    }
+    //       setHasOptionsMenu(true);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,7 +146,9 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
     public void onFocus() {
         // Buscamos los files del grupo
         GetGroupFilesHttpAsyncTask service = new GetGroupFilesHttpAsyncTask(getActivity(), this, GET_UPLOADED_DATA_SERVICE_ID, group);
-        String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
+
+        //String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
+        String finalUrl = "http://www.mocky.io/v2/556c5dd9c7c159e511d0e1d4";
         service.execute(finalUrl);
     }
 
