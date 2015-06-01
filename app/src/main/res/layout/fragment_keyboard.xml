@@ -9,13 +9,14 @@
         android:layout_width="0px" android:layout_height="0px"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:id="@+id/comentaryEditText"
             android:hint="Escriba su comentario"
             android:layout_marginLeft="5dp"
