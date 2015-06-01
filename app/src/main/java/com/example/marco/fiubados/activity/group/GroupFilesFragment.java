@@ -1,5 +1,7 @@
 package com.example.marco.fiubados.activity.group;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -52,11 +54,15 @@ public class GroupFilesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 File file = (File) mGroupFilesAdapter.getItem(position);
-                // Procesar archivo seleccionado
-                Toast.makeText(getActivity(), "Se ha seleccionado " + file.getName(), Toast.LENGTH_LONG).show();
+                onFileItemClick(file);
             }
         });
 
         return rootView;
+    }
+
+    private void onFileItemClick(File file) {
+        //Toast.makeText(getActivity(), "Se ha seleccionado " + file.getName(), Toast.LENGTH_LONG).show();
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(file.getUrl())));
     }
 }

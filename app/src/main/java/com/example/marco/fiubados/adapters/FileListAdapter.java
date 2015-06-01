@@ -64,9 +64,21 @@ public class FileListAdapter extends BaseAdapter {
 
         fileItemView.fileName.setText(file.getName());
         fileItemView.uploaderName.setText("Subido por " + file.getUploader().getFullName());
-        // Setear el tipo de archivo.
+
+        if (isYoutubeLink(file.getUrl())) {
+            fileItemView.fileType.setImageResource(R.drawable.ic_action_youtube_holo_light);
+        }
 
         return convertView;
+    }
+
+    private boolean isYoutubeLink(String url) {
+        final String YOUTUBE = "youtube.com";
+        final String YOUTUBE_SHORT = "youtu.be";
+        if (url.contains(YOUTUBE) || url.contains(YOUTUBE_SHORT)) {
+            return true;
+        }
+        return false;
     }
 
     class FileItemView {
