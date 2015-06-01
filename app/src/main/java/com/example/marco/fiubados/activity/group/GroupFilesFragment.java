@@ -145,8 +145,8 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
         // Buscamos los files del grupo
         GetGroupFilesHttpAsyncTask service = new GetGroupFilesHttpAsyncTask(getActivity(), this, GET_UPLOADED_DATA_SERVICE_ID, group);
 
-        //String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
-        String finalUrl = "http://www.mocky.io/v2/556c5dd9c7c159e511d0e1d4";
+        String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
+        //String finalUrl = "http://www.mocky.io/v2/556c5dd9c7c159e511d0e1d4";
         service.execute(finalUrl);
     }
 
