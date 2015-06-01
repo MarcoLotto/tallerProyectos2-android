@@ -74,10 +74,8 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
         //mFiles.add(youtubeFile);
         //mFiles.add(pdfFile);
 
-        mGroupFilesAdapter = new FileListAdapter(getActivity(), mFiles);
-
         // Get a reference to the ListView, and attach this adapter to it.
-        UpdateUIList();
+        //UpdateUIList();
 
         return rootView;
     }
@@ -171,6 +169,7 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
 
     private void UpdateUIList( ) {
         // Get a reference to the ListView, and attach this adapter to it.
+        mGroupFilesAdapter = new FileListAdapter(getActivity(), group.getFiles());
         ListView listView = (ListView) rootView.findViewById(R.id.group_files_list_view);
         listView.setAdapter(mGroupFilesAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

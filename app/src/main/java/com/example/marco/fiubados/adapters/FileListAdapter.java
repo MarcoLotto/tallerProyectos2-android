@@ -69,7 +69,7 @@ public class FileListAdapter extends BaseAdapter {
         File file = (File) getItem(position);
 
         fileItemView.fileName.setText(file.getName());
-        fileItemView.uploaderName.setText("Subido por " + file.getUploader().getFullName());
+        fileItemView.uploaderName.setText("Subido por " + file.getUploaderFullName());
 
         if (isYoutubeLink(file.getUrl())) {
             fileItemView.fileType.setImageResource(R.drawable.ic_action_youtube_holo_light);

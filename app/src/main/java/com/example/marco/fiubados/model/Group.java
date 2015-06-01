@@ -9,7 +9,7 @@ public class Group extends DatabaseObject {
     private String description;
     private List<GroupDiscussion> discussions;
     private boolean isMember;
-    private List<File> files;
+    private List<File> files = new ArrayList<File>();
 	
     public Group(String id) {
         super(id);

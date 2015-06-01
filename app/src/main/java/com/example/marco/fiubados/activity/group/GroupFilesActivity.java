@@ -33,17 +33,17 @@ public class GroupFilesActivity extends AppCompatActivity {
         ActivityStackManager.getInstance().addActivityToStack(this);
 
         // Create new transaction
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        Fragment newFragment;
+        //FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        //Fragment newFragment;
 
-        newFragment = new GroupFilesFragment();
+        //newFragment = new GroupFilesFragment();
 
         // Replace whatever is in the fragment_container view with this fragment,
         // and add the transaction to the back stack if needed
-        transaction.add(R.id.group_main_container, newFragment);
+        //transaction.add(R.id.group_main_container, newFragment);
 
         // Commit the transaction
-        transaction.commit();
+        //transaction.commit();
 }
 
     @Override
