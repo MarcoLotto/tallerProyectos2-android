@@ -22,6 +22,7 @@ import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.FileListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupFilesHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GroupFileCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.File;
 import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
@@ -116,18 +117,19 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
                         String url = ((EditText) dialogView.findViewById(R.id.fieldValueUrl)).getText().toString();
                         String type = ((EditText) dialogView.findViewById(R.id.fieldValueType)).getText().toString();
 
-                        // TODO:Validamos los campos
-                        if (FieldsValidator.isTextFieldValid(name, 1)) {
-                        //GroupDiscussion discussion = new GroupDiscussion("", name, "");
-                        File file = new File(name,url, user );
-                        GroupFileCreateHttpAsyncTask service = new GroupFileCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_UPLOADED_DATA_SERVICE_ID, file);
-
-                        String finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_UPLOADED_DATA_SERVICE_ENDPOINT_URL;
-                        service.execute(finalUrl);
+                        // TODO:Falta Validar los campos
+                        // TODO: el type deberia ser parseado del nombre...
+                        if ( (FieldsValidator.isTextFieldValid(name, 1)) &&
+                                (FieldsValidator.isTextFieldValid(url, 1)) &&
+                                    (FieldsValidator.isTextFieldValid(type, 1)) ){
+                            File file = new File("",name,url, user );
+                            GroupFileCreateHttpAsyncTask service = new GroupFileCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_UPLOADED_DATA_SERVICE_ID, file);
+                            String finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_UPLOADED_DATA_SERVICE_ENDPOINT_URL;
+                            service.execute(finalUrl);
                     }
                         else
                     {
-                        Toast toast = Toast.makeText(ownerActivity.getApplicationContext(), "Error en los campos ingresados, el único campo que puede estar vacío es la descripción", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(ownerActivity.getApplicationContext(), "Error en los campos ingresados, ninguno puede estar vacio", Toast.LENGTH_LONG);
                         toast.show();
                     }
                  }
