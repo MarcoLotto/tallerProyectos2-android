@@ -1,5 +1,6 @@
 package com.example.marco.fiubados.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Adapter de archivos.
+ * Muestra el nombre del archivo y como subtitulo el nombre de la persona que lo subió.
+ * Si un archivo corresponde a un video de Youtube, lo indicará con un ícono.
+ *
  * Created by ezequiel on 31/05/15.
  */
 public class FileListAdapter extends BaseAdapter {
@@ -43,6 +48,7 @@ public class FileListAdapter extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         FileItemView fileItemView;
@@ -75,10 +81,7 @@ public class FileListAdapter extends BaseAdapter {
     private boolean isYoutubeLink(String url) {
         final String YOUTUBE = "youtube.com";
         final String YOUTUBE_SHORT = "youtu.be";
-        if (url.contains(YOUTUBE) || url.contains(YOUTUBE_SHORT)) {
-            return true;
-        }
-        return false;
+        return url.contains(YOUTUBE) || url.contains(YOUTUBE_SHORT);
     }
 
     class FileItemView {
