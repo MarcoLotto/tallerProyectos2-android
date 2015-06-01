@@ -24,7 +24,7 @@ public class GroupJoinHttpAsyncTask extends HttpAsyncTask{
         try {
             JSONObject jObject = new JSONObject();
             jObject.put("userToken", ContextManager.getInstance().getUserToken());
-            setResquestPostData(jObject);
+            setRequestPostData(jObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

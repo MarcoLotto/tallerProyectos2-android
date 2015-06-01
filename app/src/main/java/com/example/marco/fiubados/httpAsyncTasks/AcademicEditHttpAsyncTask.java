@@ -31,7 +31,7 @@ public class AcademicEditHttpAsyncTask extends HttpAsyncTask{
         try {
             JSONObject mainJsonObject = new JSONObject();
             mainJsonObject.put("career", this.academic.getCareer());
-            this.setResquestPostData(mainJsonObject);
+            this.setRequestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -38,7 +38,7 @@ public class GroupEditAndCreateHttpAsyncTask extends HttpAsyncTask{
 
             JSONObject mainJsonObject = new JSONObject();
             mainJsonObject.put("group", jobObject);
-            this.setResquestPostData(mainJsonObject);
+            this.setRequestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

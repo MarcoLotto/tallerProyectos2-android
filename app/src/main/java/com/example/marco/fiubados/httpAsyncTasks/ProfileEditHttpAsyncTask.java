@@ -44,7 +44,7 @@ public class ProfileEditHttpAsyncTask extends HttpAsyncTask {
             dataObject.put("profile", profileObject);
             JSONObject mainJsonObject = new JSONObject();
             mainJsonObject.put("data", dataObject);
-            this.setResquestPostData(mainJsonObject);
+            this.setRequestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

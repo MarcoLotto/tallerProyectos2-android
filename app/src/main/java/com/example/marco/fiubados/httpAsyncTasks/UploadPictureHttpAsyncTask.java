@@ -41,7 +41,7 @@ public class UploadPictureHttpAsyncTask extends HttpAsyncTask {
             JSONObject mainJsonObject = new JSONObject();
             mainJsonObject.put("userToken", ContextManager.getInstance().getUserToken());
             mainJsonObject.put("image", imageJsonObject);
-            setResquestPostData(mainJsonObject);
+            setRequestPostData(mainJsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }

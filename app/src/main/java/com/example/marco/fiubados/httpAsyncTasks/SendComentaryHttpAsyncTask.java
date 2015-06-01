@@ -38,7 +38,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
             jObject.put("containerId", this.containerId); // Id de usuario / discusión
             jObject.put("parentId", this.parentComentaryId); // Id del comentario padre (-1 si no tiene)
             jObject.put("message", this.message); // Mensaje del comentario
-            setResquestPostData(jObject);
+            setRequestPostData(jObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
     @Override
     protected void onResponseArrival() {
         if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-            if(this.getResponseField("result").equals(this.SEND_COMENTARY_RESULT_OK)) {
+            if(this.getResponseField("result").equals(SEND_COMENTARY_RESULT_OK)) {
                 // Le indicamos al servicio que ya se agrego el comentario
                 callbackScreen.onServiceCallback(new ArrayList<String>(), serviceId);
             }

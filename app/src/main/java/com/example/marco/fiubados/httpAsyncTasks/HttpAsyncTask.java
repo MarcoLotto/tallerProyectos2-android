@@ -288,10 +288,11 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
     }
 
     /**
-     * Se provee el json object ya formateado para su envio. Tener en cuenta que al setear esto se ignoran otros campos de request
+     * Se provee el json object ya formateado para su envio. Tener en cuenta que al setear esto se
+     * ignoran otros campos de request
      * @param mainJsonObject
      */
-    public void setResquestPostData(JSONObject mainJsonObject) {
+    public void setRequestPostData(JSONObject mainJsonObject) {
         this.requestPostData = mainJsonObject;
     }
 }

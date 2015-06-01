@@ -22,6 +22,7 @@ import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.SendComentaryHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
@@ -31,6 +32,7 @@ import com.example.marco.fiubados.model.User;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,8 +45,10 @@ public class WallTabScreen implements CallbackScreen {
     private static final String SEND_FRIENDSHIP_REQUEST_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/friends/send_friendship_request";
     private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users/upload_profile_picture";
 
-    private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "http://www.mocky.io/v2/556a3abee66746240a151b49";
-    private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "http://www.mocky.io/v2/556a3abee66746240a151b49";
+
+    private static final String COMMENTS_SERVICE_URL = ContextManager.WS_SERVER_URL + "/api/users/";
+    private static final String GET_COMMENTS_ENDPOINT = "/wall/comments";
+    private static final String SEND_COMMENT_ENDPOINT = "/wall/comments";
 
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
     private static final int PROFILE_PICTURE_MAX_SIZE = 524228;
@@ -55,7 +59,8 @@ public class WallTabScreen implements CallbackScreen {
     private static final int UPLOAD_IMAGE_SERVICE_ID = 3;
     private static final int RELOAD_PROFILE_SERVICE_ID = 4;
     private static final int GET_PROFILE_PICTURE_SERVICE_ID = 5;
-    private static final int GET_COMENTARIES_SERVICE_ID = 6;
+    private static final int GET_COMMENTS_SERVICE_ID = 6;
+    private static final int SEND_COMMENT_SERVICE_ID = 7;
 
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
@@ -98,7 +103,7 @@ public class WallTabScreen implements CallbackScreen {
         wallCommentSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Hacer algo, je
+                onSendCommentTouch();
             }
         });
 
@@ -109,6 +114,18 @@ public class WallTabScreen implements CallbackScreen {
             }
         });
 
+    }
+
+    private void onSendCommentTouch(){
+        String message = this.wallCommentEditText.getText().toString();
+
+        if (!message.isEmpty()){
+            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.tabOwnerActivity, this, SEND_COMMENT_SERVICE_ID, this.getUserOwnerOfTheWall().getId(), "-1", message);
+            service.execute(COMMENTS_SERVICE_URL + this.getUserOwnerOfTheWall().getId() + SEND_COMMENT_ENDPOINT);
+        }
+
+        this.wallCommentEditText.setText("");
+        this.wallCommentEditText.clearFocus();
     }
 
     private void onProfileImageTouch() {
@@ -166,8 +183,8 @@ public class WallTabScreen implements CallbackScreen {
     }
 
     private void findComments(){
-        GetComentariesHttpAsyncTask comentariesService = new GetComentariesHttpAsyncTask(this.tabOwnerActivity, this, GET_COMENTARIES_SERVICE_ID, this.getUserOwnerOfTheWall().getId());
-        comentariesService.execute(GET_COMENTARIES_SERVICE_ENDPOINT);
+        GetComentariesHttpAsyncTask comentariesService = new GetComentariesHttpAsyncTask(this.tabOwnerActivity, this, GET_COMMENTS_SERVICE_ID, this.getUserOwnerOfTheWall().getId());
+        comentariesService.execute(COMMENTS_SERVICE_URL + this.getUserOwnerOfTheWall().getId() + GET_COMMENTS_ENDPOINT);
     }
 
     private void findProfilePicture(){
@@ -224,9 +241,14 @@ public class WallTabScreen implements CallbackScreen {
             this.presentProfilePicture(responseElements);
         }
 
-        else if(serviceId == GET_COMENTARIES_SERVICE_ID){
+        else if(serviceId == GET_COMMENTS_SERVICE_ID){
             // Llenamos los comentarios que nos devuelve el servicio
             this.fillUIListWithComentaries(responseElements);
+        }
+
+        else if(serviceId == SEND_COMMENT_SERVICE_ID){
+            // Buscamos todos los comentarios nuevamente
+            this.findComments();
         }
     }
 
@@ -239,6 +261,7 @@ public class WallTabScreen implements CallbackScreen {
                     new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
         }
 
+        Collections.reverse(finalListViewLines);
         this.wallCommentsListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.tabOwnerActivity, this.wallCommentsListView));
 
         if(responseElements.isEmpty()){

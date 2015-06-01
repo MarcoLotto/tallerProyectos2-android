@@ -27,7 +27,6 @@ import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupDiscussionsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GroupDiscussionCreateHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.GroupEditAndCreateHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Group;

@@ -4,9 +4,7 @@ import android.app.Activity;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.TabScreens.WallTabScreen;
 import com.example.marco.fiubados.model.Comentary;
-import com.example.marco.fiubados.model.Group;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONArray;
@@ -48,7 +46,7 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
             List<Comentary> comentaries = new ArrayList<>();
 
             String result = this.getResponseField("result");
-            if(result.equals(this.GET_COMENTARIES_RESULT_OK)) {
+            if(result.equals(GET_COMENTARIES_RESULT_OK)) {
                 String dataField = this.getResponseField("data");
                 try {
                     String containerField = (new JSONObject(dataField)).getString("comentaries");
