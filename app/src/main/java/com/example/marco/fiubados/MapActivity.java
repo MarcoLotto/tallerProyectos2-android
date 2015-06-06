@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,24 +62,27 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        //magia relacionada con el mapa
+        SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                map = googleMap;
+                map.setMyLocationEnabled(true);
 
-        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setMyLocationEnabled(true);
+                buildGoogleApiClient();
+                createLocationRequest();
 
-        this.buildGoogleApiClient();
-        this.createLocationRequest();
-        // La magia
+                LatLng bsas = new LatLng(-34.60305, -58.43855);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(bsas, 11));
+                users = new ArrayList<>();
+                obtenerDatosDelPerfil();
+                onFocus();
+            }
+        });
+    }
 
-        LatLng bsas = new LatLng(-34.60305, -58.43855);
+    private void onMapReady(){
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(bsas, 11));
-
-        this.users = new ArrayList<>();
-
-        this.obtenerDatosDelPerfil();
-
-        this.onFocus();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -98,18 +102,11 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     @Override
     public void onFocus() {
-
         this.users.clear();
-
         // Vamos a hacer el pedido de amigos al web service
-
-
-        GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
-                SEARCH_FRIENDS_SERVICE_ID, "TODO");
-
+        GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this, SEARCH_FRIENDS_SERVICE_ID, "TODO");
         friendsHttpService.execute(FRIENDS_SEARCH_ENDPOINT_URL);
         //friendsHttpService.execute("http://www.mocky.io/v2/5563b7b0ab3d5f7512da77a3");
-
     }
 
     @Override
@@ -201,7 +198,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         SimpleDateFormat sdf = new SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss a");
         String lastUpdateTime = sdf.format(c.getTime());
         map.animateCamera(CameraUpdateFactory.newLatLng(
-                new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
+                        new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
         );
 
         user.setLocation(mCurrentLocation);
@@ -231,4 +228,6 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         this.fields.add(new ProfileField( "lastUpdateTime", String.valueOf( this.user.getLocation().getLongitude()),"UltimoTiempoDeUpdate" ));
     }
 }
+
+
 
