@@ -72,15 +72,12 @@ public class GetGroupFilesHttpAsyncTask extends HttpAsyncTask {
             String fId = jsonObject.getString("id");
             String fName = jsonObject.getString("name");
             String fUrl = jsonObject.getString("url");
-            String fFileType = jsonObject.getString("fileType");
+            //String fFileType = jsonObject.getString("fileType");
             String userId =  jsonObject.getString("authorId");
             String fileAuthor = jsonObject.getString("authorFirstName") + " " + jsonObject.getString("authorLastName");
             String discussionCreationDate = jsonObject.getString("creationDate");
-
-            //TODO:File file = new File(fId,fName, fUrl, new User(userId) );
             File file = new File(fId,fName, fUrl, fileAuthor );
-            //TODO: usar fileType tipo enum
-            //TODO: file.setCreationDate(discussionCreationDate);
+            file.setCreationDate(discussionCreationDate);
             group.addFile(file);
         }
     }

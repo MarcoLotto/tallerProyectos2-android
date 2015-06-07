@@ -30,6 +30,7 @@ public class GroupFileCreateHttpAsyncTask extends HttpAsyncTask{
         try {
 
             JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userToken", ContextManager.getInstance().getUserToken());
             jsonObject.put("name", this.file.getName());
             jsonObject.put("url", this.file.getUrl());
             //jsonObject.put("type", this.file.getName());

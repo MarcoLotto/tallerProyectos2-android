@@ -13,6 +13,7 @@ public class File extends DatabaseObject{
     private String type;
     private User uploader;
     private String uploaderFullName;
+    private String creationDate;
 
     public File(String id) {
         super(id);
@@ -68,5 +69,13 @@ public class File extends DatabaseObject{
 
     public String getUploaderFullName() {
         return this.uploaderFullName;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
     }
 }
