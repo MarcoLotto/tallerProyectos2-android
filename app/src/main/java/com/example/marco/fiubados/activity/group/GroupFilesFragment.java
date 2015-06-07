@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -122,9 +123,14 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
 
                         // TODO:Falta Validar los campos
                         // TODO: el type deberia ser parseado del nombre...
-                        if ( (FieldsValidator.isTextFieldValid(name, 1)) &&
-                                (FieldsValidator.isTextFieldValid(url, 1)) &&
-                                    (FieldsValidator.isTextFieldValid(type, 1)) ){
+                        // Validate URL
+                        if (!URLUtil.isValidUrl(url)) {
+                            Toast.makeText(ownerActivity.getApplicationContext(), "URL invalida", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if ( (FieldsValidator.isTextFieldValid(name, 1))
+                                    // &&(FieldsValidator.isTextFieldValid(type, 1))
+                                ){
                             File file = new File("",name,url, user );
                             GroupFileCreateHttpAsyncTask service = new GroupFileCreateHttpAsyncTask(ownerActivity, ownerCallbackScreen, CREATE_UPLOADED_DATA_SERVICE_ID, file);
                             String finalUrl = GROUPS_SERVICE_URL + group.getId() + CREATE_UPLOADED_DATA_SERVICE_ENDPOINT_URL;
