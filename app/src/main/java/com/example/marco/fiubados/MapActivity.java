@@ -22,16 +22,19 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
-public class MapActivity extends AppCompatActivity implements CallbackScreen, com.google.android.gms.location.LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapActivity extends AppCompatActivity implements CallbackScreen, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, com.google.android.gms.location.LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     //aca voy a updatear el profile, para updatear el Location.... es lo que hay
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
@@ -51,6 +54,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     private static final int SEARCH_FRIENDS_SERVICE_ID = 0;
 
     private List<User> users;
+    private Map<String, User> markersVsUsers = new HashMap<>();
 
     private User user;
 
@@ -78,6 +82,8 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
                 users = new ArrayList<>();
                 obtenerDatosDelPerfil();
                 mGoogleApiClient.connect();
+                map.setOnMarkerClickListener(MapActivity.this);
+                map.setOnInfoWindowClickListener(MapActivity.this);
                 onFocus();
             }
         });
@@ -141,14 +147,36 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     private void actualizarMapa(){
         map.clear();
+        this.markersVsUsers.clear();
         Iterator<User> iterator = this.users.iterator();
         while (iterator.hasNext()) {
             User friend = iterator.next();
             LatLng latLng = new LatLng(friend.getLocation().getLatitude(),friend.getLocation().getLongitude());
-            map.addMarker(new MarkerOptions().title( friend.getFullName() )
-                            .snippet( friend.getLastTimeUpdate() )
+            Marker marker = map.addMarker(new MarkerOptions().title( friend.getFullName() )
+                            .snippet( "Toque para ir al muro" )
                             .position( latLng )
             );
+            // Guardamos a quien pertenece este marker
+            this.markersVsUsers.put(marker.getId(), friend);
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        return false;
+    }
+
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(this.markersVsUsers.containsKey(marker.getId())) {
+            User user = this.markersVsUsers.get(marker.getId());
+
+            // Vamos al muro de la persona en cuestión
+            MainScreenActivity activity = ContextManager.getInstance().getMainScreenActivity();
+            activity.getWallTabScreen().setUserOwnerOfTheWall(user);
+            activity.selectWallTabScreen();
+            this.finish();
         }
     }
 
@@ -222,6 +250,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     }
 
     private void fillFieldsListWithPersonalProfileData() {
+        this.fields.clear();
         this.fields.add(new ProfileField("firstName", this.user.getFirstName(), "Nombre"));
         this.fields.add(new ProfileField("lastName", this.user.getLastName(), "Apellido"));
         this.fields.add(new ProfileField("biography", this.user.getBiography(), "Biografia"));
