@@ -1,6 +1,7 @@
 package com.example.marco.fiubados;
 
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -76,13 +77,10 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(bsas, 11));
                 users = new ArrayList<>();
                 obtenerDatosDelPerfil();
+                mGoogleApiClient.connect();
                 onFocus();
             }
         });
-    }
-
-    private void onMapReady(){
-
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -95,8 +93,8 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(100000);
-        mLocationRequest.setFastestInterval(100000/2);
+        // mLocationRequest.setInterval(100000);
+        // mLocationRequest.setFastestInterval(100000/2);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
@@ -189,7 +187,13 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(lastLocation != null) {
+            this.onLocationChanged(lastLocation);
+        }
+        else {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
     }
 
     @Override
