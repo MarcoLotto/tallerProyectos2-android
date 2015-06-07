@@ -101,7 +101,7 @@ public class GetFriendsHttpAsyncTask extends HttpAsyncTask {
                 Double latitude = jsonObject.getDouble("latitude");
                 location.setLongitude(longitude);
                 location.setLatitude(latitude);
-                lastTimeUpdate = jsonObject.getString("lastTimeUpdate");
+                lastTimeUpdate = jsonObject.getString("lastUpdateTime");
             }
 
             User user = new User(userId, firstName, lastName);

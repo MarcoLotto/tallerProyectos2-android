@@ -1,6 +1,7 @@
 package com.example.marco.fiubados;
 
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,18 +19,22 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
-public class MapActivity extends AppCompatActivity implements CallbackScreen, com.google.android.gms.location.LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapActivity extends AppCompatActivity implements CallbackScreen, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, com.google.android.gms.location.LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     //aca voy a updatear el profile, para updatear el Location.... es lo que hay
     private static final String EDIT_PROFILE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/users";
@@ -49,6 +54,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     private static final int SEARCH_FRIENDS_SERVICE_ID = 0;
 
     private List<User> users;
+    private Map<String, User> markersVsUsers = new HashMap<>();
 
     private User user;
 
@@ -61,24 +67,26 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        //magia relacionada con el mapa
+        SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                map = googleMap;
+                map.setMyLocationEnabled(true);
 
-        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        map.setMyLocationEnabled(true);
+                buildGoogleApiClient();
+                createLocationRequest();
 
-        this.buildGoogleApiClient();
-        this.createLocationRequest();
-        // La magia
-
-        LatLng bsas = new LatLng(-34.60305, -58.43855);
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(bsas, 11));
-
-        this.users = new ArrayList<>();
-
-        this.obtenerDatosDelPerfil();
-
-        this.onFocus();
+                LatLng bsas = new LatLng(-34.60305, -58.43855);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(bsas, 11));
+                users = new ArrayList<>();
+                obtenerDatosDelPerfil();
+                mGoogleApiClient.connect();
+                map.setOnMarkerClickListener(MapActivity.this);
+                map.setOnInfoWindowClickListener(MapActivity.this);
+                onFocus();
+            }
+        });
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -91,25 +99,18 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(100000);
-        mLocationRequest.setFastestInterval(100000/2);
+        // mLocationRequest.setInterval(100000);
+        // mLocationRequest.setFastestInterval(100000/2);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
     @Override
     public void onFocus() {
-
         this.users.clear();
-
         // Vamos a hacer el pedido de amigos al web service
-
-
-        GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this,
-                SEARCH_FRIENDS_SERVICE_ID, "TODO");
-
+        GetFriendsHttpAsyncTask friendsHttpService = new GetFriendsHttpAsyncTask(this, this, SEARCH_FRIENDS_SERVICE_ID, "TODO");
         friendsHttpService.execute(FRIENDS_SEARCH_ENDPOINT_URL);
         //friendsHttpService.execute("http://www.mocky.io/v2/5563b7b0ab3d5f7512da77a3");
-
     }
 
     @Override
@@ -146,14 +147,36 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     private void actualizarMapa(){
         map.clear();
+        this.markersVsUsers.clear();
         Iterator<User> iterator = this.users.iterator();
         while (iterator.hasNext()) {
             User friend = iterator.next();
             LatLng latLng = new LatLng(friend.getLocation().getLatitude(),friend.getLocation().getLongitude());
-            map.addMarker(new MarkerOptions().title( friend.getFullName() )
-                            .snippet( friend.getLastTimeUpdate() )
+            Marker marker = map.addMarker(new MarkerOptions().title( friend.getFullName() )
+                            .snippet( "Toque para ir al muro" )
                             .position( latLng )
             );
+            // Guardamos a quien pertenece este marker
+            this.markersVsUsers.put(marker.getId(), friend);
+        }
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        return false;
+    }
+
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        if(this.markersVsUsers.containsKey(marker.getId())) {
+            User user = this.markersVsUsers.get(marker.getId());
+
+            // Vamos al muro de la persona en cuestión
+            MainScreenActivity activity = ContextManager.getInstance().getMainScreenActivity();
+            activity.getWallTabScreen().setUserOwnerOfTheWall(user);
+            activity.selectWallTabScreen();
+            this.finish();
         }
     }
 
@@ -192,7 +215,13 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if(lastLocation != null) {
+            this.onLocationChanged(lastLocation);
+        }
+        else {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
     }
 
     @Override
@@ -201,7 +230,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         SimpleDateFormat sdf = new SimpleDateFormat("dd:MMMM:yyyy HH:mm:ss a");
         String lastUpdateTime = sdf.format(c.getTime());
         map.animateCamera(CameraUpdateFactory.newLatLng(
-                new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
+                        new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()))
         );
 
         user.setLocation(mCurrentLocation);
@@ -221,6 +250,7 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
     }
 
     private void fillFieldsListWithPersonalProfileData() {
+        this.fields.clear();
         this.fields.add(new ProfileField("firstName", this.user.getFirstName(), "Nombre"));
         this.fields.add(new ProfileField("lastName", this.user.getLastName(), "Apellido"));
         this.fields.add(new ProfileField("biography", this.user.getBiography(), "Biografia"));
@@ -231,4 +261,6 @@ public class MapActivity extends AppCompatActivity implements CallbackScreen, co
         this.fields.add(new ProfileField( "lastUpdateTime", String.valueOf( this.user.getLocation().getLongitude()),"UltimoTiempoDeUpdate" ));
     }
 }
+
+
 

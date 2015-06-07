@@ -128,7 +128,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDrw4RG-NCzjwiqi90o_-TmxrJ6y0j04vU" />
+            android:value="AIzaSyChYB4MyVs-kAaKAP3i0hDPyAuLQjzngtM" />
 
 		<activity
             android:name=".activity.group.GroupDiscussionActivity"

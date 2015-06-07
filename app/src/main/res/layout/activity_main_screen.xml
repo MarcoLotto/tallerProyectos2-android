@@ -117,14 +117,12 @@
 
                     <LinearLayout
                         xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/wallComments"
-                        android:paddingLeft="50dp"
-                        android:paddingRight="30dp">
+                        android:id="@+id/wallComments" >
 
                         <ListView
-                            android:layout_width="wrap_content"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/wallCommentsListView"
                             android:layout_gravity="center_horizontal|top" />
