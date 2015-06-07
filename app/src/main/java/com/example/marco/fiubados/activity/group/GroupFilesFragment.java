@@ -59,6 +59,12 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
 //    }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_group_files, container, false);
@@ -76,7 +82,6 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
 
         // Get a reference to the ListView, and attach this adapter to it.
         //UpdateUIList();
-
         return rootView;
     }
 
@@ -84,7 +89,7 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
         //Toast.makeText(getActivity(), "Se ha seleccionado " + file.getName(), Toast.LENGTH_LONG).show();
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(file.getUrl())));
     }
-
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -145,8 +150,8 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
         // Buscamos los files del grupo
         GetGroupFilesHttpAsyncTask service = new GetGroupFilesHttpAsyncTask(getActivity(), this, GET_UPLOADED_DATA_SERVICE_ID, group);
 
-        String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
-        //String finalUrl = "http://www.mocky.io/v2/556c5dd9c7c159e511d0e1d4";
+        //String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
+        String finalUrl = "http://www.mocky.io/v2/5574a6bf094d18441711da0e";
         service.execute(finalUrl);
     }
 
