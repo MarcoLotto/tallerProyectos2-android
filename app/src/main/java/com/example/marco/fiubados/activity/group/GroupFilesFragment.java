@@ -119,10 +119,8 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
                         // Conseguimos todos los valores de los campos
                         String name = ((EditText) dialogView.findViewById(R.id.fieldValueName)).getText().toString();
                         String url = ((EditText) dialogView.findViewById(R.id.fieldValueUrl)).getText().toString();
-                        String type = ((EditText) dialogView.findViewById(R.id.fieldValueType)).getText().toString();
+                        //type = ((EditText) dialogView.findViewById(R.id.fieldValueType)).getText().toString();
 
-                        // TODO:Falta Validar los campos
-                        // TODO: el type deberia ser parseado del nombre...
                         // Validate URL
                         if (!URLUtil.isValidUrl(url)) {
                             Toast.makeText(ownerActivity.getApplicationContext(), "URL invalida", Toast.LENGTH_SHORT).show();
@@ -156,8 +154,8 @@ public class GroupFilesFragment extends Fragment implements CallbackScreen {
         // Buscamos los files del grupo
         GetGroupFilesHttpAsyncTask service = new GetGroupFilesHttpAsyncTask(getActivity(), this, GET_UPLOADED_DATA_SERVICE_ID, group);
 
-        //String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
-        String finalUrl = "http://www.mocky.io/v2/5574a6bf094d18441711da0e";
+        String finalUrl = GROUPS_SERVICE_URL + group.getId() + GET_UPLOADED_DATA_ENDPOINT_URL;
+        //String finalUrl = "http://www.mocky.io/v2/5574a6bf094d18441711da0e";
         service.execute(finalUrl);
     }
 
