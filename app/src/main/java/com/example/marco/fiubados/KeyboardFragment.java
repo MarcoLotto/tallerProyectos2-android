@@ -1,29 +1,16 @@
 package com.example.marco.fiubados;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.adapters.*;
-import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.SendComentaryHttpAsyncTask;
-import com.example.marco.fiubados.model.Comentary;
-import com.example.marco.fiubados.model.DualField;
-import com.example.marco.fiubados.model.Field;
-import com.example.marco.fiubados.model.TripleField;
+import com.example.marco.fiubados.httpAsyncTasks.SendCommentHttpAsyncTask;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class KeyboardFragment extends Fragment implements CallbackScreen {
@@ -73,7 +60,7 @@ public class KeyboardFragment extends Fragment implements CallbackScreen {
     private void sendComentary() {
         String message = this.comentaryEditText.getText().toString();
         if(!message.isEmpty()){
-            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.getActivity(), this, SEND_COMENTARY_SERVICE_ID, this.containerId, this.parentComentaryId, message);
+            SendCommentHttpAsyncTask service = new SendCommentHttpAsyncTask(this.getActivity(), this, SEND_COMENTARY_SERVICE_ID, this.containerId, this.parentComentaryId, message);
             service.execute(this.sendComentaryUrl);
         }
     }

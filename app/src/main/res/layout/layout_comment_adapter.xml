@@ -24,20 +24,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="18sp"
+                    android:textColor="#ff1c1c1c"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/message"
+                    android:textSize="16sp"
+                    android:textColor="#ff1c1c1c"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="" />
 
                 <TextView
                     android:id="@+id/date"
+                    android:textSize="12sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="" />
+                    android:text=""
+                    android:textStyle="italic"/>
 
         </LinearLayout>
     </LinearLayout>

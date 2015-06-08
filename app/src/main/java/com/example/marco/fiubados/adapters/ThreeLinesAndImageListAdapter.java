@@ -59,7 +59,7 @@ public class ThreeLinesAndImageListAdapter extends BaseAdapter implements Callba
         TextView dateTextView = (TextView) row.findViewById(R.id.date);
         ImageView imageView = (ImageView)row.findViewById(R.id.image);
 
-        titleTextView.setText(this.fields.get(position).getField("Autor").getValue());
+        titleTextView.setText(this.fields.get(position).getField("Titulo").getValue());
         messageTextView.setText(this.fields.get(position).getField("Mensaje").getValue());
         dateTextView.setText(this.fields.get(position).getField("Date").getValue());
         String imageUrl = this.fields.get(position).getField("ImageURL").getValue();

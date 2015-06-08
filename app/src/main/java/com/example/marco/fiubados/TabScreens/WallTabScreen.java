@@ -21,15 +21,19 @@ import com.example.marco.fiubados.adapters.ThreeLinesAndImageListAdapter;
 import com.example.marco.fiubados.commons.WallPostComparator;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
-import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GetCommentsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.ProfileInfoHttpAsyncTask;
-import com.example.marco.fiubados.httpAsyncTasks.SendComentaryHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.SendCommentHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.SendWallNotificationHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.MultipleField;
 import com.example.marco.fiubados.model.User;
+import com.example.marco.fiubados.model.WallNotification;
+import com.example.marco.fiubados.model.WallPost;
+import com.example.marco.fiubados.model.WallPostType;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -54,8 +58,13 @@ public class WallTabScreen implements CallbackScreen {
     private static final String GET_COMMENTS_ENDPOINT = "/wall/comments";
     private static final String SEND_COMMENT_ENDPOINT = "/wall/comments";
 
+    private static final String NOTIFICATIONS_SERVICE_URL = ContextManager.WS_SERVER_URL + "/api/users/";
+    private static final String SEND_NOTIFICATION_ENDPOINT = "/wall/notifications";
+
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
     private static final int PROFILE_PICTURE_MAX_SIZE = 524228;
+
+    private static final String NEW_FRIENDSHIP_MESSAGE = " ahora es amigo de ";
 
     private final int SEND_FRIEND_REQUEST_SERVICE_ID = 0;
     private final int RESPOND_FRIEND_REQUEST_SERVICE_ID = 1;
@@ -63,8 +72,9 @@ public class WallTabScreen implements CallbackScreen {
     private static final int UPLOAD_IMAGE_SERVICE_ID = 3;
     private static final int RELOAD_PROFILE_SERVICE_ID = 4;
     private static final int GET_PROFILE_PICTURE_SERVICE_ID = 5;
-    private static final int GET_COMMENTS_SERVICE_ID = 6;
+    private static final int GET_WALL_POSTS_SERVICE_ID = 6;
     private static final int SEND_COMMENT_SERVICE_ID = 7;
+    private static final int SEND_WALL_NOTIFICATION_SERVICE_ID = 8;
 
     private TabbedActivity tabOwnerActivity;
     private User userOwnerOfTheWall;
@@ -75,6 +85,8 @@ public class WallTabScreen implements CallbackScreen {
     private ListView wallCommentsListView;
     private EditText wallCommentEditText;
     private Button wallCommentSendButton;
+
+    private List<WallPost> wallPosts = new ArrayList<>();
 
     public WallTabScreen(TabbedActivity tabOwnerActivity, Button addFriendButton, Button confirmFriendRequestButton,
                          TextView wallTitleTextView, TextView friendRequestSent, ImageView profileImageView,
@@ -124,7 +136,7 @@ public class WallTabScreen implements CallbackScreen {
         String message = this.wallCommentEditText.getText().toString();
 
         if (!message.isEmpty()){
-            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.tabOwnerActivity, this,
+            SendCommentHttpAsyncTask service = new SendCommentHttpAsyncTask(this.tabOwnerActivity, this,
                     SEND_COMMENT_SERVICE_ID, this.getUserOwnerOfTheWall().getId(), "-1", message);
             service.execute(COMMENTS_SERVICE_URL + this.getUserOwnerOfTheWall().getId() + SEND_COMMENT_ENDPOINT);
         }
@@ -180,7 +192,7 @@ public class WallTabScreen implements CallbackScreen {
                 this.wallCommentEditText.setVisibility(View.VISIBLE);
                 this.wallCommentSendButton.setVisibility(View.VISIBLE);
                 this.wallCommentsListView.setVisibility(View.VISIBLE);
-                this.findComments();
+                this.findWallPosts();
             }
         }
 
@@ -188,10 +200,12 @@ public class WallTabScreen implements CallbackScreen {
         this.findProfilePicture();
     }
 
-    private void findComments(){
-        GetComentariesHttpAsyncTask comentariesService = new GetComentariesHttpAsyncTask(this.tabOwnerActivity, this, GET_COMMENTS_SERVICE_ID, this.getUserOwnerOfTheWall().getId());
+    private void findWallPosts(){
+        this.wallPosts.clear();
+        GetCommentsHttpAsyncTask comentariesService = new GetCommentsHttpAsyncTask(this.tabOwnerActivity, this, GET_WALL_POSTS_SERVICE_ID, this.getUserOwnerOfTheWall().getId());
         comentariesService.execute(COMMENTS_SERVICE_URL + this.getUserOwnerOfTheWall().getId() + GET_COMMENTS_ENDPOINT);
     }
+
 
     private void findProfilePicture(){
         // Temporalmente, cargamos una imagen de perfil por defecto de los assets
@@ -233,6 +247,15 @@ public class WallTabScreen implements CallbackScreen {
             toast.show();
 
             // Publicamos en el muro la amistad
+            User myUser = ContextManager.getInstance().getMyUser();
+            User newFriendUser = this.getUserOwnerOfTheWall();
+
+            SendWallNotificationHttpAsyncTask service = new SendWallNotificationHttpAsyncTask(this.tabOwnerActivity,
+                    this, SEND_WALL_NOTIFICATION_SERVICE_ID, myUser.getFirstName() + NEW_FRIENDSHIP_MESSAGE,
+                    myUser.getId(), myUser.getFirstName() + NEW_FRIENDSHIP_MESSAGE + newFriendUser.getFirstName()
+                    + " " + newFriendUser.getLastName());
+            service.execute(NOTIFICATIONS_SERVICE_URL + myUser.getId() + SEND_NOTIFICATION_ENDPOINT);
+            //service.execute(NOTIFICATIONS_SERVICE_URL + newFriendUser.getId() + SEND_NOTIFICATION_ENDPOINT);
         }
         else if(serviceId == UPLOAD_IMAGE_SERVICE_ID){
             // Pudimos cambiar la imagen de perfil correctamente
@@ -249,41 +272,51 @@ public class WallTabScreen implements CallbackScreen {
             this.presentProfilePicture(responseElements);
         }
 
-        else if(serviceId == GET_COMMENTS_SERVICE_ID){
+        else if(serviceId == GET_WALL_POSTS_SERVICE_ID){
             // Llenamos los comentarios que nos devuelve el servicio
-            this.fillUIListWithComentaries(responseElements);
+            this.fillUIListWithWallPosts(responseElements);
         }
 
         else if(serviceId == SEND_COMMENT_SERVICE_ID){
             // Buscamos todos los comentarios nuevamente
-            this.findComments();
+            this.findWallPosts();
         }
+
     }
 
-    private void fillUIListWithComentaries(List<Comentary> responseElements) {
+    private void fillUIListWithWallPosts(List<WallPost> responseElements){
         List<MultipleField> finalListViewLines = new ArrayList<>();
+        this.wallPosts.addAll(responseElements);
 
         // Ordenar por fecha
-        Collections.sort(responseElements, new WallPostComparator());
+        Collections.sort(this.wallPosts, new WallPostComparator());
 
-        for (Comentary comentary : responseElements){
-            String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
-            String date = this.humanReadableDate(comentary.getDate());
-            finalListViewLines.add(new MultipleField(new Field("Autor", authorName),
-                    new Field("Mensaje", comentary.getMessage()),
-                    new Field("Date", date),
-                    new Field("ImageURL", comentary.getImageUrl())));
+        for (WallPost wallPost : this.wallPosts){
+            if (wallPost.getType().equals(WallPostType.COMMENT)){
+                Comentary comentary = (Comentary) wallPost;
+                String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
+                String date = this.humanReadableDate(comentary.getDate());
+                finalListViewLines.add(new MultipleField(new Field("Titulo", authorName),
+                        new Field("Mensaje", comentary.getMessage()),
+                        new Field("Date", date),
+                        new Field("ImageURL", comentary.getImageUrl())));
+            } else {
+                WallNotification notification = (WallNotification) wallPost;
+                String date = this.humanReadableDate(notification.getDate());
+                finalListViewLines.add(new MultipleField(new Field("Titulo", notification.getMessage()),
+                        new Field("Mensaje", ""),
+                        new Field("Date", date),
+                        new Field("ImageURL", notification.getImageUrl())));
+            }
         }
 
         this.wallCommentsListView.setAdapter(new ThreeLinesAndImageListAdapter(finalListViewLines, this.tabOwnerActivity, this.wallCommentsListView));
 
-        if(responseElements.isEmpty()){
+        if(this.wallPosts.isEmpty()){
             this.wallCommentsListView.setVisibility(View.GONE);
-        }
-        else{
+        } else{
             this.wallCommentsListView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private String humanReadableDate(String timestampDate){
@@ -335,7 +368,7 @@ public class WallTabScreen implements CallbackScreen {
                     this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
             service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
         } else {
-            String message = "La imagen supera los " + (PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "KB. Suba una imagen mas pequeña.";
+            String message = "La imagen supera los " + (PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "Suba una imagen mas pequeña.";
             Toast toast = Toast.makeText(tabOwnerActivity.getApplicationContext(), message, Toast.LENGTH_LONG);
             toast.show();
         }

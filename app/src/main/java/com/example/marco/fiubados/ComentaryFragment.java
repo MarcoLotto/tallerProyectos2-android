@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
 import com.example.marco.fiubados.adapters.*;
 import com.example.marco.fiubados.commons.ActivityStackManager;
-import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GetCommentsHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.TripleField;
@@ -66,7 +66,7 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
     @Override
     public void onFocus() {
         // Llamamos al servicio de obtención de comentarios
-        GetComentariesHttpAsyncTask service = new GetComentariesHttpAsyncTask(this.getActivity(), this, GET_COMENTARIES_SERVICE_ID, this.containerId);
+        GetCommentsHttpAsyncTask service = new GetCommentsHttpAsyncTask(this.getActivity(), this, GET_COMENTARIES_SERVICE_ID, this.containerId);
         service.execute(this.getComentariesUrl);
     }
 

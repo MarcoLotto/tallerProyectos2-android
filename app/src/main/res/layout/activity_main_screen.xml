@@ -82,6 +82,7 @@
                             android:textSize="28sp"
                             android:id="@+id/wallTitleTextView"
                             android:layout_marginLeft="0dp"
+                            android:textColor="#ff1c1c1c"
                             android:layout_marginTop="12dp" />
 
                     </LinearLayout>

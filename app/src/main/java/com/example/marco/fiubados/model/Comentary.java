@@ -3,18 +3,14 @@ package com.example.marco.fiubados.model;
 /**
  * Created by Marco on 23/05/2015.
  */
-public class Comentary extends DatabaseObject {
+public class Comentary extends WallPost {
 
     private User author;
-    private String message;
-    private String date;
     private String imageUrl;
 
     public Comentary(String id, User author, String message, String date, String imageUrl) {
-        super(id);
+        super(id, message, date, WallPostType.COMMENT);
         this.author = author;
-        this.message = message;
-        this.date = date;
         this.imageUrl = imageUrl;
     }
 
@@ -24,22 +20,6 @@ public class Comentary extends DatabaseObject {
 
     public void setAuthor(User author) {
         this.author = author;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getImageUrl() {
