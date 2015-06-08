@@ -33,12 +33,20 @@ public class GroupsTabScreen implements CallbackScreen {
         this.tabOwnerActivity = tabOwnerActivity;
         this.groupsListView = groupsListView;
         this.groups = new ArrayList<>();
+        this.configureClicks();
+    }
+
+    private void configureClicks() {
+        this.groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                onGroupItemClick(position);
+            }
+        });
     }
 
     @Override
     public void onFocus() {
-        this.groups.clear();
-
         // Buscamos los grupos
         GetGroupsHttpAsyncTask groupsTask = new GetGroupsHttpAsyncTask(this.tabOwnerActivity, this, SEARCH_GROUPS_SERVICE_ID);
         groupsTask.execute(GROUPS_SEARCH_ENDPOINT_URL);
@@ -61,12 +69,6 @@ public class GroupsTabScreen implements CallbackScreen {
 
         ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, groupStrings);
         this.groupsListView.setAdapter(adapter);
-        this.groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                onGroupItemClick(position);
-            }
-        });
     }
 
     private void onGroupItemClick(int position) {

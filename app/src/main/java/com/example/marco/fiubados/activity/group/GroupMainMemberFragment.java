@@ -174,7 +174,9 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         for (GroupDiscussion discussion : discussions) {
             finalListViewLines.add(new DualField(new Field("Nombre", discussion.getName()), new Field("Autor", "Creado por " + discussion.getAuthor())));
         }
-        this.discussionsListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
+        if(getActivity() != null) {
+            this.discussionsListView.setAdapter(new TwoLinesListAdapter(getActivity().getApplicationContext(), finalListViewLines));
+        }
     }
 
     private void createAddDiscussionDialog(final Activity ownerActivity, final CallbackScreen ownerCallbackScreen) {
