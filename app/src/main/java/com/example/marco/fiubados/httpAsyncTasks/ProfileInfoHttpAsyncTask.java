@@ -137,7 +137,7 @@ public class ProfileInfoHttpAsyncTask extends HttpAsyncTask {
         loc.setLatitude( latitude );
         loc.setLongitude( longitude );
         user.setLocation( loc );
-        user.setLastTimeUpdate( jsonProfileField.getString("lastUpdateTime") );
+        //user.setLastTimeUpdate( jsonProfileField.getString("lastTimeUpdate") );
         } else {
             Location loc = new Location("");
             user.setLocation( loc );

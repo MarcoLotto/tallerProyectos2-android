@@ -73,10 +73,15 @@ public class GetCommentsHttpAsyncTask extends HttpAsyncTask {
 
             String id = jsonObject.getString("id");
             String message = jsonObject.getString("message");
-            String date = jsonObject.getString("date");
+            String date = "12/06/2015";  // REVIEW: Sacar esto
+            if(jsonObject.has("date")) {
+                date = jsonObject.getString("date");
+            }
             String imageUrl = jsonObject.getString("image");
-            String postType = jsonObject.getString("postType");
-
+            String postType = WallPostType.COMMENT.getType();
+            if(jsonObject.has("postType")){
+                postType = jsonObject.getString("postType");
+            }
             if (WallPostType.COMMENT.getType().equals(postType)){
                 User author = new User(jsonObject.getString("authorId"), jsonObject.getString("authorFirstName"), jsonObject.getString("authorLastName"));
                 author.setProfilePicture(imageUrl);
