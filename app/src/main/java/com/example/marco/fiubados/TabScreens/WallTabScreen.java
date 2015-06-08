@@ -17,7 +17,8 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.NotificationsActivity;
 import com.example.marco.fiubados.ProfileActivity;
 import com.example.marco.fiubados.TabbedActivity;
-import com.example.marco.fiubados.adapters.TwoLinesAndImageListAdapter;
+import com.example.marco.fiubados.adapters.ThreeLinesAndImageListAdapter;
+import com.example.marco.fiubados.commons.WallPostComparator;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.FriendshipResponseHttpAsynkTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetComentariesHttpAsyncTask;
@@ -27,13 +28,16 @@ import com.example.marco.fiubados.httpAsyncTasks.SendFriendRequestHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Field;
-import com.example.marco.fiubados.model.TripleField;
+import com.example.marco.fiubados.model.MultipleField;
 import com.example.marco.fiubados.model.User;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Marco on 08/04/2015.
@@ -120,7 +124,8 @@ public class WallTabScreen implements CallbackScreen {
         String message = this.wallCommentEditText.getText().toString();
 
         if (!message.isEmpty()){
-            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.tabOwnerActivity, this, SEND_COMMENT_SERVICE_ID, this.getUserOwnerOfTheWall().getId(), "-1", message);
+            SendComentaryHttpAsyncTask service = new SendComentaryHttpAsyncTask(this.tabOwnerActivity, this,
+                    SEND_COMMENT_SERVICE_ID, this.getUserOwnerOfTheWall().getId(), "-1", message);
             service.execute(COMMENTS_SERVICE_URL + this.getUserOwnerOfTheWall().getId() + SEND_COMMENT_ENDPOINT);
         }
 
@@ -138,8 +143,9 @@ public class WallTabScreen implements CallbackScreen {
 
     private void onConfirmFriendRequestButtonClick() {
         // Llamamos al servicio para confirmar la solicitud de amistad
-        FriendshipResponseHttpAsynkTask service = new FriendshipResponseHttpAsynkTask(this.tabOwnerActivity, this, this.RESPOND_FRIEND_REQUEST_SERVICE_ID,
-                this.userOwnerOfTheWall.getFriendshipRequestId(), NotificationsActivity.FRIENDSHIP_RESPONSE_STATUS_ACCEPT);
+        FriendshipResponseHttpAsynkTask service = new FriendshipResponseHttpAsynkTask(this.tabOwnerActivity, this,
+                RESPOND_FRIEND_REQUEST_SERVICE_ID, this.userOwnerOfTheWall.getFriendshipRequestId(),
+                NotificationsActivity.FRIENDSHIP_RESPONSE_STATUS_ACCEPT);
         service.execute(NotificationsActivity.FRIENDSHIP_CONFIRMATION_ENDPOINT_URL);
     }
 
@@ -225,6 +231,8 @@ public class WallTabScreen implements CallbackScreen {
             this.confirmFriendRequestButton.setVisibility(View.GONE);
             Toast toast = Toast.makeText(this.tabOwnerActivity.getApplicationContext(), "Ahora son amigos", Toast.LENGTH_SHORT);
             toast.show();
+
+            // Publicamos en el muro la amistad
         }
         else if(serviceId == UPLOAD_IMAGE_SERVICE_ID){
             // Pudimos cambiar la imagen de perfil correctamente
@@ -253,16 +261,21 @@ public class WallTabScreen implements CallbackScreen {
     }
 
     private void fillUIListWithComentaries(List<Comentary> responseElements) {
-        List<TripleField> finalListViewLines = new ArrayList<>();
+        List<MultipleField> finalListViewLines = new ArrayList<>();
+
+        // Ordenar por fecha
+        Collections.sort(responseElements, new WallPostComparator());
 
         for (Comentary comentary : responseElements){
             String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
-            finalListViewLines.add(new TripleField(new Field("Autor", authorName),
-                    new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
+            String date = this.humanReadableDate(comentary.getDate());
+            finalListViewLines.add(new MultipleField(new Field("Autor", authorName),
+                    new Field("Mensaje", comentary.getMessage()),
+                    new Field("Date", date),
+                    new Field("ImageURL", comentary.getImageUrl())));
         }
 
-        Collections.reverse(finalListViewLines);
-        this.wallCommentsListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.tabOwnerActivity, this.wallCommentsListView));
+        this.wallCommentsListView.setAdapter(new ThreeLinesAndImageListAdapter(finalListViewLines, this.tabOwnerActivity, this.wallCommentsListView));
 
         if(responseElements.isEmpty()){
             this.wallCommentsListView.setVisibility(View.GONE);
@@ -271,6 +284,13 @@ public class WallTabScreen implements CallbackScreen {
             this.wallCommentsListView.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private String humanReadableDate(String timestampDate){
+        Long timestamp = Long.valueOf(timestampDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy 'a las' HH:mm:ss ");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT-3"));
+        return dateFormat.format(new Date(timestamp));
     }
 
     private void onProfileImageChanged() {

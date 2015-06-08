@@ -6,12 +6,15 @@ package com.example.marco.fiubados.model;
 public class Comentary extends DatabaseObject {
 
     private User author;
-    private String message, imageUrl;
+    private String message;
+    private String date;
+    private String imageUrl;
 
-    public Comentary(String id, User author, String message, String imageUrl) {
+    public Comentary(String id, User author, String message, String date, String imageUrl) {
         super(id);
         this.author = author;
         this.message = message;
+        this.date = date;
         this.imageUrl = imageUrl;
     }
 
@@ -29,6 +32,14 @@ public class Comentary extends DatabaseObject {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getImageUrl() {

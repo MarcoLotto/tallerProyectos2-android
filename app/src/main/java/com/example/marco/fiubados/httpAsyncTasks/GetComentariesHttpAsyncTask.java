@@ -55,7 +55,7 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
                     e.printStackTrace();
                 }
             }
-            // Le devolvemos a la pantalla que nos llamó todos los amigos que conseguimos
+            // Le devolvemos a la pantalla que nos llamó todos los comentarios que conseguimos
             this.callbackScreen.onServiceCallback(comentaries, this.serviceId);
         } else {
             this.dialog.setMessage("Error en la conexión con el servidor");
@@ -76,7 +76,8 @@ public class GetComentariesHttpAsyncTask extends HttpAsyncTask {
                 author.setFriendshipStatus(jsonObject.getString("friendship"));
             }
             String message = jsonObject.getString("message");
-            Comentary comentary = new Comentary(id, author, message, imageUrl);
+            String date = jsonObject.getString("date");
+            Comentary comentary = new Comentary(id, author, message, date, imageUrl);
             comentaries.add(comentary);
         }
     }

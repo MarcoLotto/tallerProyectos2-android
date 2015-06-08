@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Marco on 24/05/2015.
@@ -20,6 +21,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
     private String containerId;
     private String parentComentaryId;
     private String message;
+    private String date;
 
     public SendComentaryHttpAsyncTask(Activity callingActivity, CallbackScreen callbackScreen, int serviceId,
                                       String containerId, String parentComentaryId, String message) {
@@ -27,6 +29,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
         this.containerId = containerId;
         this.parentComentaryId = parentComentaryId;
         this.message = message;
+        this.date = (Long.valueOf(new Date().getTime())).toString();
     }
 
     @Override
@@ -38,6 +41,7 @@ public class SendComentaryHttpAsyncTask extends HttpAsyncTask {
             jObject.put("containerId", this.containerId); // Id de usuario / discusión
             jObject.put("parentId", this.parentComentaryId); // Id del comentario padre (-1 si no tiene)
             jObject.put("message", this.message); // Mensaje del comentario
+            jObject.put("date", this.date); // Timestamp del comentario
             setRequestPostData(jObject);
         } catch (JSONException e) {
             e.printStackTrace();
