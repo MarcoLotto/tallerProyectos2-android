@@ -255,7 +255,12 @@ public class WallTabScreen implements CallbackScreen {
                     myUser.getId(), myUser.getFirstName() + NEW_FRIENDSHIP_MESSAGE + newFriendUser.getFirstName()
                     + " " + newFriendUser.getLastName());
             service.execute(NOTIFICATIONS_SERVICE_URL + myUser.getId() + SEND_NOTIFICATION_ENDPOINT);
-            //service.execute(NOTIFICATIONS_SERVICE_URL + newFriendUser.getId() + SEND_NOTIFICATION_ENDPOINT);
+
+            service = new SendWallNotificationHttpAsyncTask(this.tabOwnerActivity,
+                    this, SEND_WALL_NOTIFICATION_SERVICE_ID, myUser.getFirstName() + NEW_FRIENDSHIP_MESSAGE,
+                    myUser.getId(), newFriendUser.getFirstName() + NEW_FRIENDSHIP_MESSAGE + myUser.getFirstName()
+                    + " " + myUser.getLastName());
+            service.execute(NOTIFICATIONS_SERVICE_URL + newFriendUser.getId() + SEND_NOTIFICATION_ENDPOINT);
         }
         else if(serviceId == UPLOAD_IMAGE_SERVICE_ID){
             // Pudimos cambiar la imagen de perfil correctamente
