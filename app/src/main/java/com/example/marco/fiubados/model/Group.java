@@ -10,7 +10,8 @@ public class Group extends DatabaseObject {
     private List<GroupDiscussion> discussions;
     private boolean isMember;
     private List<File> files = new ArrayList<File>();
-	
+    private String profilePicture;
+
     public Group(String id) {
         super(id);
     }
@@ -66,5 +67,13 @@ public class Group extends DatabaseObject {
     }
     public List<File> getFiles(){
         return this.files;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
