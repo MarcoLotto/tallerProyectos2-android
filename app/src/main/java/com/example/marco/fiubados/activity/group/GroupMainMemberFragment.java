@@ -28,11 +28,12 @@ import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.KeyboardFragment;
 import com.example.marco.fiubados.R;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
-import com.example.marco.fiubados.TabScreens.WallTabScreen;
+import com.example.marco.fiubados.TabScreens.GroupsTabScreen;
 import com.example.marco.fiubados.adapters.TwoLinesListAdapter;
 import com.example.marco.fiubados.commons.FieldsValidator;
 import com.example.marco.fiubados.httpAsyncTasks.DownloadPictureHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupDiscussionsHttpAsyncTask;
+import com.example.marco.fiubados.httpAsyncTasks.GetGroupsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.GroupDiscussionCreateHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.UploadPictureHttpAsyncTask;
 import com.example.marco.fiubados.model.DualField;
@@ -236,6 +237,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
             toast.show();
         }
         else if(serviceId == RELOAD_GROUP_SERVICE_ID){
+            this.updateGroupImageUrl(responseElements);
+
             // Vamos a buscar a intenet nuestra imagen de perfil
             this.findProfilePicture();
         }
@@ -245,11 +248,19 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         }
     }
 
+    private void updateGroupImageUrl(List<Group> responseElements) {
+        for(Group responseGroup : responseElements){
+            if(responseGroup.getId().equals(this.group.getId())){
+                this.group.setProfilePicture(responseGroup.getProfilePicture());
+                break;
+            }
+        }
+    }
+
     private void onGroupImageChanged() {
-        // Recargamos el perfil para recargar la nueva imagen del usuario
-        // TODO: Aca hay que recargar el grupo para traer la nueva imagen de perfil
-        //ProfileInfoHttpAsyncTask service = new ProfileInfoHttpAsyncTask(this.tabOwnerActivity, this, RELOAD_PROFILE_SERVICE_ID, this.getUserOwnerOfTheWall());
-        //service.execute(ProfileActivity.SHOW_PROFILE_ENDPOINT_URL);
+        // Recargamos los grupos para recargar la imagen de perfil REVIEW: podria hacerse con solo este grupo
+        GetGroupsHttpAsyncTask service = new GetGroupsHttpAsyncTask(this.getActivity(), this, RELOAD_GROUP_SERVICE_ID);
+        service.execute(GroupsTabScreen.GROUPS_SEARCH_ENDPOINT_URL);
     }
 
     private void findProfilePicture(){

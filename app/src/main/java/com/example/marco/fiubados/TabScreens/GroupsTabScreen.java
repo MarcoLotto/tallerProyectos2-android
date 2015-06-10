@@ -10,12 +10,17 @@ import android.widget.ListView;
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabbedActivity;
 import com.example.marco.fiubados.activity.group.GroupMainActivity;
+import com.example.marco.fiubados.adapters.TwoLinesAndImageListAdapter;
 import com.example.marco.fiubados.httpAsyncTasks.GetGroupsHttpAsyncTask;
 import com.example.marco.fiubados.httpAsyncTasks.SendWallNotificationHttpAsyncTask;
+import com.example.marco.fiubados.model.Comentary;
+import com.example.marco.fiubados.model.Field;
 import com.example.marco.fiubados.model.Group;
+import com.example.marco.fiubados.model.TripleField;
 import com.example.marco.fiubados.model.User;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -66,7 +71,7 @@ public class GroupsTabScreen implements CallbackScreen {
     public void onServiceCallback(List responseElements, int serviceId) {
         if (serviceId == SEARCH_GROUPS_SERVICE_ID || serviceId == CREATE_GROUP_SERVICE_ID) {
             this.groups = responseElements;
-            this.addGroupsToGroupUIList();
+            this.fillUIListWithGroups();
         }
 
         // Si es de creacion de grupo, publicamos una notificacion
@@ -80,15 +85,15 @@ public class GroupsTabScreen implements CallbackScreen {
         }
     }
 
-    private void addGroupsToGroupUIList() {
-        List<String> groupStrings = new ArrayList<>();
-
-        for (Group group : this.groups){
-            groupStrings.add(group.getName());
+    private void fillUIListWithGroups() {
+        List<TripleField> finalListViewLines = new ArrayList<>();
+        Iterator<Group> it = this.groups.iterator();
+        while(it.hasNext()){
+            Group group = it.next();
+            finalListViewLines.add(new TripleField(new Field("Nombre", group.getName()),
+                    new Field("Descripcion", group.getDescription()), new Field("ImageURL", group.getProfilePicture())));
         }
-
-        ArrayAdapter adapter = new ArrayAdapter<>(this.tabOwnerActivity, android.R.layout.simple_list_item_1, groupStrings);
-        this.groupsListView.setAdapter(adapter);
+        this.groupsListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.tabOwnerActivity, this.groupsListView));
     }
 
     private void onGroupItemClick(int position) {

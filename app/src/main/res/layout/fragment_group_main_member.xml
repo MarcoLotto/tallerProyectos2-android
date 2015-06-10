@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15dp"
+            android:paddingLeft="5dp"
             android:id="@+id/text_view_group_description"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text" />
