@@ -75,6 +75,7 @@ public class GetGroupsHttpAsyncTask extends HttpAsyncTask {
             String groupDescription = jsonObject.getString("description");
             String groupId = jsonObject.getString("groupId");
             Group group = new Group(groupId, groupName, groupDescription, true);
+            group.setProfilePicture(jsonObject.getString("picture"));
             groups.add(group);
         }
     }

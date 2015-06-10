@@ -55,7 +55,8 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
     private static final String GET_DISCUSSIONS_ENDPOINT_URL = "/discussions/";
     private static final String GET_COMENTARIES_SERVICE_ENDPOINT = "";
     private static final String SEND_COMENTARY_SERVICE_ENDPOINT = "/comments";
-    private static final String UPLOAD_IMAGE_SERVICE_ENDPOINT_URL = ContextManager.WS_SERVER_URL + "/api/groups/upload_profile_picture";  // REVIEW
+    private static final String UPLOAD_IMAGE_ENDPOINT_URL_PART_1 = ContextManager.WS_SERVER_URL + "/api/groups/";
+    private static final String UPLOAD_IMAGE_ENDPOINT_URL_PART_2 = "/upload_profile_picture";
     private static final String DEFAULT_PROFILE_PICTURE = "ic_action_picture_holo_light";
 
     private static final int GET_DISCUSSIONS_SERVICE_ID = 0;
@@ -116,7 +117,7 @@ public class GroupMainMemberFragment extends Fragment implements CallbackScreen 
         long length = file.length();
         if(length <= PROFILE_PICTURE_MAX_SIZE) {
             UploadPictureHttpAsyncTask service = new UploadPictureHttpAsyncTask(this.getActivity(), this, UPLOAD_IMAGE_SERVICE_ID, picturePathUploading);
-            service.execute(UPLOAD_IMAGE_SERVICE_ENDPOINT_URL);
+            service.execute(UPLOAD_IMAGE_ENDPOINT_URL_PART_1 + this.group.getId() + UPLOAD_IMAGE_ENDPOINT_URL_PART_2);
         } else {
             String message = "La imagen supera los " + (PROFILE_PICTURE_MAX_SIZE / 1024 + 1) + "kb. Suba una imagen mas pequeña.";
             Toast toast = Toast.makeText(this.getActivity().getApplicationContext(), message, Toast.LENGTH_LONG);
