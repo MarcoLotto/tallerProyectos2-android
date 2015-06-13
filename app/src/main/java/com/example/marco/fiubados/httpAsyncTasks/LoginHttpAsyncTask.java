@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.marco.fiubados.ContextManager;
 import com.example.marco.fiubados.TabScreens.CallbackScreen;
+import com.example.marco.fiubados.commons.AlertDialogBuilder;
 import com.example.marco.fiubados.model.User;
 
 import org.json.JSONException;
@@ -22,6 +23,7 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
 
     private final String LOG_TAG = LoginHttpAsyncTask.class.getSimpleName();
     private final String LOGIN_RESULT_OK = "ok";
+    private final String LOGIN_RESULT_BANNED = "bannedUser";
     private final String LOGIN_RESULT_UNAPPROVED = "unapprovedUser";
     private final String LOGIN_RESULT_INVALID_CREDENTIALS = "invalidCredentials";
 
@@ -70,6 +72,12 @@ public class LoginHttpAsyncTask extends HttpAsyncTask {
                     "El registro no ha sido aprobado por un administrador. Ten paciencia.",
                     Toast.LENGTH_LONG)
                     .show();
+        } else if (result.equals(LOGIN_RESULT_BANNED)) {
+            AlertDialogBuilder.generateAlert(
+                    this.callingActivity,
+                    "Usuario Suspendido",
+                    "Tu cuenta ha sido suspendida por un administrador.\n¡Lo sentimos!")
+            .show();
         } else if (result.equals(LOGIN_RESULT_INVALID_CREDENTIALS)) {
             Toast.makeText(
                     this.callingActivity.getApplicationContext(),
