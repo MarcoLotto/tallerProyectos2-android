@@ -77,6 +77,9 @@ public class GetCommentsHttpAsyncTask extends HttpAsyncTask {
             if(jsonObject.has("date")) {
                 date = jsonObject.getString("date");
             }
+            else if(jsonObject.has("creationDate")) {
+                date = jsonObject.getString("creationDate");
+            }
             String imageUrl = jsonObject.getString("image");
             String postType = WallPostType.COMMENT.getType();
             if(jsonObject.has("postType")){

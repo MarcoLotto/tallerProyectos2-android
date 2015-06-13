@@ -15,13 +15,19 @@ import com.example.marco.fiubados.commons.ActivityStackManager;
 import com.example.marco.fiubados.httpAsyncTasks.GetCommentsHttpAsyncTask;
 import com.example.marco.fiubados.model.Comentary;
 import com.example.marco.fiubados.model.Field;
+import com.example.marco.fiubados.model.MultipleField;
 import com.example.marco.fiubados.model.TripleField;
 import com.example.marco.fiubados.model.User;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ComentaryFragment extends Fragment implements CallbackScreen {
 
@@ -78,18 +84,34 @@ public class ComentaryFragment extends Fragment implements CallbackScreen {
         }
     }
 
+    private String humanReadableDate(String timestampDate){
+        String finalTimeStamp = timestampDate.substring(0, 19);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+        try {
+            Date date = sdf.parse(finalTimeStamp);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy 'a las' HH:mm:ss ");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT-3"));
+            return formatter.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     private void fillUIListWithComentaries(List<Comentary> responseElements) {
-        List<TripleField> finalListViewLines = new ArrayList<>();
+        List<MultipleField> finalListViewLines = new ArrayList<>();
         this.comments = responseElements;
         Iterator<Comentary> it = responseElements.iterator();
         while(it.hasNext()){
             Comentary comentary = it.next();
             String authorName = comentary.getAuthor().getFirstName() + " " + comentary.getAuthor().getLastName();
-            finalListViewLines.add(new TripleField(new Field("Autor", authorName),
-                    new Field("Mensaje", comentary.getMessage()), new Field("ImageURL", comentary.getImageUrl())));
+            finalListViewLines.add(new MultipleField(new Field("Titulo", authorName),
+                    new Field("Mensaje", comentary.getMessage()),
+                    new Field("Date", this.humanReadableDate(comentary.getDate())),
+                    new Field("ImageURL", comentary.getImageUrl())));
         }
-
-        this.comentaryListView.setAdapter(new TwoLinesAndImageListAdapter(finalListViewLines, this.getActivity(), this.comentaryListView));
+        this.comentaryListView.setAdapter(new ThreeLinesAndImageListAdapter(finalListViewLines, this.getActivity(), this.comentaryListView));
 
         if(responseElements.isEmpty()){
             this.noCommentsTextView.setVisibility(View.VISIBLE);
