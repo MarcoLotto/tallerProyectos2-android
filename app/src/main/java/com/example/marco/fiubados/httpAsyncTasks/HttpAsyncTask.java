@@ -87,6 +87,7 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
         this.configureResponseFields();
         this.dialog.show();
         dialog.setContentView(R.layout.progress_dialog);
+        dialog.setCanceledOnTouchOutside(false);  // Evitamos que se cancele el process al tocar en los bordes
     }
 
     @Override
@@ -264,7 +265,14 @@ public abstract class HttpAsyncTask extends AsyncTask <String, Integer, JSONObje
             }
         }
         // Mandamos a que los hijos procesen el resultado como quieran
-        this.onResponseArrival();
+        try {
+            this.onResponseArrival();
+        }
+        catch(Exception e){
+            // Si hay un pedido que viene despues de mucho tiempo, puede ser que el contexto no esté preparado
+            // para tratarlo. Nos cubrimos ante esta situación
+            e.printStackTrace();
+        }
     }
 
     public void addResponseField(String name) {
